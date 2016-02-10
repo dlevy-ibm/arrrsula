@@ -50,7 +50,7 @@ done
 # Get additional things
 if [ ! -d ovs ] ; then
     git submodule add https://github.com/openvswitch/ovs.git
-fi 
+fi
 
 if [ ! -d kuryr ] ; then
     git submodule add https://git.openstack.org/openstack/kuryr.git
