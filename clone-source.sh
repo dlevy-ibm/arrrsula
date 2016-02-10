@@ -2,6 +2,8 @@
 
 set -e
 
+source project-list.sh
+
 git clone git@github.com:pyrrrat/openstack.git
 BASEDIR=$(pwd)/openstack
 
@@ -15,12 +17,10 @@ git push origin master
 # Null merge previous deploy branch changes if they exist
 git branch -a | grep origin/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' origin/pyrrrat/deploy
 
-PURE_PROJECTS='cinder glance heat horizon keystone neutron requirements'
 for project in $PURE_PROJECTS ; do
     git submodule update --init $project
 done
 
-LOCAL_PROJECTS='nova python-ironicclient ironic ironic-python-agent'
 
 for project in $LOCAL_PROJECTS ; do
     # Get the pure upstream version checked out
@@ -50,17 +50,4 @@ git submodule add https://github.com/openvswitch/ovs.git
 git submodule add https://git.openstack.org/openstack/kuryr.git
 git submodule add https://git.openstack.org/openstack/networking-ovn.git
 
-# set -e is on, so we if this fails, we bail out
-echo INSERT DEPLOY / TESTS HERE
-
-# Record the successful state into the repo that is good to pull from
-for project in $LOCAL_PROJECTS ; do
-    pushd $project
-    git checkout -b deploymaybe
-    git push pyrrrat HEAD:pyrrrat/deploy
-    popd
-done
-
-git commit -a -m"Committing potential deploy state"
-git checkout -b deploymaybe
-git push origin HEAD:pyrrrat/deploy
+echo You have sourcecode - you should test it!
