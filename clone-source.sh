@@ -15,7 +15,7 @@ git push origin master
 # Null merge previous deploy branch changes if they exist
 git branch -a | grep origin/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' origin/pyrrat/deploy
 
-PURE_PROJECTS='cinder glance heat horizon keystone neutron'
+PURE_PROJECTS='cinder glance heat horizon keystone neutron requirements'
 for project in $PURE_PROJECTS ; do
     git submodule update --init $project
 done
@@ -41,12 +41,14 @@ for project in $LOCAL_PROJECTS ; do
     popd
 
     # Update the submodule to reference our repo
-    git config -f .gitmodules --set submodule.${project}.url git@github.com:pyrrrat/${project}.git
+    git config -f .gitmodules submodule.${project}.url git@github.com:pyrrrat/${project}.git
 
 done
 
-# Get non-OpenStack things
+# Get additional things
 git submodule add https://github.com/openvswitch/ovs.git
+git submodule add https://git.openstack.org/openstack/kuryr.git
+git submodule add https://git.openstack.org/openstack/networking-ovn.git
 
 # set -e is on, so we if this fails, we bail out
 echo INSERT DEPLOY / TESTS HERE
@@ -54,9 +56,11 @@ echo INSERT DEPLOY / TESTS HERE
 # Record the successful state into the repo that is good to pull from
 for project in $LOCAL_PROJECTS ; do
     pushd $project
-    git push git@github.com:pyrrrat/${project}.git HEAD:pyrrrat/deploy
+    git checkout -b deploymaybe
+    git push pyrrrat HEAD:pyrrrat/deploy
     popd
 done
 
 git commit -a -m"Committing potential deploy state"
-git push git@github.com:pyrrrat/openstack.git HEAD:pyrrrat/deploy
+git checkout -b deploymaybe
+git push origin HEAD:pyrrrat/deploy
