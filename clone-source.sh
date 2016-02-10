@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 source project-list.sh
 BASEDIR=$(pwd)/openstack
