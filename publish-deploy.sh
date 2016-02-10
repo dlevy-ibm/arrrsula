@@ -7,6 +7,7 @@ source project-list.sh
 BASEDIR=$(pwd)/openstack
 
 cd $BASEDIR
+git push origin master
 
 # Record the successful state into the repo that is good to pull from
 for project in $LOCAL_PROJECTS ; do
