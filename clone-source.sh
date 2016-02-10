@@ -13,7 +13,7 @@ git reset --hard FETCH_HEAD
 git push origin master
 
 # Null merge previous deploy branch changes if they exist
-git branch -a | grep origin/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' origin/pyrrat/deploy
+git branch -a | grep origin/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' origin/pyrrrat/deploy
 
 PURE_PROJECTS='cinder glance heat horizon keystone neutron requirements'
 for project in $PURE_PROJECTS ; do
@@ -33,7 +33,7 @@ for project in $LOCAL_PROJECTS ; do
     git remote update
 
     # If we already have a deploy branch, null merge it so we can just push
-    git branch -a | grep pyrrrat/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' pyrrrat/pyrrat/deploy
+    git branch -a | grep pyrrrat/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' pyrrrat/pyrrrat/deploy
 
     # Merge our change
     git fetch git@github.com:pyrrrat/${project}.git
