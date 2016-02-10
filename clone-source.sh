@@ -16,6 +16,13 @@ git checkout master
 git fetch https://git.openstack.org/openstack/openstack.git
 git reset --hard FETCH_HEAD
 
+# move git refs from gerrit to the git farm
+for project in *; do
+    git config -f .gitmodules submodule.${project}.url https://git.openstack.org/openstack/${project}
+done
+git commit -a -m"Moving all submodule refs to the git farm"
+
+
 for project in $PURE_PROJECTS ; do
     git submodule update --init $project
 done
