@@ -33,7 +33,7 @@ for project in $LOCAL_PROJECTS ; do
     git remote update
 
     # If we already have a deploy branch, null merge it so we can just push
-    git branch -a | grep pyrrrat/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' origin/pyrrat/deploy
+    git branch -a | grep pyrrrat/pyrrrat/deploy && git merge -s ours -m 'Merging up with upstream' pyrrrat/pyrrat/deploy
 
     # Merge our change
     git fetch git@github.com:pyrrrat/${project}.git
