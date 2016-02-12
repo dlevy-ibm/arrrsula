@@ -189,7 +189,7 @@ cinder:
       control_location: front-end
 
 neutron:
-  plugin: ml2
+  plugin: ovn
   bridge_mappings: ''
   network_vlan_ranges: ''
   tenant_network_type: vxlan
