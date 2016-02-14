@@ -27,6 +27,18 @@ for project in $PURE_PROJECTS ; do
     git submodule update --init $project
 done
 
+# Get additional things
+if [ ! -d ovs ] ; then
+    git submodule add https://github.com/openvswitch/ovs.git
+fi
+
+if [ ! -d kuryr ] ; then
+    git submodule add https://git.openstack.org/openstack/kuryr.git
+fi
+
+if [ ! -d networking-ovn ] ; then
+    git submodule add https://git.openstack.org/openstack/networking-ovn.git
+fi
 
 for project in $LOCAL_PROJECTS ; do
     pushd $project
@@ -53,19 +65,6 @@ for project in $LOCAL_PROJECTS ; do
     git config -f .gitmodules submodule.${project}.url git@github.com:pyrrrat/${project}.git
 
 done
-
-# Get additional things
-if [ ! -d ovs ] ; then
-    git submodule add https://github.com/openvswitch/ovs.git
-fi
-
-if [ ! -d kuryr ] ; then
-    git submodule add https://git.openstack.org/openstack/kuryr.git
-fi
-
-if [ ! -d networking-ovn ] ; then
-    git submodule add https://git.openstack.org/openstack/networking-ovn.git
-fi
 
 for project in $EXTRA_PROJECTS ; do
     pushd $project
