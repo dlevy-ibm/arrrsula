@@ -28,17 +28,9 @@ for project in $PURE_PROJECTS ; do
 done
 
 # Get additional things
-if [ ! -d ovs ] ; then
-    git submodule add https://github.com/openvswitch/ovs.git
-fi
-
-if [ ! -d kuryr ] ; then
-    git submodule add https://git.openstack.org/openstack/kuryr.git
-fi
-
-if [ ! -d networking-ovn ] ; then
-    git submodule add https://git.openstack.org/openstack/networking-ovn.git
-fi
+git submodule add https://github.com/openvswitch/ovs.git
+git submodule add https://git.openstack.org/openstack/kuryr.git
+git submodule add https://git.openstack.org/openstack/networking-ovn.git
 
 for project in $LOCAL_PROJECTS ; do
     pushd $project
@@ -65,6 +57,17 @@ for project in $LOCAL_PROJECTS ; do
     git config -f .gitmodules submodule.${project}.url git@github.com:pyrrrat/${project}.git
 
 done
+
+# Set up OVS for debian builds
+pushd ovs
+# Capture short sha for documentation purposes
+OVS_REF=$(git rev-parse --short HEAD)
+# Count of revisions - provides simple stupid method to keep our local debs
+# monotonically increasing
+OVS_REFCOUNT=$(git log --oneline | wc -l)
+dch -l "${OVS_REFCOUNT}+git${OVS_REF}" -m "CI Build for ${OVS_REF}"
+debcommit -a
+popd
 
 for project in $EXTRA_PROJECTS ; do
     pushd $project
