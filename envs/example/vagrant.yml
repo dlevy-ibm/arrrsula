@@ -17,12 +17,15 @@ nova:
   scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
 
 neutron:
-  plugin: ml2
-  bridge_mappings: physnet:eth2
-  network_vlan_ranges: physnet
-  tenant_network_type: vlan
+  plugin: ovn
+  bridge_mappings: ''
+  network_vlan_ranges: ''
+  tenant_network_type: ''
   enable_flat_networks: True
-  tunnel_types: []
+  tunnel_types:
+    - geneve
+  lbaas:
+    enable: False
   networks:
     - name: internal
       shared: true

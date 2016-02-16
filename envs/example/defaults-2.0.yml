@@ -194,7 +194,7 @@ neutron:
   network_vlan_ranges: ''
   tenant_network_type: vxlan
   tunnel_types:
-    - vxlan
+    - geneve
   lbaas:
     enable: False
   logging:

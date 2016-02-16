@@ -125,7 +125,7 @@ neutron:
     neutron-l3-agent:
       config_files:
         - /etc/neutron/l3_agent.ini
-      pidfile: /var/run/enutron-l3-agent.pid
+      pidfile: /var/run/neutron-l3-agent.pid
     neutron-dhcp-agent:
       config_files:
         - /etc/neutron/dhcp_agent.ini
