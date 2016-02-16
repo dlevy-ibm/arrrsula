@@ -27,7 +27,7 @@ secrets:
 fqdn: openstack.example.com
 swift_fqdn: "{{ fqdn }}"
 floating_ip: "{{ controller_primary }}"
-undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][primary_interface]['ipv4']['address'] }}"
+undercloud_floating_ip: "{{ hostvars[groups['controller'][0]][hostvars[groups['controller'][0]]['primary_interface']['ipv4']['address'] }}"
 
 etc_hosts:
   - name: "{{ fqdn }}"

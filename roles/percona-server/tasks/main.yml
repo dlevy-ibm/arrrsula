@@ -95,7 +95,7 @@
   when: percona.replication and not already_bootstrapped.rc == 0
 
 - name: register replication databases
-  command: echo {% for host in groups['db'] %}{% if not loop.last %}{{ hostvars[host][primary_interface]['ipv4']['address'] }},{% else %}{{ hostvars[host][primary_interface]['ipv4']['address'] }}{% endif %}{% endfor %}
+  command: echo {% for host in groups['db'] %}{% if not loop.last %}{{ hostvars[host][hostvars[host]['primary_interface']]['ipv4']['address'] }},{% else %}{{ hostvars[host][hostvars[host]['primary_interface']]['ipv4']['address'] }}{% endif %}{% endfor %}
   register: percona_replication_nodes
   when: percona.replication
 

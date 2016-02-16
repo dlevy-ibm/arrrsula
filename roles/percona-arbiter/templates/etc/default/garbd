@@ -1,5 +1,5 @@
 {% macro garbd_hosts() -%}
-{% for host in groups['db'] -%} {{ hostvars[host][primary_interface]['ipv4']['address'] -}}:4567 {% endfor -%}
+{% for host in groups['db'] -%} {{ hostvars[host][hostvars[host]['primary_interface']]['ipv4']['address'] -}}:4567 {% endfor -%}
 {% endmacro -%}
 GALERA_NODES="{{ garbd_hosts() }}"
 GALERA_GROUP="mstack_db_cluster"

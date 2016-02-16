@@ -1,5 +1,5 @@
 #!/bin/bash
-ips="{% for host in groups['compute'] -%}{{ hostvars[host][primary_interface]['ipv4']['address'] }} {% endfor -%}"
+ips="{% for host in groups['compute'] -%}{{ hostvars[host][hostvars[host]['primary_interface']]['ipv4']['address'] }} {% endfor -%}"
 
 for ip in $ips; do
   echo testing ssh to $ip ...
