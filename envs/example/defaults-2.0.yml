@@ -58,6 +58,7 @@ endpoints:
   main:     "{{ fqdn }}"
   db:       "{{ undercloud_floating_ip }}"
   rabbit:   "{{ undercloud_floating_ip }}"
+  ovndb:    "{{ undercloud_floating_ip }}"
   magnum: "{{ fqdn }}"
   identity_uri: https://{{ fqdn }}:35357
   auth_uri: https://{{ fqdn }}:5000/v2.0
@@ -190,9 +191,12 @@ cinder:
 
 neutron:
   plugin: ovn
-  bridge_mappings: ''
+  bridge_mappings: provider:br-provider
   network_vlan_ranges: ''
-  tenant_network_type: vxlan
+  tenant_network_type: ''
+  # The 'overlay_interface' option replaces 'vxlan_interface' because the OVN
+  # plug-in requires a tunnel interface, but not necessarily for VXLAN.
+  overlay_interface: ''
   tunnel_types:
     - geneve
   lbaas:
@@ -201,21 +205,25 @@ neutron:
     debug: True
     verbose: True
   networks:
-    - name: internal
+    - name: provider
       shared: true
-      external: false
-      network_type: vxlan
-      segmentation_id: 256
-      provider_physical_network: ~
-    - name: external
-      shared: false
-      external: true
-      network_type: local
-      segmentation_id: ~
-      provider_physical_network: ~
+      router_external: true
+      provider_network_type: flat
+      provider_physical_network: provider
+      tenant_name: admin
+    - name: private
+      tenant_name: demo
   subnets:
-    - name: internal_v4
-      network_name: internal
+    - name: provider-v4
+      network_name: provider
+      ip_version: 4
+      cidr: 192.168.255.0/24
+      enable_dhcp: "true"
+      gateway_ip: 192.168.255.1
+      dns_nameservers: '8.8.8.8,8.8.4.4'
+      tenant_name: demo
+    - name: private-v4
+      network_name: private
       ip_version: 4
       cidr: 172.16.255.0/24
       pool_start: 172.16.255.2
@@ -223,8 +231,9 @@ neutron:
       enable_dhcp: "true"
       gateway_ip: 172.16.255.1
       dns_nameservers: '8.8.8.8,8.8.4.4'
-    - name: internal_v6
-      network_name: internal
+      tenant_name: demo
+    - name: private-v6
+      network_name: private
       ip_version: 6
       cidr: 2db8:1::/64
       enable_dhcp: "true"
@@ -232,23 +241,17 @@ neutron:
       ipv6_address_mode: dhcpv6-stateless
       ipv6_ra_mode: dhcpv6-stateless
       dns_nameservers: '2001:4860:4860::8888,2001:4860:4860::8844'
-    - name: external
-      network_name: external
-      ip_version: 4
-      cidr: 192.168.255.0/24
-      enable_dhcp: "false"
-      gateway_ip: 192.168.255.1
-      dns_nameservers: '8.8.8.8,8.8.4.4'
+      tenant_name: demo
   routers:
-    - name: default
-      tenant_name: admin
+    - name: router
+      tenant_name: demo
   router_interfaces:
+    - router_name: router
+      subnet_name: private-v4
+      tenant_name: demo
     - router_name: default
-      subnet_name: internal_v4
-      tenant_name: admin
-    - router_name: default
-      subnet_name: internal_v6
-      tenant_name: admin
+      subnet_name: private-v6
+      tenant_name: demo
   service:
     envs:
       - "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"

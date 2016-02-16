@@ -115,14 +115,6 @@
       tags: ['infra']
   environment: "{{ env_vars|default({}) }}"
 
-- name: openvswitch
-  hosts: network:compute
-  roles:
-    - role: openvswitch
-      when: neutron.plugin == 'ovs'
-      tags: ['infra', 'data', 'openvswitch']
-  environment: "{{ env_vars|default({}) }}"
-
 - name: controller haproxy
   gather_facts: force
   hosts: controller
@@ -153,7 +145,24 @@
     - role: ceph-osd
       tags: ['ceph', 'ceph-osd']
 
+# OVN SERVICES
+
+- name: ovn database
+  hosts: ovndb
+  roles:
+    - role: ovn-northd
+    - tags: ['ovn', 'database']
+  environment: "{{ env_vars|default({}) }}"
+
+- name: ovn control plane
+  hosts: compute
+  roles:
+    - role: ovn-controller
+    - tags: ['ovn', 'control']
+  environment: "{{ env_vars|default({}) }}"
+
 # OPENSTACK SERVICES
+
 - name: openstack client tools
   hosts: all
   roles:
