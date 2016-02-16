@@ -1,0 +1,36 @@
+- name: install dependencies
+  apt: pkg={{ item }}
+  with_items:
+    - openvswitch-common
+    - openvswitch-datapath-dkms
+    - openvswitch-switch
+    - openvswitch-ovn
+`
+- name: start openvswitch service
+  service: name=openvswitch-switch state=started enabled=yes
+
+# Using 'command' instead of the openvswitch_bridge module due to lack of
+# support beyond managing bridges. Also using 'changed_when: false' because
+# the 'ovs-vsctl set open' command only provides output when it fails.
+
+- name: setup connection to remote database
+  command: ovs-vsctl set open . external-ids:ovn-remote=tcp:{{ endpoints.ovndb }}:6640
+  changed_when: false
+
+- name: enable overlay network protocol
+  command: ovs-vsctl set open . external-ids:ovn-encap-type={{ neutron.tunnel_types }}
+  changed_when: false
+
+- name: enable overlay network protocol
+  command: ovs-vsctl set open . external-ids:ovn-encap-ip={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}
+  changed_when: false
+
+- name: add bridges for provider networks to ovs
+  command: ovs-vsctl --may-exist add-br {{item.split(':')[1]}}
+  with_items: "{{ovs_bridge_mappings.split(',')}}"
+
+- name: enable provider networks on ovs
+  command: ovs-vsctl set open . external-ids:ovn-bridge-mappings={{ ovs_bridge_mappings }}
+
+- name: start ovn controller
+  service: name=ovn-controller state=started enabled=yes

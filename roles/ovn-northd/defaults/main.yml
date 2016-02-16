@@ -1,0 +1,3 @@
+ovs_db_nb_schema: /usr/share/openvswitch/ovn-nb.ovsschema
+ovs_db_sb_schema: /usr/share/openvswitch/ovn-sb.ovsschema
+ovs_db_dir: /var/lib/openvswitch

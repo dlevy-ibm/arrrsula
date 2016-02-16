@@ -1,0 +1,38 @@
+- name: install dependencies
+  apt: pkg={{ item }}
+  with_items:
+    - openvswitch-common
+    - openvswitch-datapath-dkms
+    - openvswitch-switch
+    - openvswitch-common
+
+- name: reload service files
+  shell: systemctl daemon-reload
+  when: service.changed
+  notify: restart openvswitch-switch
+
+- name: check if ovn north database exists
+  stat: path="{{ovs_db_dir}}/ovnnb.db"
+  register: ovnnb
+
+- name: check if ovn south database exists
+  stat: path="{{ovs_db_dir}}/ovnsb.db"
+  register: ovnsb
+
+- name: create ovn north database
+  shell: ovsdb-tool create {{ovs_db_dir}}/ovnnb.db {{ ovs_db_nb_schema }}
+  when: not ovnnb.stat.exists
+
+- name: create ovn south database
+  shell: ovsdb-tool create {{ovs_db_dir}}/ovnsb.db {{ ovs_db_sb_schema }}
+  when: not ovnsb.stat.exists
+
+- name: start openvswitch service
+  service: name=openvswitch-switch state=started enabled=yes
+
+- name: enable remote access to database
+  shell: ovs-appctl -t ovsdb-server ovsdb-server/add-remote ptcp:6640:{{ endpoints.ovndb }}
+  changed_when: false
+
+- name: start ovn northd service
+  service: name=ovn-northd state=started enabled=yes
