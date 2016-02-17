@@ -68,7 +68,6 @@
   changed_when: true
   notify: restart neutron services
   # we want this to always be changed so that it can notify the service restart
-P
 
 - meta: flush_handlers
 

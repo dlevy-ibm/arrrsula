@@ -5,7 +5,7 @@
     - openvswitch-datapath-dkms
     - openvswitch-switch
     - openvswitch-ovn
-`
+
 - name: start openvswitch service
   service: name=openvswitch-switch state=started enabled=yes
 

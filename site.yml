@@ -151,14 +151,14 @@
   hosts: ovndb
   roles:
     - role: ovn-northd
-    - tags: ['ovn', 'database']
+      tags: ['ovn', 'database']
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn control plane
   hosts: compute
   roles:
     - role: ovn-controller
-    - tags: ['ovn', 'control']
+      tags: ['ovn', 'control']
   environment: "{{ env_vars|default({}) }}"
 
 # OPENSTACK SERVICES
