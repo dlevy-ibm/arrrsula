@@ -4,7 +4,9 @@
     - openvswitch-common
     - openvswitch-datapath-dkms
     - openvswitch-switch
-    - openvswitch-ovn
+    - ovn-common
+    - ovn-host
+    - python-openvswitch
 
 - name: start openvswitch service
   service: name=openvswitch-switch state=started enabled=yes
@@ -33,4 +35,4 @@
   command: ovs-vsctl set open . external-ids:ovn-bridge-mappings={{ ovs_bridge_mappings }}
 
 - name: start ovn controller
-  service: name=ovn-controller state=started enabled=yes
+  service: name=ovn-host state=started enabled=yes
