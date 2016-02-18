@@ -1,0 +1,2 @@
+ovs_db_vtep_schema: /usr/share/openvswitch/vtep.ovsschema
+ovs_db_dir: /var/lib/openvswitch

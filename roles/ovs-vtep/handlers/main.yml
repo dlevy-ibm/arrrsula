@@ -1,0 +1,2 @@
+- name: restart openvswitch-vtep
+  service: name=openvswitch-vtep state=restarted
