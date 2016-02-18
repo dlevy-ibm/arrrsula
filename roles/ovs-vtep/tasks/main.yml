@@ -1,0 +1,30 @@
+- name: install dependencies
+  apt: pkg={{ item }}
+  with_items:
+    - openvswitch-common
+    - openvswitch-vtep
+    - openvswitch-datapath-dkms
+    - openvswitch-switch
+
+- name: reload service files
+  shell: systemctl daemon-reload
+  when: service.changed
+  notify: restart openvswitch-vtep
+
+- name: check if vtep database exists
+  stat: path="{{ovs_db_dir}}/vtep.db"
+  register: vtep
+
+- name: create vtep database
+  shell: ovsdb-tool create {{ovs_db_dir}}/vtep.db {{ ovs_db_vtep_schema }}
+  when: not vtep.stat.exists
+
+- name: start openvswitch service
+  service: name=openvswitch-switch state=started enabled=yes
+
+- name: enable remote access to database
+  shell: ovs-appctl -t ovsdb-server ovsdb-server/add-remote ptcp:6640:{{ endpoints.vtep }}
+  changed_when: false
+
+- name: start openvswitch-vtep service
+  service: name=openvswitch-vtep state=started enabled=yes
