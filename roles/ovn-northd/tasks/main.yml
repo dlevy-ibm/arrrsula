@@ -4,7 +4,9 @@
     - openvswitch-common
     - openvswitch-datapath-dkms
     - openvswitch-switch
-    - openvswitch-common
+    - ovn-common
+    - ovn-central
+    - python-openvswitch
 
 - name: reload service files
   shell: systemctl daemon-reload
@@ -35,4 +37,4 @@
   changed_when: false
 
 - name: start ovn northd service
-  service: name=ovn-northd state=started enabled=yes
+  service: name=ovn-central state=started enabled=yes
