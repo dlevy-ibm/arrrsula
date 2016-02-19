@@ -142,6 +142,9 @@ apt_repos:
   ceph:
     repo: https://apt-mirror.openstack.blueboxgrid.com/ceph/debian-
     key_url: https://apt-mirror.openstack.blueboxgrid.com/keys/ceph.key
+  ovn:
+    repo: http://jenkins.fewbar.net/
+    key_url: http://jenkins.fewbar.net/jenkins.gpg
 
 client:
   self_signed_cert: true
