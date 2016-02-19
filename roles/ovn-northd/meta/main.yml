@@ -3,5 +3,5 @@ dependencies:
   - role: apt-repos
     repos:
         # TODO add OVS -master apt repository
-      - repo: 'deb {{ apt_repos.ovn.repo }} {{ apt_repos.ovn.dir | default("trusty main") }}'
+      - repo: 'deb {{ apt_repos.ovn.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.ovn.key_url }}'
