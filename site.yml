@@ -155,7 +155,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn control plane
-  hosts: controller
+  hosts: compute
   roles:
     - role: ovn-controller
       tags: ['ovn', 'control']
