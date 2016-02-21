@@ -22,6 +22,9 @@
   notify:
     - apply-sysctl
 
+- name: ensure /etc/default/grub exists
+  file: path=/etc/default/grub owner=root group=root mode=0644
+
 - name: "Kernel boot parameters: disable quiet boot"
   lineinfile: dest=/etc/default/grub
               regexp="^GRUB_CMDLINE_LINUX_DEFAULT="
