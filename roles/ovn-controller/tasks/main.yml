@@ -29,10 +29,10 @@
 
 - name: add bridges for provider networks to ovs
   command: ovs-vsctl --may-exist add-br {{item.split(':')[1]}}
-  with_items: "{{ovs_bridge_mappings.split(',')}}"
+  with_items: "{{ neutron.bridge_mappings.split(',') }}"
 
 - name: enable provider networks on ovs
-  command: ovs-vsctl set open . external-ids:ovn-bridge-mappings={{ ovs_bridge_mappings }}
+  command: ovs-vsctl set open . external-ids:ovn-bridge-mappings={{ neutron.bridge_mappings }}
 
 - name: start ovn controller
   service: name=ovn-host state=started enabled=yes
