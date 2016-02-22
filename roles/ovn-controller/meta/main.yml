@@ -1,6 +1,5 @@
 ---
 dependencies:
-  - role: neutron-common
   - role: collectd-plugin
     when: collectd is defined and collectd.enabled|bool
   - role: apt-repos
