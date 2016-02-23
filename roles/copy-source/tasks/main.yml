@@ -1,0 +1,10 @@
+- name: "get OpenStack Super repo"
+  git: repo="{{ openstack_source.git_mirror }}/openstack"
+       dest="/opt/stack"
+       version="{{ openstack_source.project_rev }}"
+       update="{{ openstack_source.git_update }}"
+       recursive=yes
+  register: git_result
+  until: git_result|success
+  retries: 3
+  when: not openstack_source.copy_source

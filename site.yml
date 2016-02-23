@@ -11,6 +11,8 @@
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
+    - role: copy-source
+      tags: ['common']
   environment: "{{ env_vars|default({}) }}"
 
 - name: security and errata
