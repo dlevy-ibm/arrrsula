@@ -49,6 +49,8 @@ nova:
       - { name: requests, version: 2.7.0 }
       - { name: kombu>=3.0.7 }
       - { name: amqp>=1.4.0 }
+      - { name: pytz }
+      - { name: debtcollector }
     system_dependencies:
       - libjs-jquery-tablesorter
       - libmysqlclient-dev
@@ -56,7 +58,6 @@ nova:
   alternatives:
     - nova-all
     - nova-api
-    - nova-api-ec2
     - nova-api-metadata
     - nova-api-os-compute
     - nova-cells
@@ -70,7 +71,6 @@ nova:
     - nova-manage
     - nova-network
     - nova-novncproxy
-    - nova-objectstore
     - nova-rootwrap
     - nova-scheduler
     - nova-serialproxy
