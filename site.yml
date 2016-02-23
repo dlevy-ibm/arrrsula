@@ -11,7 +11,7 @@
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
-    - role: copy-source
+    - role: clone-source
       tags: ['common']
   environment: "{{ env_vars|default({}) }}"
 
