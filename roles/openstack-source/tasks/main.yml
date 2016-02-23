@@ -70,10 +70,12 @@
   with_items: openstack_source.python_dependencies
   when: not openstack_source.pypi_mirror
 
+# see arrrsula issue #24 for environment workaround
 - name: "pip install {{ project_name }}"
   pip:
     name: "/opt/stack/{{ project_name }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+  environment: "{{ {'GIT_DIR': '/opt/stack/.git/modules/%s' % project_name } if openstack_source.use_superproject else {} }}"
   register: pip_result
   until: pip_result|success
   retries: 3
