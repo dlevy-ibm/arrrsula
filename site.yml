@@ -1,4 +1,18 @@
 ---
+- name: Get OpenStack Repo SHA
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - git: repo="{{ openstack_source.git_mirror }}/openstack"
+         dest="/opt/stack"
+         version="{{ openstack_source.project_rev }}"
+         update="{{ openstack_source.git_update }}"
+         recursive=yes
+    register: git_result
+    until: git_result|success
+    retries: 3
+    when: openstack_source.use_superproject
+
 - name: common role for all hosts
   hosts: all
   gather_facts: force
@@ -12,6 +26,7 @@
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
     - role: clone-source
+      ref: "{{ hostvars.localhost.git_result.after }}"
       tags: ['common']
   environment: "{{ env_vars|default({}) }}"
 
