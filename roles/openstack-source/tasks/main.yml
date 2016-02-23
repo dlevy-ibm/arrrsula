@@ -11,7 +11,7 @@
   register: git_result
   until: git_result|success
   retries: 3
-  when: not openstack_source.copy_source
+  when: not openstack_source.user_superproject
 
 - name: "python requirements for {{ project_name }} from alternative proxy"
   pip:

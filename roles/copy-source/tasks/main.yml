@@ -7,4 +7,4 @@
   register: git_result
   until: git_result|success
   retries: 3
-  when: not openstack_source.copy_source
+  when: openstack_source.use_superproject

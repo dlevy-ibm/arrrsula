@@ -8,5 +8,4 @@ openstack_source:
   rootwrap: "{{ rootwrap|default(False)|bool }}"
   system_dependencies: "{{ system_dependencies|default([]) }}"
   python_dependencies: "{{ python_dependencies|default([]) }}"
-  copy_source: no
-  copy_from: /srv/git/openstack
+  use_superproject: no
