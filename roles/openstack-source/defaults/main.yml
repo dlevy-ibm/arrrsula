@@ -8,5 +8,6 @@ openstack_source:
   rootwrap: "{{ rootwrap|default(False)|bool }}"
   system_dependencies: "{{ system_dependencies|default([]) }}"
   python_dependencies: "{{ python_dependencies|default([]) }}"
+  openstack_dependencies: "{{ openstack_dependencies|default([]) }}"
   use_superproject: no
   use_constraints: no

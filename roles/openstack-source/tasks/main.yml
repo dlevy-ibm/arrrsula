@@ -22,14 +22,6 @@
   changed_when: superrepo_init.stdout
   when: openstack_source.use_superproject
 
-- name: get {{ project_name }} from superrepo
-  command: git submodule update --recursive {{ project_name }}
-  args:
-    chdir: /opt/stack
-  register: superrepo_update
-  changed_when: superrepo_update.stdout
-  when: openstack_source.use_superproject
-
 - name: get requirements project from superrepo
   command: git submodule update --recursive requirements
   args:
@@ -45,6 +37,15 @@
   until: git_result|success
   retries: 3
   when: openstack_source.use_constraints and not openstack_source.use_superproject
+
+- name: get {{ project_name }} from superrepo
+  command: git submodule update --recursive {{ item }}
+  args:
+    chdir: /opt/stack
+  register: superrepo_update
+  changed_when: superrepo_update.stdout
+  when: openstack_source.use_superproject
+  with_items: openstack_source.openstack_dependencies + [project_name]
 
 - name: "get {{ project_name }} source repo"
   git: repo="{{ openstack_source.git_mirror }}/{{ project_name }}.git"
@@ -96,14 +97,15 @@
 # see arrrsula issue #24 for environment workaround
 - name: "pip install {{ project_name }}"
   pip:
-    name: "/opt/stack/{{ project_name }}"
-    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+    name: "/opt/stack/{{ item }}"
+    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ item }}"
     extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}}"
-  environment: "{{ {'GIT_DIR': '/opt/stack/.git/modules/%s' % project_name } if openstack_source.use_superproject else {} }}"
+  environment: "{{ {'GIT_DIR': '/opt/stack/.git/modules/%s' % item } if openstack_source.use_superproject else {} }}"
   register: pip_result
   until: pip_result|success
   retries: 3
   delay: 10
+  with_items: openstack_source.openstack_dependencies + [project_name]
   when: not openstack_source.pypi_mirror
   notify:
     - update ca-certs
