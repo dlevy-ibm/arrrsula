@@ -47,9 +47,6 @@ OPENSTACK_API_VERSIONS = {
 
 # Default OpenStack Dashboard configuration.
 HORIZON_CONFIG = {
-{% if horizon.customize %}
-    'customization_module': 'horizon-customization.horizon_customization',
-{% endif %}
     'dashboards': ('project', 'admin', 'settings',),
     'default_dashboard': 'project',
     'user_home': 'openstack_dashboard.views.get_user_home',
@@ -268,13 +265,11 @@ LOGGING = {
     }
 }
 
-from openstack_dashboard.settings import STATICFILES_DIRS, STATIC_ROOT
 {% if openstack_install_method == 'package' %}
 STATIC_ROOT='/opt/bbc/openstack-{{ openstack_package_version }}/horizon/static'
 {% else %}
 STATIC_ROOT='/opt/stack/horizon/static'
 {% endif %}
-STATICFILES_DIRS.append(('/etc/openstack-dashboard/static'))
 
 # The OPENSTACK_HEAT_STACK settings can be used to disable password
 # field required while launching the stack.
