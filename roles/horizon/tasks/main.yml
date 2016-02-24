@@ -24,9 +24,6 @@
   notify:
     - restart apache
 
-- name: create horizon config directory
-  file: dest=/etc/openstack-dashboard state=directory
-
 - name: apache ports config
   template: src=etc/apache2/ports.conf
             dest=/etc/apache2/ports.conf
@@ -37,9 +34,6 @@
   command: a2dissite 000-default
   notify:
     - restart apache
-
-- name: create horizon config directory
-  file: dest=/etc/openstack-dashboard state=directory
 
 - name: openstack dashboard config (12.04)
   template: src=etc/apache2/sites-available/openstack_dashboard.conf
@@ -61,12 +55,9 @@
     - restart apache
 
 - name: horizon local settings
-  template: src=etc/openstack-dashboard/{{ item }}
-            dest=/etc/openstack-dashboard/{{ item }}
+  template: src=local_settings.py
+            dest={{ openstack_source.virtualenv_base }}/horizon/lib/python2.7/site-packages/openstack_dashboard/local/local_settings.py
             mode=0644
-  with_items:
-    - local_settings.py
-    - __init__.py
   notify:
     - restart apache
 
@@ -76,31 +67,13 @@
   when: openstack_install_method == 'package'
 
 - name: create static assets directory
-  file: dest="/opt/stack/horizon/static"
+  file: dest="{{ openstack_source.virtualenv_base }}/horizon/static"
         owner=www-data group=www-data state=directory
   when: openstack_install_method == 'source'
-
-- name: create customer-specific static assets directories
-  file: dest=/etc/openstack-dashboard/{{ item }} state=directory
-  with_items:
-    - static
-    - static/dashboard
-    - static/dashboard/img
-    - static/dashboard/fonts
-
-- name: custom horizon logo
-  get_url: url={{ item.url }}
-           dest=/etc/openstack-dashboard/static/dashboard/{{ item.name }}
-  with_items:
-    - { name: img/logo.png, url: "{{ horizon.logo_url }}"  }
-    - { name: img/logo-splash.png, url: "{{ horizon.logo_url }}" }
-    - { name: img/favicon.ico, url: "{{ horizon.favicon_url }}" }
-  when: (horizon.logo_url is defined and horizon.favicon_url is defined)
 
 - name: gather static assets from openstack package install
   environment:
     DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
-    PYTHONPATH: /etc/openstack-dashboard:$PYTHONPATH
   shell: "{{ item }}"
   with_items:
     - "{{ 'horizon'|ursula_package_path(openstack_package_version) }}/bin/django-admin.py collectstatic --noinput"
@@ -110,7 +83,6 @@
 - name: gather static assets from openstack source install
   environment:
     DJANGO_SETTINGS_MODULE: 'openstack_dashboard.settings'
-    PYTHONPATH: "/etc/openstack-dashboard:/opt/stack/horizon:$PYTHONPATH"
   shell: "{{ item }}"
   with_items:
     - "{{ openstack_source.virtualenv_base }}/horizon/bin/django-admin.py collectstatic --noinput"
