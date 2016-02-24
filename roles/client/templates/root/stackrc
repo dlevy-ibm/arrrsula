@@ -3,7 +3,7 @@ export OS_AUTH_URL={{ endpoints.auth_uri }}
 export OS_USERNAME=admin
 export OS_TENANT_NAME=admin
 {% if client.self_signed_cert -%}
-export OS_CACERT=/opt/stack/ssl/openstack.crt
+export OS_CACERT={{ client.ca_path }}
 {% else %}
 export OS_CACERT=/etc/ssl/certs/ca-certificates.crt
 {% endif -%}

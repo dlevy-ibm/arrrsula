@@ -45,6 +45,9 @@ common:
     verbose: True
   serial_console: ttyS0
 
+client:
+  ca_path: /opt/ssl/openstack.crt
+
 openstack:
   gem_sources:
     - https://gem-mirror.openstack.blueboxgrid.com
