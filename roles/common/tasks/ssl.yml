@@ -16,10 +16,10 @@
   notify: refresh CAs
 
 - name: ssl directory
-  file: dest=/opt/stack/ssl state=directory
+  file: dest={{ client.ca_path | dirname }} state=directory
 
 - name: openstack cert
-  template: src=openstack.crt dest=/opt/stack/ssl/openstack.crt mode=0644
+  template: src=openstack.crt dest={{ client.ca_path }} mode=0644
   tags: cert
 # ugly hack: some python http libs don't honor the system ca-certs, and ship with
 # their own list, instead.
