@@ -30,6 +30,22 @@
   changed_when: superrepo_update.stdout
   when: openstack_source.use_superproject
 
+- name: get requirements project from superrepo
+  command: git submodule update --recursive requirements
+  args:
+    chdir: /opt/stack
+  register: superrepo_update
+  changed_when: superrepo_update.stdout
+  when: openstack_source.use_constraints and openstack_source.use_superproject
+
+- name: get requirements project from git
+  git: repo="{{ openstack_source.git_mirror }}/requirements.git"
+       dest="/opt/stack/requirements"
+  register: git_result
+  until: git_result|success
+  retries: 3
+  when: openstack_source.use_constraints and not openstack_source.use_superproject
+
 - name: "get {{ project_name }} source repo"
   git: repo="{{ openstack_source.git_mirror }}/{{ project_name }}.git"
        dest="/opt/stack/{{ project_name }}"
@@ -40,12 +56,18 @@
   retries: 3
   when: not openstack_source.use_superproject
 
+- name: upgrade pip
+  pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+
 - name: "python requirements for {{ project_name }} from alternative proxy"
   pip:
     name: "{{ item.name }}"
     version: "{{ item.version|default(omit) }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
-    extra_args: "-i {{ openstack_source.pypi_mirror }} -c /opt/stack/requirements/upper-constraints.txt"
+    extra_args: "-i {{ openstack_source.pypi_mirror }} {{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}}"
   with_items: openstack_source.python_dependencies
   when: openstack_source.pypi_mirror
 
@@ -67,6 +89,7 @@
     name: "{{ item.name }}"
     version: "{{ item.version|default(omit) }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+    extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}}"
   with_items: openstack_source.python_dependencies
   when: not openstack_source.pypi_mirror
 
@@ -75,6 +98,7 @@
   pip:
     name: "/opt/stack/{{ project_name }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
+    extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}}"
   environment: "{{ {'GIT_DIR': '/opt/stack/.git/modules/%s' % project_name } if openstack_source.use_superproject else {} }}"
   register: pip_result
   until: pip_result|success
