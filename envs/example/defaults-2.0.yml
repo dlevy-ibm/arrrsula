@@ -279,14 +279,15 @@ keystone:
   logging:
     debug: True
     verbose: True
+  bootstrap:
+    user: admin
+    project: admin
+    password:  "{{ secrets.admin_password }}"
+    role: admin
   tenants:
-    - admin
     - service
     - demo
   users:
-    - name: admin
-      password: "{{ secrets.admin_password }}"
-      tenant: admin
     - name: demo
       password: demopass
       tenant: demo
@@ -327,9 +328,6 @@ keystone:
       password: "{{ secrets.project_admin_password }}"
       tenant: demo
   user_roles:
-    - user: admin
-      tenant: admin
-      role: admin
     - user: admin
       tenant: demo
       role: cloud_admin
