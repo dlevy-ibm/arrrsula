@@ -50,3 +50,6 @@
 
 - name: install shade for ansible modules
   pip: name=shade version=0.16.0
+
+- name: install virtualenv
+  pip: name=virtualenv state=latest
