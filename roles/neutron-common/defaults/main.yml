@@ -117,16 +117,11 @@ neutron:
   enable_external_interface: False
   agents:
     neutron-l3-agent:
-      config_files:
-        - /etc/neutron/l3_agent.ini
+      config_files: /etc/neutron/l3_agent.ini
       pidfile: /var/run/neutron-l3-agent.pid
     neutron-dhcp-agent:
-      config_files:
-        - /etc/neutron/dhcp_agent.ini
+      config_files: /etc/neutron/dhcp_agent.ini
     neutron-metadata-agent:
-      config_files:
-        - /etc/neutron/metadata_agent.ini
+      config_files: /etc/neutron/metadata_agent.ini
     neutron-lbaasv2-agent:
-      config_files:
-        - /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
-        - /etc/neutron/neutron_lbaas.conf
+      config_files: /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini,/etc/neutron/neutron_lbaas.conf
