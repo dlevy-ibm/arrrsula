@@ -240,7 +240,7 @@ def main():
             region_name = dict(default=None),
             name = dict(required=True),
             tenant_name = dict(default=None),
-            provider_network_type = dict(default=None, choices=['local', 'vlan', 'flat', 'gre', 'vxlan']),
+            provider_network_type = dict(default=None, choices=['local', 'vlan', 'flat', 'gre', 'vxlan', 'geneve']),
             provider_physical_network = dict(default=None),
             provider_segmentation_id = dict(default=None),
             router_external = dict(default=False, type='bool'),
