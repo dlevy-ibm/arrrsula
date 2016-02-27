@@ -1,9 +1,17 @@
 ---
+ansible_user: vagrant
+sudo: true
+stack_env: twonode
+undercloud_cidr: 172.16.0.0/24
+floating_ip: 172.16.0.100
+undercloud_floating_ip: 172.16.0.100
+
 primary_interface: ansible_eth1
+primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
 undercloud_cidr:
   - 172.16.0.0/24
 
-fqdn: openstack.example.org
+fqdn: ci2.fewbar.net
 
 monitoring:
   rabbit:
@@ -13,36 +21,74 @@ monitoring:
     pass: rabbit
     vhost: /rabbit
 
+client:
+  self_signed_cert: false
+
 nova:
   scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
 
 neutron:
   plugin: ovn
-  bridge_mappings: ''
+  bridge_mappings: provider:br-provider
   network_vlan_ranges: ''
   tenant_network_type: ''
-  enable_flat_networks: True
-  tunnel_types:
-    - geneve
+  overlay_interface: ansible_eth1
+  tunnel_types: geneve
   lbaas:
     enable: False
   networks:
-    - name: internal
+    - name: provider
       shared: true
-      external: true
-      network_type: flat
-      provider_physical_network: physnet
-      segmentation_id: ~
+      network_type: local
+      router_external: true
+      provider_network_type: flat
+      provider_physical_network: provider
+      tenant_name: admin
+    - name: private
+      provider_physical_network: ~
+      tenant_name: demo
   subnets:
-    - name: internal
-      network_name: internal
-      cidr: 172.16.255.0/24
-      enable_dhcp: "true"
-      gateway_ip: 172.16.255.100
+    - name: provider-v4
+      network_name: provider
       ip_version: 4
+      cidr: 192.168.255.0/24
+      enable_dhcp: "true"
+      gateway_ip: 192.168.255.1
       dns_nameservers: '8.8.8.8,8.8.4.4'
-  routers: []
-  router_interfaces: []
+      tenant_name: demo
+    - name: private-v4
+      network_name: private
+      ip_version: 4
+      cidr: 172.16.255.0/24
+      pool_start: 172.16.255.2
+      pool_end: 172.16.255.254
+      enable_dhcp: "true"
+      gateway_ip: 172.16.255.1
+      dns_nameservers: '8.8.8.8,8.8.4.4'
+      tenant_name: demo
+    - name: private-v6
+      network_name: private
+      ip_version: 6
+      cidr: 2db8:1::/64
+      enable_dhcp: "true"
+      gateway_ip: 2db8:1::1
+      ipv6_address_mode: dhcpv6-stateless
+      ipv6_ra_mode: dhcpv6-stateless
+      dns_nameservers: '2001:4860:4860::8888,2001:4860:4860::8844'
+      tenant_name: demo
+  routers:
+    - name: router
+      tenant_name: demo
+  router_interfaces:
+    - router_name: router
+      subnet_name: private-v4
+      tenant_name: demo
+    - router_name: default
+      subnet_name: private-v6
+      tenant_name: demo
+  service:
+    envs:
+      - "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
   logging:
     debug: True
   tenant_nameservers:
@@ -51,54 +97,57 @@ neutron:
 
 ssl:
   crt: |
-    -----BEGIN CERTIFICATE-----
-    MIIDRjCCAi4CCQD3Frgj1hIUiDANBgkqhkiG9w0BAQUFADBlMQswCQYDVQQGEwJB
-    VTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0
-    cyBQdHkgTHRkMR4wHAYDVQQDDBVvcGVuc3RhY2suZXhhbXBsZS5vcmcwHhcNMTQx
-    MjAzMjMxNTE4WhcNMjQxMTMwMjMxNTE4WjBlMQswCQYDVQQGEwJBVTETMBEGA1UE
-    CAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRk
-    MR4wHAYDVQQDDBVvcGVuc3RhY2suZXhhbXBsZS5vcmcwggEiMA0GCSqGSIb3DQEB
-    AQUAA4IBDwAwggEKAoIBAQDIPiKa1jWJKPy3ViASUIW3GS/8qwPu8fc6Z/5C1USA
-    SoAo9Ar07ENR8rNeWhwamHp+54NgqMjJOP/giP2dlMWDheu9Z6bUZ2r48GO8AfMx
-    rnHEhk6J6Rns6PRfTsGdkDFD1R330lZYluS+C0Vdj//00rldcnBLgivzbdj6W1pd
-    GI6zodTDXbSPEw4GR00CrLuc31KjWHaH1gV976sxJ6F9VeHDwomUFaU/MkR9QKVM
-    Lk73JdCr30DY5VGMxb+JbFV2pyYAQ1q+bu7Po4MrFY4Br7Zvp6KUaypGYQMwyQGV
-    N9Duzo4DQ/sy2GZuIQAi2uPjL+sHfFU7Ge/UkUxuvQHdAgMBAAEwDQYJKoZIhvcN
-    AQEFBQADggEBAF0FXzd555D/5bExTlk+ikuWyyktnpbTxMgKs8IDbSuOFBu0g+Uv
-    IFSQeiYxVven8LID4o6BuE/fz82N22ke2QvS4SoncTEIe25Q77u7qCGVQR6f19NA
-    XlcJpJtUFych5dsXSnuw5ruGV3z/Bb0USIkwsibvDUbE0a84g0HozfQc3DEtGVFI
-    GJhWrGbdAFhqn0MfGLafYsdtLrqQyiWOzVfwpT0urEC93DZbwnVrhJgT3d2eeAt6
-    3NAPCIVXNUk5vw3q2AyAym/Fi7pm6IPem0cvQa8W05wLvU81MFdJLyppFsAVejas
-    pGk+li652YNmpk3cwb9LVSbNs+AlnSMUvbw=
-    -----END CERTIFICATE-----
+      -----BEGIN CERTIFICATE-----
+      MIIDejCCAmICCQDW9Bmniq7oGTANBgkqhkiG9w0BAQsFADB/MQswCQYDVQQGEwJV
+      UzELMAkGA1UECAwCT1IxETAPBgNVBAcMCFBvcnRsYW5kMRgwFgYDVQQKDA9EZXJw
+      IEluZHVzdHJpZXMxFjAUBgNVBAsMDURlcnBhcnRtZW50IDExHjAcBgNVBAMMFW9w
+      ZW5zdGFjay5leGFtcGxlLmNvbTAeFw0xNjAyMTEyMzUzMjVaFw0xNzAyMTAyMzUz
+      MjVaMH8xCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJPUjERMA8GA1UEBwwIUG9ydGxh
+      bmQxGDAWBgNVBAoMD0RlcnAgSW5kdXN0cmllczEWMBQGA1UECwwNRGVycGFydG1l
+      bnQgMTEeMBwGA1UEAwwVb3BlbnN0YWNrLmV4YW1wbGUuY29tMIIBIjANBgkqhkiG
+      9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwm30deewoOBLmSYw/y/8Kw5fkKYtPXNToVjA
+      /+4i23VnwM6Gx/EJXo48bvDzT7Ci8WTiWxQqK66esGxpPY7XzrDA/rKmTKR7y+JY
+      Oz8HewgqD4ckEvyOAhH+FurgIj8ksGAgRxPm8g83yvGRo/qSZP2XjOxqzn/Muefn
+      9kjfKaH8NlspHAS8D13dT5Ge/hM10xGV6SHNunjem6nI+CG4RCxk0iAAxoqaOmL2
+      I7Yo1A/hRwHSWQ2Xu3YlD/P3jfov5WAu7gASxszcDOOwDCSu4zTiftjjXzmYAfgu
+      bM9aDOwmKa36bskfj43gTZ1Sh0myWdR9u5PHNXle4b7nFuqTVQIDAQABMA0GCSqG
+      SIb3DQEBCwUAA4IBAQC30hGbrPhu6A8CxteJdluZra7sGp0r6AqBU5c7HipKOHyf
+      mvRTTPi0mWhC2UwlCL+xdjbYnDQOIuQSk3mKkpTFQ9Wbajw5C6tR8py/w1DZ2hl2
+      xTKxeVNYsqhq4BVEPR3pfVfKISllUNJZyB+ysXIJur11QP6HRXioelpXUyiotzQT
+      VIPdgV4nvGajEq5Qrvv55zxCEIwCHNguKLr/OStt5urRnXCvl3GqRBPWdFfGP11m
+      vOrL94lvcvUUO+CGRXFrb0TpsLciJZn0ZbiMYf+MbxkZ/MKZXFTArM7RY5aoUzPU
+      cCVAvLq6EpZ4XexciTv+E2I3I0i6MPwxQaY4l1vI
+      -----END CERTIFICATE-----
   key: |
-    -----BEGIN RSA PRIVATE KEY-----
-    MIIEpQIBAAKCAQEAyD4imtY1iSj8t1YgElCFtxkv/KsD7vH3Omf+QtVEgEqAKPQK
-    9OxDUfKzXlocGph6fueDYKjIyTj/4Ij9nZTFg4XrvWem1Gdq+PBjvAHzMa5xxIZO
-    iekZ7Oj0X07BnZAxQ9Ud99JWWJbkvgtFXY//9NK5XXJwS4Ir823Y+ltaXRiOs6HU
-    w120jxMOBkdNAqy7nN9So1h2h9YFfe+rMSehfVXhw8KJlBWlPzJEfUClTC5O9yXQ
-    q99A2OVRjMW/iWxVdqcmAENavm7uz6ODKxWOAa+2b6eilGsqRmEDMMkBlTfQ7s6O
-    A0P7MthmbiEAItrj4y/rB3xVOxnv1JFMbr0B3QIDAQABAoIBABqUPM2mn0aMfTbs
-    pKcprwYFvtvf6069KV7ETPicDFKnEOnestGdxrXK7Eoa1d4l3SSZIFQlMzmaakRo
-    iplvFOSHUyo55ugMriNK7UIYVCqFCC7Y0PX3TeynY0B/WK3MZO2nDSpG7hUmOkiL
-    gHKR2Zyql9YyiXtMVP8j1ogstgrjKnAEPf9dTXYPIRYS+XgUB9EubGbGyp+WzmjD
-    V/Bv941Fi2im7nbjNI9mD2y0jwoHHxXDkwRNgO21ii2zTQ3tfYfOFIoDufCWeQPa
-    eN+saCPOLuEDfAPOh2G4oNBEJzs2oM6NL7RGhgzjL1vDkwyTpvJUGaySNuyyIpX8
-    HyDY6PUCgYEA6wlQYDtbrCLKXEhmkZXcARpT1VRYJYoGzgBW4nEDDfCKDwQzuGuZ
-    7LaDaQpQRqSn5b/YmvZaHyEs50c8Rn3rylKtYkZ+yUmLtN91oEiawC8eJOnwSrhi
-    t8GEFX1BvbIUEmbIDkh9qtkKsEidRnPHKSIq1EIt5s2m0s497MlThWsCgYEA2hpc
-    0HLXA2jSzHyD1tndAN4erK7Qt+v2iJRLKP0fMPT4iOfsiz2ugGVKoN0HoDvPtuk8
-    xAATtPFqjNffJZugshDjTOPQSDqTx9VqC+dqW95UoYaWniBowwdKYy8DFh1pm3n8
-    9N8cxAXWLgLR88WKOS4cTt8W03Vz1z7s9WFQH9cCgYEAvbdS7Zp8MMIUXdEDGdjB
-    MRKzQKtIS2TSgU281CMst//FMMHPjbktEelwwUTV72/RJp5olQztSdtZh4X0nWHf
-    Bf0efwkwJgH7hxAovixc3WwrBNjgYS/cXz8RAteMTTaFBSV5ri3NYi63dfvnF4s0
-    43r030hcDMVLNzXKvmrzw+kCgYEAqzZcvAoavgNwz7PDb0sRkdfMbrTBBlDG9Mqt
-    Ad1KugzkedzOtTPTo9lgL02z6dZqJeWMnTSOQ9HsWeows34rNP3K4ZZI8BqD3jCr
-    kfK1bK7o8vALltBMTSWRALFsE9U9DR9DMxteoocObooqNNpSurZ25Hd+nLssF8G/
-    FJWy53sCgYEAyH6B/6MxNOrXHLecpKY/Ge7ZEbB5Y/vpo57WtWvyXCtlCE88QxlB
-    ctLf3kQWMcfoDFdASzZq90UWuyMuPJhID8eJCf9Zr60727E2bo9vrkUSUozrPP2I
-    UcuANCgZCi0trhZW1HdUNiFj4zvjP2SbC/cdCGd7VvZpaJePF8UqmCA=
-    -----END RSA PRIVATE KEY-----
+      -----BEGIN RSA PRIVATE KEY-----
+      MIIEpQIBAAKCAQEAwm30deewoOBLmSYw/y/8Kw5fkKYtPXNToVjA/+4i23VnwM6G
+      x/EJXo48bvDzT7Ci8WTiWxQqK66esGxpPY7XzrDA/rKmTKR7y+JYOz8HewgqD4ck
+      EvyOAhH+FurgIj8ksGAgRxPm8g83yvGRo/qSZP2XjOxqzn/Muefn9kjfKaH8Nlsp
+      HAS8D13dT5Ge/hM10xGV6SHNunjem6nI+CG4RCxk0iAAxoqaOmL2I7Yo1A/hRwHS
+      WQ2Xu3YlD/P3jfov5WAu7gASxszcDOOwDCSu4zTiftjjXzmYAfgubM9aDOwmKa36
+      bskfj43gTZ1Sh0myWdR9u5PHNXle4b7nFuqTVQIDAQABAoIBAQCKYF1TKOGRrfC/
+      /+lxRYKQVjt3pH2gNZs4wwUhYSfXz1hXZeWRGaCUdmDWiJBykAF4ElfzgId+7Vmt
+      sIq6MBax2SSSYS1wcMRW2DH5gKNfUfE1efYXuT2Mhae0QdfhJ9WB3fg6/hQpBOGt
+      g34nGaflToL03jIp49UeHsn9g+GoK4yjc0qN5JxdpveNTnWEyCUoLPr2HJDAsgiK
+      EFKbm+ysjoPaWSU80WYRZqqYilOPUjmXV+L4iJVLtm77yw1FyBU3qfs6eiu+72US
+      WJZAFgNKgV6OQLv4JzIqZWjTxqmfOsnEeuoEUFS+pebtmxKpc9g1dpItwfFwM2Ac
+      aiAXPAqBAoGBAPr0pks3yIPrcXloig0HTnPLYmsIZ0V4gxqEcWVf1NIhCxe7VATY
+      MvA1CLAF4wt5r1Quwbq+066YOthCpW/lDybZf5urInYJoBu76Q+HPOQnsNwLr5H/
+      1pqrdq1T8EUj/JRnL9FMpIdiUvbl6dX2u5AMOsYFJACD1aDRHSFLMaBhAoGBAMZW
+      b9wfjGvZ/GvITg3uarxlpYYAvBNE1lDLFad16BLfD4nBEQVM0syZe7AZJ4WPQShN
+      A5+qXWZ3Qax/iNhIAuCbyNlbltNs/4EHpilIiTexWlb32u92wuNsaEW+V2jJJOl/
+      VPHfuYetqbRzA03o2IyFNKS3E/8U+hoskSwyvad1AoGBAKySTkSNULL+1iKB8+Tv
+      sFBKfRxTRAjuzWEP0JbApq31ERa5uBY4whaSsa2x7qa2gA3otUoA7bozbsvGUNO4
+      dYnmqSzYKzN2fQZ1WthVzFaswJ8g3hQNFXt5C3w3q5MwIwG+T5CjHsUGpTypb/q1
+      19c/wa7oXBCKl/4lrt11QuQhAoGBAJlleshVwiYcB0VZOz09G2Iwf29/m/aPM+5y
+      04GcCGyoBn11S/O8cgD56BbPrah3nl5MCjRv8CLys2F1leIo98i90/5//svwrkAe
+      KV4ekrn3OjavJa41PQ/l5VOjnjkV8K2C5LDZZsXQA8PjfDfCkdFEqO2IBzgvAixC
+      MdlsORCNAoGAW+jwVC0mh4caOHVmL+bXtTs4AAOqyD2QvDv9spRmWQdgeV8Cv7sv
+      6TvL7WbWQmjBqUziWASeGKHZHYxKcfAWLKd18COq29+CSVLi1B4G/6aRBxVngr3c
+      7fjuYUd1fl77WZDTbUE5kuNlu918AHgSCMc7fxbIw2KXxOuimfLJ9w8=
+      -----END RSA PRIVATE KEY-----
+  # remove this line out if using a real CA supplied cert
+  cafile: /usr/local/share/ca-certificates/{{ endpoints.main }}.crt
 
 common:
   ipmi:
