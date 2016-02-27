@@ -8,11 +8,6 @@
     - ovn-central
     - python-openvswitch
 
-- name: reload service files
-  shell: systemctl daemon-reload
-  when: service.changed
-  notify: restart openvswitch-switch
-
 - name: check if ovn north database exists
   stat: path="{{ovs_db_dir}}/ovnnb.db"
   register: ovnnb
