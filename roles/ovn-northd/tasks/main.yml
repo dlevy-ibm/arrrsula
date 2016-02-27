@@ -1,9 +1,6 @@
 - name: install dependencies
   apt: pkg={{ item }}
   with_items:
-    - openvswitch-common
-    - openvswitch-datapath-dkms
-    - openvswitch-switch
     - ovn-common
     - ovn-central
     - python-openvswitch

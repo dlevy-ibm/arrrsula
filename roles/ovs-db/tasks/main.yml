@@ -1,0 +1,9 @@
+- name: install dependencies
+  apt: pkg={{ item }}
+  with_items:
+    - openvswitch-common
+    - openvswitch-datapath-dkms
+    - openvswitch-switch
+
+- name: Ensure ovs_db_dir
+  file: path={{ ovs_db_dir }} state=directory mode=0755

@@ -1,15 +1,7 @@
 - name: install dependencies
   apt: pkg={{ item }}
   with_items:
-    - openvswitch-common
     - openvswitch-vtep
-    - openvswitch-datapath-dkms
-    - openvswitch-switch
-
-- name: reload service files
-  shell: systemctl daemon-reload
-  when: service.changed
-  notify: restart openvswitch-vtep
 
 - name: check if vtep database exists
   stat: path="{{ovs_db_dir}}/vtep.db"

@@ -5,3 +5,5 @@ dependencies:
         # TODO add OVS -master apt repository
       - repo: 'deb {{ apt_repos.ovn.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.ovn.key_url }}'
+  - role: ovs-db
+    ovs_db_dir: /var/lib/openvswitch
