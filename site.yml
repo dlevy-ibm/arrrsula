@@ -1,4 +1,10 @@
 ---
+- name: wait for hosts to be up with SSH
+  hosts: all
+  tasks:
+    - wait_for: timeout={{wait_for_all_timeout}} host={{ ansible_hostname }} port=22
+      when: wait_for_all_timeout|default(0) > 0
+
 - name: common role for all hosts
   hosts: all
   gather_facts: force
