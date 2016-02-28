@@ -1,0 +1,15 @@
+clouds:
+  admin:
+    auth:
+      username: admin
+      project_name: admin
+      auth_url: "{{ endpoints.auth_uri }}"
+      password: "{{ secrets.admin_password }}"
+      project_domain_id: default
+      user_domain_id: default
+{% if client.self_signed_cert -%}
+    cacert: "{{ client.ca_path }}"
+{% else %}
+    cacert: /etc/ssl/certs/ca-certificates.crt
+{% endif -%}
+    volume_api_version: '2'
