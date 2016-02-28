@@ -3,34 +3,6 @@
   apt: pkg={{ item }}
   with_items: openstack_source.system_dependencies
 
-- name: get openstack superrepo
-  git: repo="{{ openstack_source.git_mirror }}/openstack"
-       dest="/opt/stack"
-       version="{{ openstack_source.project_rev }}"
-       update="{{ openstack_source.git_update }}"
-       recursive=no
-       force=yes
-  register: git_result
-  until: git_result|success
-  retries: 3
-  when: openstack_source.use_superproject
-
-- name: initialize repo submodules
-  command: git submodule init
-  args:
-    chdir: /opt/stack
-  register: superrepo_init
-  changed_when: superrepo_init.stdout
-  when: openstack_source.use_superproject
-
-- name: get requirements project from superrepo
-  command: git submodule update --recursive requirements
-  args:
-    chdir: /opt/stack
-  register: superrepo_update
-  changed_when: superrepo_update.stdout
-  when: openstack_source.use_constraints and openstack_source.use_superproject
-
 - name: get requirements project from git
   git: repo="{{ openstack_source.git_mirror }}/requirements.git"
        dest="/opt/stack/requirements"
