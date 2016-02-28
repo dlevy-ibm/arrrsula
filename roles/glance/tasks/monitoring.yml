@@ -12,11 +12,6 @@
                args="--service glance"
   notify: restart sensu-client
 
-- name: install functools32 for glance-store check
-  pip:
-    name: functools32
-    state: present
-
 - name: glance-store check
   sensu_check:
     name: check-glance-store

@@ -25,12 +25,8 @@ glance:
     rev: 'stable/kilo'
     python_dependencies:
       - { name: PyMySQL }
-      - { name: functools32 }
-      - { name: ipaddr }
-      - { name: simplegeneric }
     system_dependencies:
       - libxml2-dev
-      - libmysqlclient-dev
   alternatives:
     - glance-api
     - glance-cache-cleaner
