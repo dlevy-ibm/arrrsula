@@ -39,14 +39,6 @@
     - /usr/share/pyshared/httplib2/cacerts.txt
     - /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt
     - /usr/local/lib/python2.7/dist-packages/requests/cacert.pem
-  when: ansible_distribution_version == "12.04"
-
-- name: httplib2 and request Python modules that already use system CA certs
-  apt: pkg={{ item }}
-  with_items:
-    - python-httplib2
-    - python-requests
-  when: ansible_distribution_version == "14.04"
 
 - meta: flush_handlers
 
