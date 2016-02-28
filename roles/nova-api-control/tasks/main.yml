@@ -1,0 +1,37 @@
+---
+- name: install nova API services
+  upstart_service: name={{ item }} user=nova
+                   cmd=/usr/local/bin/{{ item }}
+                   config_dirs=/etc/nova
+  with_items:
+    - nova-api
+
+- name: stop nova API before db sync
+  service: name={{ item }} state=stopped
+  with_items:
+    - nova-api
+  when: database_create.changed or force_sync|default('false')|bool
+  tags: db-migrate
+
+- name: sync nova API database
+  command: nova-manage api_db sync
+  when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
+  changed_when: true
+  notify: restart nova services
+  # we want this to always be changed so that it can notify the service restart
+  tags: db-migrate
+
+- meta: flush_handlers
+
+- name: start nova API services
+  service: name={{ item }} state=started
+  with_items:
+    - nova-api
+
+- name: permit access to nova api
+  ufw: rule=allow to_port={{ endpoints.nova.port.haproxy_api }} proto=tcp
+  tags: ufw
+
+- include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool
