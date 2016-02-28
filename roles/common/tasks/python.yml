@@ -63,7 +63,7 @@
 
 - name: install python modules
   pip: name={{ item }} state=latest
-  with-items:
+  with_items:
   - jinja2
   - setuptools
   - 'requests[security]'
