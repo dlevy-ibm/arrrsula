@@ -7,13 +7,11 @@ keystone:
     rev: 'stable/kilo'
     python_dependencies:
       - { name: PyMySQL }
-      - { name: functools32 }
     system_dependencies:
       - openssl
       - libldap2-dev
       - libsasl2-dev
       - libkrb5-dev
-      - libmysqlclient-dev
   alternatives:
     - keystone-manage
     - keystone-all
