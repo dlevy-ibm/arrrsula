@@ -7,14 +7,24 @@
   shell: python /tmp/get-pip.py
 
 - name: update pip
+  pip: name=pip state=latest
+       extra_args='-i {{ openstack.pypi_mirror }}/+simple'
+  when: openstack.pypi_mirror is defined and common.pip_version == 'latest'
+
+- name: update pip
+  pip: name=pip state=latest
+       extra_args='-i https://pypi.python.org/simple/'
+  when: openstack.pypi_mirror is undefined and common.pip_version == 'latest'
+
+- name: update pip
   pip: name=pip version={{ common.pip_version }}
        extra_args='-i {{ openstack.pypi_mirror }}/+simple'
-  when: openstack.pypi_mirror is defined
+  when: openstack.pypi_mirror is defined and common.pip_version != 'latest'
 
 - name: update pip
   pip: name=pip version={{ common.pip_version }}
        extra_args='-i https://pypi.python.org/simple/'
-  when: openstack.pypi_mirror is undefined
+  when: openstack.pypi_mirror is undefined and common.pip_version != 'latest'
 
 - name: root user pip config directory
   file: dest=/root/.pip state=directory
@@ -37,6 +47,7 @@
 
 - name: cleanup system pip installs
   pip: name={{ item }} state=absent
+  ignore_errors: yes
   with_items:
   - alembic
   - eventlet
