@@ -214,6 +214,8 @@
   roles:
     - role: nova-control
       tags: ['openstack', 'nova', 'control']
+    - role: nova-api-control
+      tags: ['openstack', 'nova', 'control']
   environment: "{{ env_vars|default({}) }}"
 
 - name: nova data plane
