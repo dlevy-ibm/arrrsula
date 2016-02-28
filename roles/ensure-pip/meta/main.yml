@@ -1,0 +1,4 @@
+---
+dependencies:
+- role: purge-pip
+- role: ansible-pip

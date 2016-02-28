@@ -28,24 +28,6 @@
     - libxml2-dev
     - libxslt1-dev
 
-- name: remove crufty system python dependencies
-  apt: pkg={{ item }}
-       state=absent
-  with_items:
-    - python-pip
-    - python-libxml2
-    - python-lxml
-    - python-greenlet
-    - python-openssl
-    - python-httplib2
-    - python-mysqldb
-    - python-jinja2
-    - python-setuptools
-    - python-virtualenv
-
-- include: python.yml
-  tags: pip, python
-
 - include: ruby.yml
   tags: ruby
 
