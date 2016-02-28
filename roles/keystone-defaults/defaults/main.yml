@@ -6,7 +6,7 @@ keystone:
   source:
     rev: 'stable/kilo'
     python_dependencies:
-      - { name: mysql-python }
+      - { name: PyMySQL }
       - { name: functools32 }
     system_dependencies:
       - openssl
