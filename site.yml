@@ -17,6 +17,9 @@
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
+    - role: openstack-superrepo
+      tags: ['common']
+      when: openstack_source.use_superproject
   environment: "{{ env_vars|default({}) }}"
 
 - name: security and errata
