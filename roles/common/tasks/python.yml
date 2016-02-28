@@ -61,11 +61,12 @@
   command: python setup.py install chdir=/opt/stack/{{ item.name }}
   with_items: common.python_extra_packages
 
-- name: install virtualenv
-  pip: name=virtualenv state=latest
-
-- name: install requests
-  pip: 'name=requests[security]'
+- name: install python modules
+  pip: name={{ item }} state=latest
+  with-items:
+  - jinja2
+  - setuptools
+  - 'requests[security]'
 
 - name: install shade for ansible modules
   pip: name=shade version=0.16.0
