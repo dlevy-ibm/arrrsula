@@ -165,6 +165,7 @@
   roles:
     - role: ovn-northd
       tags: ['ovn', 'database']
+      when: neutron.plugin == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn control plane
@@ -172,6 +173,7 @@
   roles:
     - role: ovn-controller
       tags: ['ovn', 'control']
+      when: neutron.plugin == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
 # VTEP EMULATOR
@@ -180,7 +182,8 @@
   hosts: ovndb
   roles:
     - role: ovs-vtep
-      tags: ['openvswitch-vtep', 'database']
+      tags: ['ovn', 'openvswitch-vtep', 'database']
+      when: neutron.plugin == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
 # OPENSTACK SERVICES
