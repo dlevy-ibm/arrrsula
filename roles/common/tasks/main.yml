@@ -17,6 +17,9 @@
 
 - include: system-tools.yml
 
+- include: python.yml
+  tags: python
+
 - include: ruby.yml
   tags: ruby
 
