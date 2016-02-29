@@ -12,3 +12,6 @@
 
 - name: install pip setuptools
   pip: name=setuptools state=latest
+
+- name: install pip virtualenv
+  pip: name=virtualenv state=latest
