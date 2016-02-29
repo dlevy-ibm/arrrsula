@@ -179,7 +179,7 @@
 # VTEP EMULATOR
 
 - name: vtep emulator
-  hosts: ovndb
+  hosts: vtep-emu
   roles:
     - role: ovs-vtep
       tags: ['ovn', 'openvswitch-vtep', 'database']
