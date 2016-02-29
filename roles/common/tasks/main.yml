@@ -17,17 +17,6 @@
 
 - include: system-tools.yml
 
-- name: python dependencies
-  apt: pkg={{ item }}
-  with_items:
-    - python2.7-dev
-    - python-software-properties
-    - cryptsetup
-    - libffi-dev
-    - libssl-dev
-    - libxml2-dev
-    - libxslt1-dev
-
 - include: ruby.yml
   tags: ruby
 
