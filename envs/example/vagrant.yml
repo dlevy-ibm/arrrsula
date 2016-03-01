@@ -21,27 +21,40 @@ nova:
 
 neutron:
   plugin: ovn
+  service_plugins: []
+  enable_external_interface: false
+  source:
+    rev: master
   bridge_mappings: provider:br-provider
   network_vlan_ranges: ''
   tenant_network_type: ''
-  overlay_interface: ansible_eth1
-  tunnel_types: geneve
+  # The 'overlay_interface' option replaces 'vxlan_interface' because the OVN
+  # plug-in requires a tunnel interface, but not necessarily for VXLAN.
+  # NOTE(jamielennox): defaulting this to the primary_interface because leaving
+  # it with an empty string is failing to template correctly
+  overlay_interface: "{{ primary_interface }}"
+  tunnel_types:
+    - geneve
   lbaas:
     enable: False
+  logging:
+    debug: True
+    verbose: True
   networks:
-    - name: provider
+    - name: public
       shared: true
       network_type: local
       router_external: true
       provider_network_type: flat
       provider_physical_network: provider
       tenant_name: admin
+      external: true
+      segmentation_id: null
     - name: private
-      provider_physical_network: ~
       tenant_name: demo
   subnets:
     - name: provider-v4
-      network_name: provider
+      network_name: public
       ip_version: 4
       cidr: 192.168.255.0/24
       enable_dhcp: "true"
@@ -68,21 +81,11 @@ neutron:
       ipv6_ra_mode: dhcpv6-stateless
       dns_nameservers: '2001:4860:4860::8888,2001:4860:4860::8844'
       tenant_name: demo
-  routers:
-    - name: router
-      tenant_name: demo
-  router_interfaces:
-    - router_name: router
-      subnet_name: private-v4
-      tenant_name: demo
-    - router_name: default
-      subnet_name: private-v6
-      tenant_name: demo
+  routers: []
+  router_interfaces: []
   service:
     envs:
       - "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt"
-  logging:
-    debug: True
   tenant_nameservers:
     - 8.8.4.4
     - 8.8.8.8
