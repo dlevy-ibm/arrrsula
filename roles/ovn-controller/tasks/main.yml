@@ -20,8 +20,9 @@
   changed_when: false
 
 - name: enable overlay network protocol
-  command: ovs-vsctl set open . external-ids:ovn-encap-type={{ neutron.tunnel_types }}
+  command: ovs-vsctl set open . external-ids:ovn-encap-type={{ item }}
   changed_when: false
+  with_items: neutron.tunnel_types
 
 - name: enable overlay network protocol
   command: ovs-vsctl set open . external-ids:ovn-encap-ip={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}
