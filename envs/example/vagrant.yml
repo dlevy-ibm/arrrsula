@@ -16,9 +16,6 @@ monitoring:
 client:
   self_signed_cert: false
 
-nova:
-  scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,ComputeFilter,CoreFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ServerGroupAntiAffinityFilter,ServerGroupAffinityFilter
-
 neutron:
   plugin: ovn
   service_plugins: []
