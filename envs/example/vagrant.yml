@@ -1,17 +1,9 @@
 ---
 ansible_user: vagrant
 sudo: true
-stack_env: twonode
-undercloud_cidr: 172.16.0.0/24
-floating_ip: 172.16.0.100
-undercloud_floating_ip: 172.16.0.100
 
 primary_interface: ansible_eth1
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
-undercloud_cidr:
-  - 172.16.0.0/24
-
-fqdn: ci.fewbar.net
 
 monitoring:
   rabbit:
