@@ -27,6 +27,7 @@ cinder:
     rev: 'stable/kilo'
     python_dependencies:
       - { name: PyMySQL }
+      - { name: python-memcached }
     system_dependencies: []
   logs:
   - paths:

@@ -5,6 +5,7 @@ ceilometer:
     rev: 'stable/kilo'
     python_dependencies:
       - { name: pymongo, version: '3.0.3' }
+      - { name: python-memcached }
   alternatives:
     - ceilometer-api
     - ceilometer-collector

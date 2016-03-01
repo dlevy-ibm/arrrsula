@@ -25,6 +25,7 @@ glance:
     rev: 'stable/kilo'
     python_dependencies:
       - { name: PyMySQL }
+      - { name: python-memcached }
     system_dependencies:
       - libxml2-dev
   alternatives:
