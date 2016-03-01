@@ -12,6 +12,7 @@ swift:
     python_dependencies:
       - { name: keystonemiddleware }
       - { name: python-swiftclient }
+      - { name: python-memcached }
   alternatives:
     - swift-account-audit
     - swift-account-auditor

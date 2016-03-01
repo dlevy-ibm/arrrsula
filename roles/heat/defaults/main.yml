@@ -6,6 +6,7 @@ heat:
     rev: 'stable/kilo'
     python_dependencies:
       - { name: PyMySQL }
+      - { name: python-memcached }
     system_dependencies: []
   alternatives:
     - heat-api
