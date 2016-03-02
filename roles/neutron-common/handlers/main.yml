@@ -5,5 +5,4 @@
   with_items:
     - neutron-server
     - neutron-dhcp-agent
-    - neutron-openvswitch-agent
     - neutron-lbaasv2-agent
