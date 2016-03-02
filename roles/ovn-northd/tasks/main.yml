@@ -23,12 +23,5 @@
   shell: ovsdb-tool create {{ovs_db_dir}}/ovnsb.db {{ ovs_db_sb_schema }}
   when: not ovnsb.stat.exists
 
-- name: start openvswitch service
-  service: name=openvswitch-switch state=started enabled=yes
-
-- name: enable remote access to database
-  shell: ovs-appctl -t ovsdb-server ovsdb-server/add-remote ptcp:6640:{{ endpoints.ovndb }}
-  changed_when: false
-
 - name: start ovn northd service
   service: name=ovn-central state=started enabled=yes
