@@ -1,5 +1,6 @@
 ---
 keystone:
+  enable_fatal_deprecations: False
   token_expiration_in_seconds: 86400
   admin_workers: 5
   public_workers: 5
@@ -31,3 +32,22 @@ keystone:
   logging:
     debug: False
     verbose: True
+
+  admin_project_domain_name: Default
+  admin_project_name: admin
+  domain_id_immutable: True
+  domain_name_url_safe: strict
+  prohibited_implied_role:
+    - admin
+  project_name_url_safe: strict
+  secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
+
+  identity_default_domain_id: default
+  identity_mapping_backward_compatible_ids: True
+
+  token_provider: fernet
+  token_driver: sql
+  revoke_driver: sql
+
+  fernet_key_repository: /etc/keystone/fernet-keys/
+  fernet_max_active_keys: 3

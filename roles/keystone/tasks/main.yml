@@ -57,6 +57,12 @@
   # we want this to always be changed so that it can notify the service restart
   tags: db-migrate
 
+- name: initialize fernet keys
+  command: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
+  run_once: true
+  changed_when: true
+  tags: fernet-setup
+
 - meta: flush_handlers
 
 - name: start keystone
@@ -70,15 +76,6 @@
     - "{{ endpoints.keystone_admin.port.haproxy_api }}"
     - "{{ endpoints.keystone_legacy.port.haproxy_api }}"
 
-- name: add cron job to clean up expired tokens
-  template:
-    src: etc/cron.d/drop-expired-keystone-tokens
-    dest: /etc/cron.d/drop-expired-keystone-tokens
-    owner: root
-    group: root
-    mode: 0640
-  run_once: true
-
 - name: delete old token flush job
   file:
     path: /etc/cron.hourly/drop-expired-keystone-tokens
@@ -86,7 +83,6 @@
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
-
 
 - include: logging.yml
   tags:
