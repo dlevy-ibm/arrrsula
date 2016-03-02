@@ -66,14 +66,11 @@ neutron:
     - neutron-debug
     - neutron-dhcp-agent
     - neutron-keepalived-state-change
-    - neutron-l3-agent
     - neutron-lbaasv2-agent
-    - neutron-linuxbridge-agent
     - neutron-metadata-agent
     - neutron-metering-agent
     - neutron-netns-cleanup
     - neutron-ns-metadata-proxy
-    - neutron-openvswitch-agent
     - neutron-ovs-cleanup
     - neutron-rootwrap
     - neutron-rootwrap-daemon
@@ -94,11 +91,6 @@ neutron:
         type: openstack
         tags: neutron,neutron-dhcp-agent
     - paths:
-        - /var/log/neutron/neutron-l3-agent.log
-      fields:
-        type: openstack
-        tags: neutron,neutron-l3-agent
-    - paths:
         - /var/log/neutron/neutron-metadata-agent.log
       fields:
         type: openstack
@@ -114,9 +106,6 @@ neutron:
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   enable_external_interface: False
   agents:
-    neutron-l3-agent:
-      config_files: /etc/neutron/l3_agent.ini
-      pidfile: /var/run/neutron-l3-agent.pid
     neutron-dhcp-agent:
       config_files: /etc/neutron/dhcp_agent.ini
     neutron-metadata-agent:

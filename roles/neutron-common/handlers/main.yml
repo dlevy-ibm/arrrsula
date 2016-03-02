@@ -5,7 +5,4 @@
   with_items:
     - neutron-server
     - neutron-dhcp-agent
-    - neutron-l3-agent
-    - neutron-openvswitch-agent
-    - neutron-linuxbridge-agent
     - neutron-lbaasv2-agent
