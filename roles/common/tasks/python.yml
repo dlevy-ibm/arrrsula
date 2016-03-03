@@ -25,4 +25,4 @@
   - 'requests[security]'
 
 - name: install shade for ansible modules
-  pip: name=shade version=0.16.0
+  pip: name=shade
