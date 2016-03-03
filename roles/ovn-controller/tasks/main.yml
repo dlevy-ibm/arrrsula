@@ -19,6 +19,9 @@
   command: ovs-vsctl set open . external-ids:ovn-remote=tcp:{{ endpoints.ovndb }}:6640
   changed_when: false
 
+- name: add ovs integration bridge
+  command: ovs-vsctl --may-exist add-br br-int
+
 - name: enable integration bridge
   command: ovs-vsctl set open . external-ids:ovn-bridge=br-int
   changed_when: false
@@ -36,7 +39,7 @@
   command: ovs-vsctl set open . external-ids:ovn-encap-ip={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}
   changed_when: false
 
-- name: add ovs bridges for provider networks
+- name: add ovs provider network bridges
   command: ovs-vsctl --may-exist add-br {{item.split(':')[1]}}
   with_items: "{{ neutron.bridge_mappings.split(',') }}"
 
