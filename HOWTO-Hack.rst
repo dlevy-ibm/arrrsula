@@ -16,7 +16,7 @@ our master branch locally, then merge from upstream, then commit the merge
 and push it to our master branch. For instance:
 
 ::
-  git clone git@github.com:pyrrrat/nova
+  git clone ssh://USER@review.portbleu.com:29418/nova
   cd nova
   git fetch https://git.openstack.org/openstack/nova
   git merge FETCH_HEAD
