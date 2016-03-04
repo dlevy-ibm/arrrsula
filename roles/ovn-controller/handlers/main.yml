@@ -1,0 +1,5 @@
+---
+- name: ifup provider network bridge
+  command: ip link set dev {{item.split(':')[1]}} up
+  with_items: "{{ neutron.bridge_mappings.split(',') }}"
+  ignore_errors: yes
