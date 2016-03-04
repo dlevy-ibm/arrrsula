@@ -5,16 +5,29 @@ sudo: true
 primary_interface: ansible_eth1
 primary_ip: "{{ hostvars[inventory_hostname][primary_interface]['ipv4']['address'] }}"
 
-monitoring:
-  rabbit:
-    host: 172.16.0.15
-    port: 5671
-    user: rabbit
-    pass: rabbit
-    vhost: /rabbit
+common:
+  ipmi:
+    enabled: false
+
+stack_env: vagrant
+
+haproxy:
+  enabled: True
 
 client:
   self_signed_cert: false
+
+keystone:
+  logging:
+    debug: False
+
+glance:
+  logging:
+    debug: False
+
+nova:
+  logging:
+    debug: False
 
 neutron:
   plugin: ovn
@@ -35,12 +48,10 @@ neutron:
   lbaas:
     enable: False
   logging:
-    debug: True
-    verbose: True
+    debug: False
   networks:
-    - name: public
+    - name: provider
       shared: true
-      network_type: local
       router_external: true
       provider_network_type: flat
       provider_physical_network: provider
@@ -51,21 +62,23 @@ neutron:
       tenant_name: demo
   subnets:
     - name: provider-v4
-      network_name: public
+      network_name: provider
       ip_version: 4
-      cidr: 192.168.255.0/24
+      cidr: 10.100.0.0/24
       enable_dhcp: "true"
-      gateway_ip: 192.168.255.1
+      pool_start: 10.100.0.101
+      pool_end: 10.100.0.250
+      gateway_ip: 10.100.0.1
       dns_nameservers: '8.8.8.8,8.8.4.4'
       tenant_name: demo
     - name: private-v4
       network_name: private
       ip_version: 4
-      cidr: 172.16.255.0/24
-      pool_start: 172.16.255.2
-      pool_end: 172.16.255.254
+      cidr: 172.16.1.0/24
+      pool_start: 172.16.1.101
+      pool_end: 172.16.1.250
       enable_dhcp: "true"
-      gateway_ip: 172.16.255.1
+      gateway_ip: 172.16.1.1
       dns_nameservers: '8.8.8.8,8.8.4.4'
       tenant_name: demo
     - name: private-v6
@@ -140,16 +153,3 @@ ssl:
       -----END RSA PRIVATE KEY-----
   # remove this line out if using a real CA supplied cert
   cafile: /usr/local/share/ca-certificates/{{ endpoints.main }}.crt
-
-common:
-  ipmi:
-    enabled: false
-
-stack_env: vagrant
-
-haproxy:
-  enabled: True
-
-logging:
-  forward:
-    host: 172.16.0.13
