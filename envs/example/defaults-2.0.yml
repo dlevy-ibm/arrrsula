@@ -219,14 +219,16 @@ neutron:
     - name: private
       tenant_name: demo
   subnets:
-    - name: provider-v4
+    - name: provider-ipv4
       network_name: provider
       ip_version: 4
       cidr: 192.168.255.0/24
+      pool_start: 192.168.255.101
+      pool_end: 192.168.255.250
       enable_dhcp: "true"
       gateway_ip: 192.168.255.1
       dns_nameservers: '8.8.8.8,8.8.4.4'
-      tenant_name: demo
+      tenant_name: admin
     - name: private-v4
       network_name: private
       ip_version: 4
