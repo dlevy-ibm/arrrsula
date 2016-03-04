@@ -1,7 +1,7 @@
 ---
 - name: neutron networks
   neutron_network: name={{ item.name }}
-                   provider_network_type={{ item.network_type|default(omit) }}
+                   provider_network_type={{ item.provider_network_type|default(omit) }}
                    state=present
                    shared={{ item.shared|default(omit) }}
                    router_external={{ item.external|default(omit) }}
