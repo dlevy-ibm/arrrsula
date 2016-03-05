@@ -75,6 +75,9 @@
     dest: "{{ cinder_uuid_file['source'] }}"
     content: "{{ cinder_uuid_file['content'] | b64decode }}"
 
+- name: print hostvars because confusion
+  debug: var=hostvars
+
 - name: generate ceph configuration file
   template: src=etc/ceph/ceph.conf
             dest=/etc/ceph/ceph.conf
