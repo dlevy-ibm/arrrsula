@@ -1,4 +1,6 @@
 ---
-- name: ifup neutron external interface
-  command: ifup {{ neutron_external_interface }}
-  ignore_errors: yes
+- name: ifup provider network bridge
+  command: ifup {{ provider_bridge_device }}
+
+- name: ifup provider network interface
+  command: ifup {{ provider_interface_device }}
