@@ -29,11 +29,14 @@
   args:
     creates: "{{ ceph.loopback.file }}"
 
+- name: see if loopback file exists
+  shell: losetup --show /dev/loop0
+  register: loopback_exists
+  ignore_errors: true
+
 - name: create loopback device
-  when: ceph.use_loopback
+  when: ceph.use_loopback and loopback_exists.rc == 0
   command: /sbin/losetup /dev/loop0 {{ ceph.loopback.file }}
-  args:
-    creates: /dev/loop0
 
 - name: check if device has a partition table
   when: ceph.use_loopback
