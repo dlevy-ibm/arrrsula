@@ -6,6 +6,10 @@ ceph:
   #  - sdb
   #  - sdc
   #  - sdd
+  use_loopback: false
+  loopback:
+    file: /var/lib/ceph-loopback
+    size: 3072000
 
   stable_release: hammer
 

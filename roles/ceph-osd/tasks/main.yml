@@ -3,6 +3,10 @@
   fail: msg="please provide osd disks"
   when: ceph.disks is not defined
 
+- name: verify sane loopback settings
+  fail: msg="Using loopback devices with ceph requires one and only one device"
+  when: ceph.use_loopback and len(ceph.disks) != 1
+
 - name: install dependencies
   apt: pkg={{ item }}
        state=present
@@ -18,6 +22,16 @@
   copy:
     dest: "{{ ceph_keyrings['source'] }}"
     content: "{{ ceph_keyrings['content'] | b64decode }}"
+
+- name: create loopback file
+  when: ceph.use_loopback
+  command: /bin/dd if=/dev/zero of={{ ceph.loopback.file }} bs=1024 count={{ ceph.loopback.size }}
+  creates: {{ ceph.loopback.file }}
+
+- name: create loopback device
+  when: ceph.use_loopback
+  command: /sbin/losetup /dev/loop0 {{ ceph.loopback.file }}
+  creates: /dev/loop0
 
 - name: check if 'ceph' partition exists on osd disks
   shell: "parted --script /dev/{{ item }} print | egrep -sq 'ceph'"
