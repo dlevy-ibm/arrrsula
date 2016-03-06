@@ -26,12 +26,14 @@
 - name: create loopback file
   when: ceph.use_loopback
   command: /bin/dd if=/dev/zero of={{ ceph.loopback.file }} bs=1024 count={{ ceph.loopback.size }}
-  creates: "{{ ceph.loopback.file }}"
+  args:
+    creates: "{{ ceph.loopback.file }}"
 
 - name: create loopback device
   when: ceph.use_loopback
   command: /sbin/losetup /dev/loop0 {{ ceph.loopback.file }}
-  creates: /dev/loop0
+  args:
+    creates: /dev/loop0
 
 - name: check if 'ceph' partition exists on osd disks
   shell: "parted --script /dev/{{ item }} print | egrep -sq 'ceph'"
