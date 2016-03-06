@@ -5,7 +5,7 @@
 
 - name: verify sane loopback settings
   fail: msg="Using loopback devices with ceph requires one and only one device"
-  when: ceph.use_loopback and len(ceph.disks) != 1
+  when: ceph.use_loopback and ceph.disks|length != 1
 
 - name: install dependencies
   apt: pkg={{ item }}
