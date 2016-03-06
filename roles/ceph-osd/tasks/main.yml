@@ -35,7 +35,7 @@
   ignore_errors: true
 
 - name: create loopback device
-  when: ceph.use_loopback and loopback_exists.rc == 0
+  when: ceph.use_loopback and loopback_exists.rc != 0
   command: /sbin/losetup /dev/loop0 {{ ceph.loopback.file }}
 
 - name: check if device has a partition table
