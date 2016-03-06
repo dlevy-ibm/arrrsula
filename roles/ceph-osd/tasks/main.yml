@@ -35,6 +35,16 @@
   args:
     creates: /dev/loop0
 
+- name: check if device has a partition table
+  when: ceph.use_loopback
+  shell: "parted --script /dev/loop0 print | grep 'Partition Table: unknown'"
+  register: has_partition_table
+  ignore_errors: true
+
+- name: create partition table
+  when: ceph.use_loopback and has_partition_table.rc == 0
+  shell: "parted --script /dev/loop0 mklabel msdos"
+
 - name: check if 'ceph' partition exists on osd disks
   shell: "parted --script /dev/{{ item }} print | egrep -sq 'ceph'"
   with_items: ceph.disks
