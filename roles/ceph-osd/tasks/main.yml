@@ -63,12 +63,16 @@
     - ceph.disks
   when: item.0.rc != 0
 
+- name: check if ceph disk is activated
+  command: '[ "$(ls -A /var/lib/ceph/osd)" ] && echo "not empty" || echo "empty"'
+  register: osd_ls
+
 - name: activate osds
   command: ceph-disk activate /dev/{{ item.1 }}
   with_together:
     - ceph_partitions.results
     - ceph.disks
-  when: item.0.rc != 0
+  when: osd_ls.stdout == "empty"
 
 - name: start and add that the osd service(s) to the init sequence
   service: name=ceph
