@@ -25,6 +25,7 @@
             mode=0644
   notify:
     - apply-sysctl
+  when: "'vagrant' not in stack_env"
 
 - name: tcp tuning
   template: src=etc/sysctl.d/60-tcp-tuning.conf
@@ -32,6 +33,7 @@
             mode=0644
   notify:
     - apply-sysctl
+  when: "'vagrant' not in stack_env"
 
 - name: ipv6 privacy
   lineinfile: dest=/etc/sysctl.d/10-ipv6-privacy.conf
