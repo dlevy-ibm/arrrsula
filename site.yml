@@ -2,6 +2,7 @@
 - name: wait for hosts to be up with SSH
   hosts: all
   gather_facts: false
+  sudo: no
   tasks:
     - local_action: wait_for timeout={{wait_for_all_timeout}} host={{ ansible_ssh_host | default(inventory_hostname) }} port=22
       when: wait_for_all_timeout|default(0) > 0
