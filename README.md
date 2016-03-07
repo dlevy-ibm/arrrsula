@@ -152,6 +152,11 @@ $ ursula envs/example/allinone site.yml
 
 ### Vagrant
 
+Install plug-ins for Vagrant::
+
+     $ vagrant plugin install vagrant-cachier
+     $ vagrant plugin install vagrant-vbguest
+
 If you're running `Vagrant`, we have a wrapper script that stands up the
 appropriate vagrant environment, saves it as an ssh config, and then calls
 `ursula` for you.
