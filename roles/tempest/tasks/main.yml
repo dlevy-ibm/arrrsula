@@ -1,0 +1,103 @@
+---
+- name: create tempest user
+  user:
+    name: tempest
+    comment: tempest
+    shell: /bin/false
+    system: yes
+    home: "{{ tempest.home }}"
+
+- name: tempest image copy
+  glance_image:
+    name: "{{ tempest.image.name }}"
+    copy_from: "{{ tempest.image.url }}"
+    container_format: bare
+    disk_format: qcow2
+    auth_url: "{{ endpoints.auth_uri }}"
+    login_tenant_name: admin
+    login_username: admin
+    login_password: "{{ secrets.admin_password }}"
+    is_public: no
+    timeout: 12000
+  register: tempest_image_ret
+  run_once: true
+  when: tempest.image is defined
+
+- name: nova find flavor
+  register: nova_flavor_ret
+  command: "openstack flavor show m1.tiny -c id -f value"
+  changed_when: false
+  environment:
+    OS_AUTH_URL: "{{ endpoints.auth_uri }}"
+    OS_USERNAME: admin
+    OS_PASSWORD: "{{ secrets.admin_password }}"
+    OS_PROJECT_NAME: admin
+
+- name: save tempest image ids
+  set_fact:
+    tempest_image_ref: "{{ tempest_image_ret.id }}"
+    tempest_flavor_ref: "{{ nova_flavor_ret.stdout }}"
+  when: tempest.image is defined
+
+- name: create tempest configurations
+  command: tempest init {{ item.name }}
+  become: yes
+  become_user: tempest
+  args:
+    chdir: "{{ tempest.home }}"
+    creates: "{{ tempest.home }}/{{ item.name }}"
+  with_items: tempest.environments
+  environment:
+    PATH: "{{ openstack_source.virtualenv_base }}/tempest/bin:{{ ansible_env.PATH }}"
+
+- name: Find public network id
+  register: tempest_public_network
+  when: tempest.network.public_network_id is not defined and tempest.network.public_network_name
+  neutron_network:
+    name: "{{ tempest.network.public_network_name }}"
+    state: present
+    auth_url: "{{ endpoints.auth_uri }}"
+    login_tenant_name: admin
+    login_username: admin
+    login_password: "{{ secrets.admin_password }}"
+
+- name: set public network id
+  when: tempest.network.public_network_id is not defined and tempest.network.public_network_name
+  set_fact:
+    tempest_network_public_network_id: "{{ tempest.network.public_network_id | default(tempest_public_network.id) }}"
+
+- name: tempest config
+  template:
+    src: tempest.conf
+    dest: "{{ tempest.home }}/{{ item.name }}/etc/tempest.conf"
+    mode: "0644"
+    owner: tempest
+    group: tempest
+  with_items: tempest.environments
+
+- name: verify tempest configuration
+  command: tempest verify-config
+  become: yes
+  become_user: tempest
+  args:
+    chdir: "{{ tempest.home }}/{{ item.name }}"
+  with_items: tempest.environments
+
+- name: run tempest
+  shell: >
+    testr run --parallel
+    {% if item.concurrency is defined %}
+    --concurrency={{ item.concurrency }}
+    {% endif %}
+    {% if item.filter is defined %}
+    {{ item.filter }}
+    {% endif %}
+    2>&1 | tee logs/output.log
+  become: yes
+  become_user: tempest
+  args:
+    chdir: "{{ tempest.home }}/{{ item.name }}"
+  with_items: tempest.environments
+  when: item.run | default(False)
+  environment:
+    PATH: "{{ openstack_source.virtualenv_base }}/tempest/bin:{{ ansible_env.PATH }}"

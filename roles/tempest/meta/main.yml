@@ -1,0 +1,15 @@
+---
+dependencies:
+  - role: monitoring-common
+    when: monitoring.enabled|default(True)|bool
+  - role: openstack-source
+    project_name: tempest
+    project_rev: "{{ tempest.source.rev }}"
+    alternatives: "{{ tempest.alternatives }}"
+    system_dependencies: "{{ tempest.source.system_dependencies }}"
+    python_dependencies: "{{ tempest.source.python_dependencies }}"
+    when: openstack_install_method == 'source'
+  - role: openstack-package
+    project_name: tempest
+    alternatives: "{{ tempest.alternatives }}"
+    when: openstack_install_method == 'package'

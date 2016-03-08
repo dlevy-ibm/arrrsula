@@ -1,0 +1,50 @@
+---
+tempest:
+  enabled: True
+  source:
+    rev: 'master'
+    system_dependencies: []
+    python_dependencies: []
+  alternatives:
+    - run-tempest-stress
+    - tempest
+    - tempest-account-generator
+    - tempest-cleanup
+    - verify-tempest-config
+  home: /var/lib/tempest
+  image:
+    name: cirros
+    url: https://file-mirror.openstack.blueboxgrid.com/cloud-images/cirros-0.3.3-x86_64-disk.img
+  environments:
+    - name: default
+      run: False
+  auth:
+    create_isolated_networks: false
+  compute:
+    ssh_user: cirros
+    fixed_network_name: provider
+  identity:
+    uri: https://{{ fqdn }}:5000/v2.0
+    uri_v3: https://{{ fqdn }}:5000/v3
+    auth_version: v3
+  dashboard:
+    url: https://{{ fqdn }}
+  network:
+    floating_ips_enabled: True
+    ipv6_enabled: False
+    api_extensions_enabled:
+      - all
+  validation:
+    connect_method: fixed
+  volume:
+    backup_enabled: True
+  logs:
+    - paths:
+        - /var/log/tempest/tempest.log
+      fields:
+        type: openstack
+        tags: tempest
+  logging:
+    debug: False
+    verbose: True
+  cafile: "{{ ssl.cafile | default('/etc/ssl/certs/ca-certificates.crt') }}"
