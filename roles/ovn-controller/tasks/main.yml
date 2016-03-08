@@ -19,20 +19,24 @@
   command: ovs-vsctl set open . external-ids:ovn-remote=tcp:{{ endpoints.ovndb }}:6640
   changed_when: false
 
-- name: enable integration bridge
-  command: ovs-vsctl set open . external-ids:ovn-bridge=br-int
+- name: add ovs integration bridge
+  command: ovs-vsctl --may-exist add-br br-int
   changed_when: false
 
-- name: configure integration bridge
+- name: configure ovs integration bridge
   command: ovs-vsctl set bridge br-int fail-mode=secure other-config:disable-in-band=true
   changed_when: false
 
-- name: configure overlay network protocol
+- name: enable ovn integration bridge
+  command: ovs-vsctl set open . external-ids:ovn-bridge=br-int
+  changed_when: false
+
+- name: configure ovn overlay network protocol
   command: ovs-vsctl set open . external-ids:ovn-encap-type={{ item }}
   changed_when: false
   with_items: neutron.tunnel_types
 
-- name: configure overlay network endpoint
+- name: configure ovn overlay network endpoint
   command: ovs-vsctl set open . external-ids:ovn-encap-ip={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}
   changed_when: false
 
