@@ -7,21 +7,36 @@
     - ovn-central
     - python-openvswitch
 
-- name: check if ovn north database exists
+- name: check if ovn northbound database exists
   stat: path="{{ovs_db_dir}}/ovnnb.db"
   register: ovnnb
 
-- name: check if ovn south database exists
+- name: check if ovn southbound database exists
   stat: path="{{ovs_db_dir}}/ovnsb.db"
   register: ovnsb
 
-- name: create ovn north database
+- name: create ovn northbound database
   shell: ovsdb-tool create {{ovs_db_dir}}/ovnnb.db {{ ovs_db_nb_schema }}
   when: not ovnnb.stat.exists
 
-- name: create ovn south database
+- name: create ovn southbound database
   shell: ovsdb-tool create {{ovs_db_dir}}/ovnsb.db {{ ovs_db_sb_schema }}
   when: not ovnsb.stat.exists
+
+#- name: permit access to ovn northbound database
+#  ufw: rule=allow to_port={{ endpoints.ovndb.port.northbound }} proto=tcp
+#  tags: ufw
+
+#- name: permit access to ovn southbound database
+#  ufw: rule=allow to_port={{ endpoints.ovndb.port.southbound }} proto=tcp
+#  tags: ufw
+
+- name: permit access to ovn databases
+  ufw: rule=allow to_port={{ item }} proto=tcp
+  with_items:
+    - "{{ endpoints.ovndb.port.northbound }}"
+    - "{{ endpoints.ovndb.port.southbound }}"
+  tags: ufw
 
 - name: start ovn northd service
   service: name=ovn-central state=started enabled=yes
