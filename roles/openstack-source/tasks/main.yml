@@ -11,15 +11,6 @@
   retries: 3
   when: openstack_source.use_constraints and not openstack_source.use_superproject
 
-- name: get {{ project_name }} from superrepo
-  command: git submodule update --recursive {{ item }}
-  args:
-    chdir: /opt/stack
-  register: superrepo_update
-  changed_when: superrepo_update.stdout
-  when: openstack_source.use_superproject
-  with_items: openstack_source.openstack_dependencies + [project_name]
-
 - name: "get {{ project_name }} source repo"
   git: repo="{{ openstack_source.git_mirror }}/{{ project_name }}.git"
        dest="/opt/stack/{{ project_name }}"

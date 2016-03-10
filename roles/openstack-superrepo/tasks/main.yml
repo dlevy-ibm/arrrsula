@@ -4,7 +4,7 @@
        dest="/opt/stack"
        version="{{ openstack_source.project_rev }}"
        update="{{ openstack_source.git_update }}"
-       recursive=no
+       recursive=yes
        force=yes
   register: git_result
   until: git_result|success
