@@ -48,5 +48,10 @@
   with_items: "{{ neutron.bridge_mappings.split(',') }}"
   notify: ifup provider network bridge
 
+- name: configure ovs provider network bridges
+  command: ovs-vsctl set bridge {{ item.split(':')[1] }} protocols=OpenFlow13
+  with_items: "{{ neutron.bridge_mappings.split(',') }}"
+  changed_when: false
+
 - name: start ovn controller
   service: name=ovn-host state=started enabled=yes
