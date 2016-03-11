@@ -1,6 +1,0 @@
-# {{ ansible_managed }}
-
-auto {{ provider_interface_device }}
-iface {{ provider_interface_device }} inet manual
-    up ip link set dev $IFACE up
-    down ip link set dev $IFACE down

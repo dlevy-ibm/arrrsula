@@ -1,41 +1,9 @@
 ---
-- name: check for /etc/network/interfaces.d
-  stat: path=/etc/network/interfaces.d
-  register: interfaces_d
-
-- fail: msg="/etc/network/interfaces.d does not exist"
-  when: interfaces_d.stat.exists == False
-
-- name: set provider network interface down
+- name: bounce provider network interface after ovs changes to move IP
   command: ifdown {{ provider_interface_device }}
-  when: hostvars[inventory_hostname][provider_interface]['ipv4'] is defined
-
-- name: configure provider network interface
-  template: >
-    src=etc/network/interfaces.d/provider_interface.cfg.j2
-    dest=/etc/network/interfaces.d/{{ provider_interface_device }}.cfg
-    mode=0644
-    owner=root
-    group=root
   when: hostvars[inventory_hostname][provider_interface]['ipv4'] is defined
   notify: ifup provider network interface
 
-- name: configure provider network bridge
-  template: >
-    src=etc/network/interfaces.d/provider_bridge.cfg.j2
-    dest=/etc/network/interfaces.d/{{ provider_bridge_device }}.cfg
-    mode=0644
-    owner=root
-    group=root
-  when: hostvars[inventory_hostname][provider_interface]['ipv4'] is defined
-  notify: ifup provider network bridge
-
-#- name: set provider network interface up
-#  command: ifup {{ provider_interface_device }}
-#  when: hostvars[inventory_hostname][provider_interface]['ipv4'] is defined
-
-#- name: set provider network interface up
-#  command: ifup {{ provider_bridge_device }}
-
 - name: add provider network interface as port on provider network bridge
   command: ovs-vsctl --may-exist add-port {{ provider_bridge_device }} {{ provider_interface_device }}
+  notify: ifup provider network bridge
