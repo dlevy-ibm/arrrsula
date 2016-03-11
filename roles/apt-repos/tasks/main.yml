@@ -1,4 +1,8 @@
 ---
+- name: disable repo key checking
+  when: apt_repos_allow_unauthenticated
+  copy: dest=/etc/apt/apt.conf.d/99unauthenticated content='APT::Get::AllowUnauthenticated "true";'
+
 - name: add any dependent repository keys from url
   apt_key:
     url: "{{ item.key_url }}"
