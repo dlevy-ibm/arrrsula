@@ -3,6 +3,11 @@
   hostname: name={{ hostname }}
   when: hostname is defined
 
+- name: remove i386 architecture
+  shell: dpkg --remove-architecture i386
+  register: result
+  changed_when: result.stderr == ''
+
 - name: ubuntu apt source list
   template: src=etc/apt/sources.list dest=/etc/apt/sources.list
   when: openstack.ubuntu_mirror is defined
