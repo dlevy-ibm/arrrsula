@@ -1,0 +1,13 @@
+---
+- name: stop keystone service before db sync
+  service:
+    name: keystone
+    state: stopped
+  ignore_errors: yes
+
+- name: remove keystone eventlet service
+  upstart_service:
+    name: keystone
+    user: keystone
+    cmd: /usr/local/bin/keystone-all
+    state: absent

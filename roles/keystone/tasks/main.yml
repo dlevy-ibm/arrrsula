@@ -31,10 +31,6 @@
     - etype: other
       permission: r
 
-- name: install keystone service
-  upstart_service: name=keystone user=keystone cmd=/usr/local/bin/keystone-all
-                   config_dirs=/etc/keystone
-
 - name: configure keystone
   template: src={{ item }} dest=/etc/keystone/
             mode={{ 0644 if 'policy.json' in item else 0640 }}
@@ -43,30 +39,23 @@
   notify:
     - restart keystone services
 
-- name: stop keystone service before db sync
-  service: name=keystone state=stopped
-  when: database_create.changed or force_sync|default('false')|bool
-  tags: db-migrate
-
-- name: sync keystone database
-  command: keystone-manage db_sync
-  when: database_create.changed or force_sync|default('false')|bool
-  run_once: true
-  changed_when: true
-  notify: restart keystone services
-  # we want this to always be changed so that it can notify the service restart
-  tags: db-migrate
-
 - name: initialize fernet keys
   command: keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
   run_once: true
   changed_when: true
   tags: fernet-setup
 
-- meta: flush_handlers
+- include: eventlet.yml
+  when: keystone.deploy_method == "eventlet"
 
-- name: start keystone
-  service: name=keystone state=started
+- include: no-eventlet.yml
+  when: keystone.deploy_method != "eventlet"
+
+- include: uwsgi.yml
+  when: keystone.deploy_method == "uwsgi"
+
+- include: no-uwsgi.yml
+  when: keystone.deploy_method != "uwsgi"
 
 - name: permit access to keystone
   ufw: rule=allow to_port={{ item }} proto=tcp

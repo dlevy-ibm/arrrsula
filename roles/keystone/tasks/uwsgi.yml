@@ -1,0 +1,44 @@
+---
+- name: install apt dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - apache2
+    - libapache2-mod-uwsgi
+
+- name: copy keystone apache template
+  template:
+    src: etc/apache2/sites-available/keystone.conf
+    dest: /etc/apache2/sites-available/keystone.conf
+    mode: 0644
+  notify:
+    - restart apache
+
+- name: enable proxy modules
+  file:
+    state: link
+    src: "/etc/apache2/mods-available/{{ item }}"
+    path: "/etc/apache2/mods-enabled/{{ item }}"
+  with_items:
+    - proxy.conf
+    - proxy.load
+    - proxy_uwsgi.load
+  notify:
+    - restart apache
+
+- name: enable apache site
+  file:
+    state: link
+    src: /etc/apache2/sites-available/keystone.conf
+    path: /etc/apache2/sites-enabled/keystone.conf
+  notify:
+    - restart apache
+
+- name: sync keystone database
+  command: keystone-manage db_sync
+  when: database_create.changed or force_sync|default('false')|bool
+  run_once: true
+  tags: db-migrate
+
+- meta: flush_handlers

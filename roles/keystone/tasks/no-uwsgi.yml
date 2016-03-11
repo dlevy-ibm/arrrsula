@@ -1,0 +1,9 @@
+---
+- name: remove keystone uwsgi files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - /etc/apache2/sites-available/keystone.conf
+    - /etc/uwsgi-emperor/vassals/keystone-wsgi-admin.ini
+    - /etc/uwsgi-emperor/vassals/keystone-wsgi-public.ini

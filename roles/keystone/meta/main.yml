@@ -23,3 +23,36 @@ dependencies:
     when: collectd is defined and collectd.enabled|bool
   - role: openstack-database
     database_name: keystone
+  - role: uwsgi
+    when: keystone.deploy_method == 'uwsgi'
+    uwsgi_apt_plugins:
+      - uwsgi-plugin-python
+    uwsgi_vassals:
+      - name: keystone-wsgi-admin
+        state: present
+        config:
+          uid: keystone
+          gid: keystone
+          wsgi-file: "{{ openstack_source.virtualenv_base }}/keystone/bin/keystone-wsgi-admin"
+          virtualenv: "{{ openstack_source.virtualenv_base }}/keystone"
+          chdir: "{{ openstack_source.virtualenv_base }}/keystone"
+          threads: "{{ ansible_processor_count }}"
+          enable-threads: true
+          plugin: python
+          thunder-lock: true
+          buffer-size: 65535
+          socket: "127.0.0.1:{{ keystone.uwsgi.vassal.public_port }}"
+      - name: keystone-wsgi-public
+        state: present
+        config:
+          uid: keystone
+          gid: keystone
+          wsgi-file: "{{ openstack_source.virtualenv_base }}/keystone/bin/keystone-wsgi-public"
+          virtualenv: "{{ openstack_source.virtualenv_base }}/keystone"
+          chdir: "{{ openstack_source.virtualenv_base }}/keystone"
+          threads: "{{ ansible_processor_count }}"
+          enable-threads: true
+          plugin: python
+          thunder-lock: true
+          buffer-size: 65535
+          socket: "127.0.0.1:{{ keystone.uwsgi.vassal.admin_port }}"

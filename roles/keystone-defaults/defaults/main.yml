@@ -51,3 +51,10 @@ keystone:
 
   fernet_key_repository: /etc/keystone/fernet-keys/
   fernet_max_active_keys: 3
+
+  deploy_method: uwsgi
+
+  uwsgi:
+    vassal:
+      public_port: 5008
+      admin_port: 5009
