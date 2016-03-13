@@ -1,0 +1,55 @@
+- name: generate admin_token
+  set_fact: admin_token="{{ 'asdf' * 9|random(start=2) }}"
+            insert_token=True
+
+- name: add admin_token to keystone conf
+  lineinfile: dest=/etc/keystone/keystone.conf
+              line="admin_token = {{ admin_token }}"
+              regexp="^admin_token"
+              insertafter='\[DEFAULT\]'
+              state=present
+
+- name: add admin_token_auth to keystone pipeline
+  template: dest=/etc/keystone/keystone-paste.ini
+            src='{{ role_path }}/../keystone/templates/etc/keystone/keystone-paste.ini'
+
+- name: restart keystone api
+  service: name=keystone state=restarted
+  when: keystone.deploy_method != "uwsgi"
+
+- name: restart uwsgi
+  service: name=uwsgi-emperor state=restarted
+  when: keystone.deploy_method == "uwsgi"
+
+- name: keystone endpoint
+  keystone_service: name={{ item.name }}
+                    type={{ item.type }}
+                    description='{{ item.description }}'
+                    public_url={{ item.public_url }}
+                    internal_url={{ item.internal_url }}
+                    admin_url={{ item.admin_url }}
+                    region=RegionOne
+                    token={{ admin_token }}
+  # TODO refactor keystone.services data to be easier to pull out individual services
+  with_items: keystone.services
+  when: endpoints[item.name] is defined and item.name == 'keystone'
+
+- name: remove admin_token from keystone api
+  lineinfile: dest=/etc/keystone/keystone.conf
+              line="admin_token = {{ admin_token }}"
+              state=absent
+
+- name: set insert_token to false
+  set_fact: insert_token=False
+
+- name: remove admin_token_auth from keystone pipeline
+  template: dest=/etc/keystone/keystone-paste.ini
+            src='{{ role_path }}/../keystone/templates/etc/keystone/keystone-paste.ini'
+
+- name: restart keystone api
+  service: name=keystone state=restarted
+  when: keystone.deploy_method != "uwsgi"
+
+- name: restart uwsgi
+  service: name=uwsgi-emperor state=restarted
+  when: keystone.deploy_method == "uwsgi"

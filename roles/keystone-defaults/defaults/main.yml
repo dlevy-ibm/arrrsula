@@ -41,6 +41,7 @@ keystone:
     - admin
   project_name_url_safe: strict
   secure_proxy_ssl_header: HTTP_X_FORWARDED_PROTO
+  use_keystone_bootstrap: True
 
   identity_default_domain_id: default
   identity_mapping_backward_compatible_ids: True
