@@ -29,7 +29,7 @@
 - name: keystone tenants
   keystone_user: tenant={{ item }}
                  tenant_description="{{ item }} tenant"
-                 auth_url={{ endpoints.auth_uri }}
+                 auth_url="http://127.0.0.1:5002"
                  login_tenant_name=admin
                  login_username=admin
                  login_password={{ secrets.admin_password }}
@@ -39,7 +39,7 @@
   keystone_user: user={{ item.name }}
                  password={{ item.password }}
                  tenant={{ item.tenant }}
-                 auth_url={{ endpoints.auth_uri }}
+                 auth_url="http://127.0.0.1:5002"
                  login_tenant_name=admin
                  login_username=admin
                  login_password={{ secrets.admin_password }}
@@ -49,7 +49,7 @@
   keystone_user: role={{ item.role }}
                  user={{ item.user }}
                  tenant={{ item.tenant }}
-                 auth_url={{ endpoints.auth_uri }}
+                 auth_url="http://127.0.0.1:5002"
                  login_tenant_name=admin
                  login_username=admin
                  login_password={{ secrets.admin_password }}
@@ -59,7 +59,7 @@
   keystone_user: user=heat_stack_user
                  password="{{ secrets.service_password }}"
                  tenant=admin
-                 auth_url={{ endpoints.auth_uri }}
+                 auth_url="http://127.0.0.1:5002"
                  login_tenant_name=admin
                  login_username=admin
                  login_password={{ secrets.admin_password }}
@@ -69,7 +69,7 @@
   keystone_user: role=heat_stack_user
                  user=heat_stack_user
                  tenant=admin
-                 auth_url={{ endpoints.auth_uri }}
+                 auth_url="http://127.0.0.1:5002"
                  login_tenant_name=admin
                  login_username=admin
                  login_password={{ secrets.admin_password }}
