@@ -38,7 +38,7 @@
 
 - name: "pip install {{ project_name }} from alternative proxy"
   pip:
-  name: "git+file:///opt/stack/{{ project_name }}"
+    name: "git+file:///opt/stack/{{ project_name }}"
     extra_args: "-i {{ openstack_source.pypi_mirror }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
   register: pip_result
