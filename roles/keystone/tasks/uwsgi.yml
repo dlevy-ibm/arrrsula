@@ -16,14 +16,11 @@
     - restart apache
 
 - name: enable proxy modules
-  file:
-    state: link
-    src: "/etc/apache2/mods-available/{{ item }}"
-    path: "/etc/apache2/mods-enabled/{{ item }}"
+  apache2_module:
+    name: "{{ item }}"
   with_items:
-    - proxy.conf
-    - proxy.load
-    - proxy_uwsgi.load
+    - proxy
+    - uwsgi
   notify:
     - restart apache
 
