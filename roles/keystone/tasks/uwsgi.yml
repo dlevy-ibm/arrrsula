@@ -7,6 +7,12 @@
     - apache2
     - libapache2-mod-uwsgi
 
+- name: Disable Apache listening on port 80
+  lineinfile:
+    dest=/etc/apache2/ports.conf
+    state=absent
+    regexp="^Listen 80$"
+
 - name: copy keystone apache template
   template:
     src: etc/apache2/sites-available/keystone.conf
