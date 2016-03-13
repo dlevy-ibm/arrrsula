@@ -25,6 +25,11 @@
 
 - name: restart keystone api
   service: name=keystone state=restarted
+  when: keystone.deploy_method != "uwsgi"
+
+- name: restart uwsgi
+  service: name=uwsgi-emperor state=restarted
+  when: keystone.deploy_method == "uwsgi"
 
 - name: keystone bootstrap user
   command: keystone-manage bootstrap
@@ -100,3 +105,8 @@
 
 - name: restart keystone api
   service: name=keystone state=restarted
+  when: keystone.deploy_method != "uwsgi"
+
+- name: restart uwsgi
+  service: name=uwsgi-emperor state=restarted
+  when: keystone.deploy_method == "uwsgi"
