@@ -36,6 +36,12 @@
   changed_when: false
   with_items: neutron.tunnel_types
 
+- name: record IP of ovn overlay endpoint in order to detect changes
+  copy:
+    content={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}
+    dest=/var/run/ovn-encap-ip
+  notify: restart ovn controller
+
 - name: configure ovn overlay network endpoint
   command: ovs-vsctl set open . external-ids:ovn-encap-ip={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}
   changed_when: false
