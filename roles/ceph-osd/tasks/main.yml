@@ -66,6 +66,7 @@
 - name: check if ceph disk is activated
   command: '[ "$(ls -A /var/lib/ceph/osd)" ] && echo "not empty" || echo "empty"'
   register: osd_ls
+  ignore_errors: true
 
 - name: activate osds
   command: ceph-disk activate /dev/{{ item.1 }}
