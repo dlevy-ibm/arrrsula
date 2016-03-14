@@ -41,7 +41,7 @@ dependencies:
           plugin: python
           thunder-lock: true
           buffer-size: 65535
-          socket: "127.0.0.1:{{ keystone.uwsgi.vassal.public_port }}"
+          socket: "127.0.0.1:{{ keystone.uwsgi.vassal.admin_port }}"
       - name: keystone-wsgi-public
         state: present
         config:
@@ -55,4 +55,4 @@ dependencies:
           plugin: python
           thunder-lock: true
           buffer-size: 65535
-          socket: "127.0.0.1:{{ keystone.uwsgi.vassal.admin_port }}"
+          socket: "127.0.0.1:{{ keystone.uwsgi.vassal.public_port }}"

@@ -21,6 +21,9 @@
   service: name=uwsgi-emperor state=restarted
   when: keystone.deploy_method == "uwsgi"
 
+- name: wait for keystone to be functional
+  pause: seconds=3
+
 - name: keystone endpoint
   keystone_service: name={{ item.name }}
                     type={{ item.type }}
@@ -29,10 +32,31 @@
                     internal_url={{ item.internal_url }}
                     admin_url={{ item.admin_url }}
                     region=RegionOne
+                    endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
                     token={{ admin_token }}
   # TODO refactor keystone.services data to be easier to pull out individual services
   with_items: keystone.services
   when: endpoints[item.name] is defined and item.name == 'keystone'
+
+- name: admin tenant
+  keystone_user: tenant={{ keystone.bootstrap.project }}
+                 tenant_description="{{ keystone.bootstrap.project }} tenant"
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 token={{ admin_token }}
+
+- name: admin user
+  keystone_user: user={{ keystone.bootstrap.user }}
+                 password={{ keystone.bootstrap.password }}
+                 tenant={{ keystone.bootstrap.project }}
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 token={{ admin_token }}
+
+- name: admin role
+  keystone_user: role={{ keystone.bootstrap.role }}
+                 user={{  keystone.bootstrap.user}}
+                 tenant={{ keystone.bootstrap.project }}
+                 endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
+                 token={{ admin_token }}
 
 - name: remove admin_token from keystone api
   lineinfile: dest=/etc/keystone/keystone.conf
@@ -53,3 +77,6 @@
 - name: restart uwsgi
   service: name=uwsgi-emperor state=restarted
   when: keystone.deploy_method == "uwsgi"
+
+- name: wait for keystone to be functional
+  pause: seconds=3
