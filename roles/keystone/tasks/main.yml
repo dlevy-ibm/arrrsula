@@ -36,6 +36,7 @@
             mode={{ 0644 if 'policy.json' in item else 0640 }}
             owner=keystone group=keystone
   with_fileglob: ../templates/etc/keystone/*
+  register: keystone_templates
   notify:
     - restart keystone services
 

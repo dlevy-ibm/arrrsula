@@ -44,4 +44,8 @@
   run_once: true
   tags: db-migrate
 
+- name: restart uwsgi
+  service: name=uwsgi-emperor state=restarted
+  when: keystone_templates.changed
+
 - meta: flush_handlers
