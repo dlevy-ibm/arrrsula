@@ -88,8 +88,7 @@
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
 
 - name: create openstack pool
-  ceph_pool:
-    pool_name: "{{ ceph.pool_name }}"
+  command: ceph osd pool create {{ ceph.pool_name }} 100
   register: pool_output
   run_once: true
   delegate_to: "{{ groups['ceph_monitors'][0] }}"
