@@ -1,4 +1,4 @@
 shade
 oslo.utils
 -e git://github.com/blueboxgroup/ursula-cli.git#egg=ursula-cli
--e git://github.com/blueboxgroup/ansible.git@1.9.2-bbg#egg=ansible
+-e git+https://review.portbleu.com/ansible#egg=ansible
