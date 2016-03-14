@@ -21,3 +21,6 @@
 
 - name: update apt index
   apt: update_cache=yes
+
+- name: bounce network interfaces
+  shell: ifdown -a --allow=reconfiguration ; ifup -a --allow=reconfiguration
