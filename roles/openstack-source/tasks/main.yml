@@ -38,7 +38,7 @@
 
 - name: "pip install {{ project_name }} from alternative proxy"
   pip:
-    name: "git+file:///opt/stack/{{ item }}#egg={{ item }}"
+    name: "/opt/stack/{{ item }}"
     extra_args: "-i {{ openstack_source.pypi_mirror }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
   register: pip_result
@@ -61,7 +61,7 @@
 # see arrrsula issue #24 for environment workaround
 - name: "pip install {{ project_name }}"
   pip:
-    name: "git+file:///opt/stack/{{ item }}#egg={{ item }}"
+    name: "/opt/stack/{{ item }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
     extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}}"
   environment: "{{ {'GIT_DIR': '/opt/stack/.git/modules/%s' % item } if openstack_source.use_superproject else {} }}"
