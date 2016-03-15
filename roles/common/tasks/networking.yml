@@ -4,6 +4,7 @@
         force=yes owner=root group=root mode=0644
   when: network_interfaces is defined
   tags: ['prereboot']
+  notify: bounce network interfaces
 
 - name: add the interfaces
   copy: content="{{ item.contents }}"
@@ -12,6 +13,7 @@
   when: network_interfaces_d is defined
   with_items: network_interfaces_d
   tags: ['prereboot']
+  notify: bounce network interfaces
 
 - name: hosts file
   template: src=etc/hosts dest=/etc/hosts owner=root group=root mode=0644
