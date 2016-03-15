@@ -408,7 +408,7 @@
       name: test-from-ansible
       flavor: m1.tiny
       image: cirros
-      network: public
+      network: provider
     run_once: true
 
   - os_server:
