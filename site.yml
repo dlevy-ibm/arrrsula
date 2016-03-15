@@ -401,11 +401,6 @@
       name: test-from-ansible
     run_once: true
 
-  - os_networks_facts:
-      cloud: admin
-      name: public
-    run_once: true
-
   - os_server:
       cloud: admin
       state: present
@@ -413,8 +408,7 @@
       name: test-from-ansible
       flavor: m1.tiny
       image: cirros
-      nics: "net-id={{ openstack_networks[0]['id'] }}"
-      # network: public -- need newer shade
+      network: public
     run_once: true
 
   - os_server:
