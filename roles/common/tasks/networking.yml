@@ -1,4 +1,10 @@
 ---
+- name: resolv.conf file
+  template: src=etc/resolv.conf.j2 dest=/etc/resolv.conf owner=root group=root mode=0644
+            backup=yes
+  when: etc_resolv_conf is defined
+  tags: ['prereboot']
+
 - name: network interfaces file
   copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces
         force=yes owner=root group=root mode=0644
