@@ -5,6 +5,10 @@
   when: etc_resolv_conf is defined
   tags: ['prereboot']
 
+- name: flush existing ip addresses from provider network interface
+  command: ip addr flush dev "{{ hostvars[inventory_hostname][provider_interface]['device'] }}"
+  when: inventory_hostname in groups['compute'] and hostvars[inventory_hostname][provider_interface]['ipv4'] is defined
+
 - name: network interfaces file
   copy: content="{{ network_interfaces }}" dest=/etc/network/interfaces
         force=yes owner=root group=root mode=0644
