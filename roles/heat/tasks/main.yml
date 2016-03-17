@@ -39,20 +39,33 @@
   notify:
     - restart heat services
 
-- name: create heat trusts roles
-  keystone_user: role={{ item }}
-                 login_user=admin
-                 endpoint="{{ endpoints.keystone.url.admin }}/{{ endpoints.keystone.version }}/"
-                 login_password="{{ secrets.admin_password }}"
-                 login_tenant_name=admin
-  with_items:
-    - heat_stack_owner
-    - heat_stack_user
-  run_once: true
+- name: create heat domain
+  os_keystone_domain: cloud=admin
+                      name="{{ heat.stack_user_domain_name }}"
 
-- name: create heat stack admin
-  shell: . /root/stackrc; heat-keystone-setup-domain --stack-user-domain-name heat --stack-domain-admin heat_domain_admin --stack-domain-admin-password "{{ secrets.stack_domain_admin_password }}"
-  run_once: true
+#- name: create heat domain admin user
+#  os_user: cloud=admin
+#           name="{{ heat.domain_admin }}"
+#           password="{{ secrets.stack_domain_admin_password }}"
+#           domain="{{ heat.stack_user_domain_name }}"
+
+# Workaround until Ursula uses Ansible 2.x
+
+- name: create heat domain admin user
+  command: openstack --os-cloud admin user create --domain {{ heat.stack_user_domain_name }} --password {{ secrets.stack_domain_admin_password }} {{ heat.domain_admin }}
+  failed_when: False
+
+- name: add admin role to the heat domain admin user
+  command: openstack --os-cloud admin role add --domain "{{ heat.stack_user_domain_name }}" --user "{{ heat.domain_admin }}" admin
+  failed_when: False
+
+- name: create heat stack owner role
+  os_keystone_role: cloud=admin
+                    name="{{ heat.stack_owner }}"
+
+- name: create heat stack user role
+  os_keystone_role: cloud=admin
+                    name="{{ heat.stack_user }}"
 
 - name: stop heat services before db sync
   service: name={{ item }} state=stopped
