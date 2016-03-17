@@ -1,5 +1,6 @@
 ---
 glance:
+  enable_fatal_deprecations: False
   api_workers: 5
   rbd_store_chunk_size: 8
   registry_workers: 5
@@ -57,5 +58,4 @@ glance:
         tags: glance,glance-registry
   logging:
     debug: False
-    verbose: True
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
