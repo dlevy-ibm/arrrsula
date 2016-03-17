@@ -62,7 +62,7 @@
                    config_files=/etc/neutron/neutron.conf,{{ neutron.lbaas.agent.config_files }}
                    envs={{ neutron.service.envs }}
   when: (neutron.lbaas.enabled == "smart" and
-         groups['controller'][0] not in groups['compute']) or
+         groups['controller'][0] not in groups['compute_kvm']) or
          neutron.lbaas.enabled|bool
 
 - name: neutron lbaas config
@@ -71,7 +71,7 @@
     dest: /etc/neutron/neutron_lbaas.conf
     mode: 0644
   when: (neutron.lbaas.enabled == "smart" and
-         groups['controller'][0] not in groups['compute']) or
+         groups['controller'][0] not in groups['compute_kvm']) or
          neutron.lbaas.enabled|bool
   notify: restart neutron lbaas agent
 
@@ -81,7 +81,7 @@
     dest: /etc/neutron/services/loadbalancer/haproxy
     mode: 0644
   when: (neutron.lbaas.enabled == "smart" and
-         groups['controller'][0] not in groups['compute']) or
+         groups['controller'][0] not in groups['compute_kvm']) or
          neutron.lbaas.enabled|bool
   notify: restart neutron lbaas agent
 
@@ -98,7 +98,7 @@
 - name: start neutron lbaas agent
   service: name=neutron-lbaasv2-agent state=started
   when: (neutron.lbaas.enabled == "smart" and
-         groups['controller'][0] not in groups['compute']) or
+         groups['controller'][0] not in groups['compute_kvm']) or
          neutron.lbaas.enabled|bool
 
 - include: ipchanged.yml

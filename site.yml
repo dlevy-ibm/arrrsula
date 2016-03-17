@@ -201,7 +201,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn control plane
-  hosts: compute
+  hosts: compute_kvm
   roles:
     - role: ovn-controller
       tags: ['ovn', 'control']
@@ -264,11 +264,10 @@
 
 - name: nova data plane
   gather_facts: force
-  hosts: compute
+  hosts: compute_kvm
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
-      when: not ironic.enabled|bool
   environment: "{{ env_vars|default({}) }}"
 
 - name: cinder control plane
@@ -290,7 +289,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ceph compute
-  hosts: compute
+  hosts: compute_kvm
   gather_facts: force
   roles:
     - role: ceph-compute
@@ -308,7 +307,7 @@
 
 - name: neutron core data plane
   gather_facts: force
-  hosts: compute:network
+  hosts: compute_kvm:network
   roles:
     - role: neutron-data
       tags: ['openstack', 'neutron', 'data']
@@ -373,7 +372,7 @@
 
 - name: ceilometer data plane
   gather_facts: force
-  hosts: compute
+  hosts: compute_kvm
   roles:
     - role: ceilometer-data
       tags: ['openstack', 'ceilometer', 'data']
@@ -403,6 +402,13 @@
     - role: ironic-data
       tags: ['openstack', 'ironic', 'data']
       when: ironic.enabled|bool
+  environment: "{{ env_vars|default({}) }}"
+
+- name: ironic nova compute service
+  hosts: compute_ironic
+  roles:
+    - role: ironic-nova-compute
+      tags: ['openstack', 'ironic', 'control']
   environment: "{{ env_vars|default({}) }}"
 
 - name: openstack network setup

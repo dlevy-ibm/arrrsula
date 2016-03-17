@@ -1,0 +1,10 @@
+---
+dependencies:
+  - role: nova-data
+    nova:
+      compute_driver: nova.virt.ironic.IronicDriver
+      scheduler_host_manager: ironic_host_manager
+      scheduler_default_filters: RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ExactCoreFilter,ExactRamFilter,ExactDiskFilter
+      ram_allocation_ratio: 1.0
+      reserved_host_memory_mb: 0
+      cpu_allocation_ratio: 1.0
