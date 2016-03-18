@@ -59,8 +59,6 @@
   upstart_service:
     name: "{{ item.key }}"
     user: neutron
-    start_on: "starting neutron-linuxbridge-agent"
-    stop_on: "stopping neutron-linuxbridge-agent"
     cmd: "/usr/local/bin/{{ item.key }}"
     pidfile: "{{ item.value.pidfile|default(omit) }}"
     config_dirs: /etc/neutron
