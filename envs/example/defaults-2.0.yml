@@ -205,7 +205,7 @@ neutron:
   tunnel_types:
     - geneve
   lbaas:
-    enable: False
+    enabled: False
   logging:
     debug: True
     verbose: True
