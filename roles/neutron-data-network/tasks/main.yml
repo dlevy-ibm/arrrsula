@@ -33,44 +33,73 @@
   failed_when: iproute_out.rc == 255
   when: "'vxlan' in neutron.tunnel_types"
 
+- name: install neutron dhcp agent upstart script
+  upstart_service: name=neutron-dhcp-agent
+                   user=neutron
+                   cmd=/usr/local/bin/neutron-dhcp-agent
+                   pidfile={{ neutron.dhcp.pidfile|default(omit) }}
+                   config_dirs=/etc/neutron
+                   config_files=/etc/neutron/neutron.conf,{{ neutron.dhcp.agent.config_files }}
+                   envs={{ neutron.service.envs }}
+  when: neutron.dhcp.enabled|default(true)|bool
+
+- name: install neutron metadata agent upstart script
+  upstart_service: name=neutron-metadata-agent
+                   user=neutron
+                   cmd=/usr/local/bin/neutron-metadata-agent
+                   pidfile={{ neutron.metadata.pidfile|default(omit) }}
+                   config_dirs=/etc/neutron
+                   config_files=/etc/neutron/neutron.conf,{{ neutron.metadata.agent.config_files }}
+                   envs={{ neutron.service.envs }}
+  when: neutron.metadata.enabled|default(true)|bool
+
+- name: install neutron lbaas agent upstart script
+  upstart_service: name=neutron-lbaasv2-agent
+                   user=neutron
+                   cmd=/usr/local/bin/neutron-lbaasv2-agent
+                   pidfile={{ neutron.lbaas.pidfile|default(omit) }}
+                   config_dirs=/etc/neutron
+                   config_files=/etc/neutron/neutron.conf,{{ neutron.lbaas.agent.config_files }}
+                   envs={{ neutron.service.envs }}
+  when: (neutron.lbaas.enabled == "smart" and
+         groups['controller'][0] not in groups['compute']) or
+         neutron.lbaas.enabled|bool
+
 - name: neutron lbaas config
   template:
     src: etc/neutron/neutron_lbaas.conf
     dest: /etc/neutron/neutron_lbaas.conf
     mode: 0644
-  when: (neutron.lbaas.enable == "smart" and
+  when: (neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or
-         neutron.lbaas.enable|bool
-  notify:
-    - restart neutron lbaas agent
+         neutron.lbaas.enabled|bool
+  notify: restart neutron lbaas agent
 
 - name: neutron lbaas agent config
   template:
     src: etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini
     dest: /etc/neutron/services/loadbalancer/haproxy
     mode: 0644
-  when: (neutron.lbaas.enable == "smart" and
+  when: (neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or
-         neutron.lbaas.enable|bool
-  notify:
-    - restart neutron lbaas agent
-
-- name: install neutron-data-network services
-  upstart_service:
-    name: "{{ item.key }}"
-    user: neutron
-    cmd: "/usr/local/bin/{{ item.key }}"
-    pidfile: "{{ item.value.pidfile|default(omit) }}"
-    config_dirs: /etc/neutron
-    config_files: /etc/neutron/neutron.conf,{{ item.value.config_files }}
-    envs: "{{ neutron.service.envs }}"
-  with_dict: neutron.agents
+         neutron.lbaas.enabled|bool
+  notify: restart neutron lbaas agent
 
 - meta: flush_handlers
 
-- name: start neutron-data-network services
-  service: name={{ item.key }} state=started
-  with_dict: neutron.agents
+- name: start neutron dhcp agent
+  service: name=neutron-dhcp-agent state=started
+  when: neutron.dhcp.enabled|bool
+
+- name: start neutron metadata agent
+  service: name=neutron-metadata-agent state=started
+  when: neutron.metadata.enabled|bool
+
+- name: start neutron lbaas agent
+  service: name=neutron-lbaasv2-agent state=started
+  when: (neutron.lbaas.enabled == "smart" and
+         groups['controller'][0] not in groups['compute']) or
+         neutron.lbaas.enabled|bool
 
 - include: ipchanged.yml
 
