@@ -42,14 +42,24 @@ neutron:
   # Tunneling encapsulations enabled e.g. gre, vxlan
   # Including any tunnels will enable tunnling
   tunnel_types: []
+  dhcp:
+    enabled: true
+    agent:
+      config_files: /etc/neutron/dhcp_agent.ini
+  metadata:
+    enabled: true
+    agent:
+      config_files: /etc/neutron/metadata_agent.ini
   lbaas:
     # enabled can be "smart" or true / false. Smart will turn on lbaas if
     # controllers are dedicated.
-    enable: smart
+    enabled: smart
     interface_driver: neutron.agent.linux.interface.BridgeInterfaceDriver
     service_plugin:
       - neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2
     service_provider: LOADBALANCERV2:Haproxy:neutron_lbaas.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
+    agent:
+      config_files: /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini,/etc/neutron/neutron_lbaas.conf
   service:
     envs: []
   source:
@@ -105,10 +115,3 @@ neutron:
     verbose: True
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   enable_external_interface: False
-  agents:
-    neutron-dhcp-agent:
-      config_files: /etc/neutron/dhcp_agent.ini
-    neutron-metadata-agent:
-      config_files: /etc/neutron/metadata_agent.ini
-    neutron-lbaasv2-agent:
-      config_files: /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini,/etc/neutron/neutron_lbaas.conf
