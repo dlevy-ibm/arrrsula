@@ -152,4 +152,4 @@ ssl:
       7fjuYUd1fl77WZDTbUE5kuNlu918AHgSCMc7fxbIw2KXxOuimfLJ9w8=
       -----END RSA PRIVATE KEY-----
   # remove this line out if using a real CA supplied cert
-  cafile: /usr/local/share/ca-certificates/{{ endpoints.main }}.crt
+cafile: "/usr/local/share/ca-certificates/{{ endpoints.main }}.crt"
