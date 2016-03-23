@@ -1,4 +1,9 @@
 ---
+
+- name: Use local copy of superrepo
+  file: path=/opt/stack state=link src=/srv/git/openstack
+  when: openstack_source.use_superproject and openstack_source.use_local_superproject
+
 - name: get openstack superrepo
   git: repo="{{ openstack_source.git_mirror }}/openstack"
        dest="/opt/stack"
@@ -9,7 +14,7 @@
   register: git_result
   until: git_result|success
   retries: 3
-  when: openstack_source.use_superproject
+  when: openstack_source.use_superproject and not openstack_source.use_local_superproject
 
 - name: initialize repo submodules
   command: git submodule init

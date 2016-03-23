@@ -27,6 +27,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.cache.scope = :box
   end
 
+  if SETTINGS['local_superproject']
+    config.vm.synced_folder SETTINGS['local_superproject'], "/srv/git/openstack"
+  end
+
   config.vm.box = BOX_NAME
   config.vm.provider "virtualbox" do |v|
     v.memory = SETTINGS['default']['memory']
