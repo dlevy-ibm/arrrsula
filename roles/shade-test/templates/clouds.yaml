@@ -1,0 +1,35 @@
+clouds:
+  devstack:
+{% if client.self_signed_cert -%}
+    cacert: "{{ client.ca_path }}"
+{% else %}
+    cacert: /etc/ssl/certs/ca-certificates.crt
+{% endif %}
+    region_name: {{ shadetest_region }}
+    identity_api_version: '{{ shadetest_identity_api_version }}'
+    volume_api_version: '2'
+    auth:
+      auth_url: {{ shadetest_keystone_auth_url }}
+      username: {{ shadetest_nonadmin_username }}
+      password: {{ shadetest_nonadmin_password }}
+      project_name: demo
+      domain_name: default
+      project_domain_id: default
+      user_domain_id: default
+  devstack-admin:
+{% if client.self_signed_cert -%}
+    cacert: "{{ client.ca_path }}"
+{% else %}
+    cacert: /etc/ssl/certs/ca-certificates.crt
+{% endif %}
+    region_name: {{ shadetest_region }}
+    identity_api_version: '{{ shadetest_identity_api_version }}'
+    volume_api_version: '2'
+    auth:
+      auth_url: {{ shadetest_keystone_auth_url }}
+      username: {{ shadetest_admin_username }}
+      password: {{ shadetest_admin_password }}
+      project_name: admin
+      domain_name: default
+      project_domain_id: default
+      user_domain_id: default
