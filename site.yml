@@ -1,7 +1,6 @@
 ---
 - name: Set up resolvconf
   hosts: all
-  run_once: true
   gather_facts: false
   roles:
     - role: resolvconf
