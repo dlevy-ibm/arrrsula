@@ -1,11 +1,4 @@
 ---
-- name: Set up resolvconf
-  hosts: all
-  gather_facts: false
-  roles:
-    - role: resolvconf
-      localhost_only: true
-
 - name: wait for hosts to be up with SSH
   hosts: all
   gather_facts: false
