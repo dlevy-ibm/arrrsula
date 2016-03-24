@@ -1,4 +1,12 @@
 ---
+- name: Set up resolvconf on localhost
+  hosts: localhost
+  delegate_to: localhost
+  run_once: true
+  gather_facts: false
+  roles:
+    - role: resolvconf
+
 - name: wait for hosts to be up with SSH
   hosts: all
   gather_facts: false
