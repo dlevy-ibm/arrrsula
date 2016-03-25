@@ -34,6 +34,7 @@
       register: apt_install_kernel
       with_items:
         - linux-image-{{ kernel_override_version }}-generic
+        - linux-image-extra-{{ kernel_override_version }}-generic
         - linux-headers-{{ kernel_override_version }}-generic
       when: kernel_override_version is defined
     - name: update vbox additions
