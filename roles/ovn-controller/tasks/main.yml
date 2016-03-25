@@ -1,5 +1,5 @@
 - name: install dependencies
-  apt: pkg={{ item }}
+  apt: pkg={{ item }} state=latest
   with_items:
     - openvswitch-common
     - openvswitch-datapath-dkms
