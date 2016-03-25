@@ -1,3 +1,5 @@
+# {{ ansible_managed }}
+
 clouds:
   admin:
     auth:
@@ -5,11 +7,13 @@ clouds:
       project_name: admin
       auth_url: "{{ endpoints.auth_url }}"
       password: "{{ secrets.admin_password }}"
-      project_domain_id: default
-      user_domain_id: default
+      project_domain_name: default
+      user_domain_name: default
 {% if client.self_signed_cert -%}
     cacert: "{{ client.ca_path }}"
 {% else %}
     cacert: /etc/ssl/certs/ca-certificates.crt
-{% endif -%}
+{% endif %}
+    identity_api_version: '3'
+    image_api_version: '2'
     volume_api_version: '2'
