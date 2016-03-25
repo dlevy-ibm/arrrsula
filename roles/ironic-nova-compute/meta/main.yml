@@ -8,3 +8,4 @@ dependencies:
       ram_allocation_ratio: 1.0
       reserved_host_memory_mb: 0
       cpu_allocation_ratio: 1.0
+    compute_ag: baremetal
