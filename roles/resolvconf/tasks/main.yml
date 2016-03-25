@@ -1,13 +1,6 @@
 - name: resolv.conf file
   template: src=etc/resolv.conf.j2 dest=/etc/resolv.conf owner=root group=root mode=0644
             backup=yes
-  when: etc_resolv_conf is defined and not localhost_only
-  tags: ['prereboot']
-
-- name: resolv.conf file
-  delegate_to: localhost
-  run_once: true
-  template: src=etc/resolv.conf.j2 dest=/etc/resolv.conf owner=root group=root mode=0644
-            backup=yes
   when: etc_resolv_conf is defined
   tags: ['prereboot']
+
