@@ -47,6 +47,8 @@ nova:
     python_dependencies:
       - { name: PyMySQL }
       - { name: python-memcached }
+      - { name: python-ironicclient }
+      - { name: pyopenssl }
     system_dependencies:
       - libjs-jquery-tablesorter
       - python-libvirt

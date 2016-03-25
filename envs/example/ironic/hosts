@@ -12,3 +12,6 @@ allinone
 
 [cinder_volume]
 allinone
+
+[ironic_nova_compute]
+allinone

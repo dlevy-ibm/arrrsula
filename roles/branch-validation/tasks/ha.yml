@@ -25,7 +25,7 @@
     reuse: true
   register: fip_compute
   with_items:
-    - "{{ (groups['compute']|difference(groups[ha_instance_group]))[0] }}"
+    - "{{ (groups['compute_kvm']|difference(groups[ha_instance_group]))[0] }}"
 
 - name: floating ips are reachable
   command: "ping -c 5 {{ item.floating_ip.floating_ip_address }}"

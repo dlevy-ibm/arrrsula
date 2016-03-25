@@ -1,6 +1,6 @@
 ---
 - include: ssh.yml
-  when: nova.enable_ssh|bool
+  when: nova.enable_ssh|bool and (not inventory_hostname in groups['compute_ironic'])
 
 - include: libvirt.yml
   when: nova.compute_driver == "libvirt.LibvirtDriver"
