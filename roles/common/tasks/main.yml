@@ -1,4 +1,6 @@
 ---
+- include: resizeroot.yml
+
 - name: set hostname
   hostname: name={{ hostname }}
   when: hostname is defined
