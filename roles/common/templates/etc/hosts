@@ -11,3 +11,6 @@ ff02::2 ip6-allrouters
 {% for entry in etc_hosts -%}
 {{ entry.ip }} {{ entry.name }}
 {% endfor %}
+{% for host in groups['all'] | difference([inventory_hostname]) %}
+{{ hostvars[host][hostvars[host]["primary_interface"]]['ipv4']['address'] }} {{ host }}
+{% endfor %}
