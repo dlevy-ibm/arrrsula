@@ -1,10 +1,10 @@
 - name: Determine root filesystem device
   set_fact: root_device={{ item.device }}
-  when: "{{ item.mount == '/' }}"
-  with_items: "{{ ansible_mounts }}"
+  when: item.mount == '/'
+  with_items: ansible_mounts
 
 - name: Resize root device
-  when: "{{ root_device is defined }}"
+  when: root_device is defined
   command: "resize2fs {{ root_device }}"
   register: resize2fs_command
   changed_when: "'Nothing to do' not in resize2fs_command.stderr"
