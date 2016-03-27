@@ -202,7 +202,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn control plane
-  hosts: compute_kvm
+  hosts: compute
   roles:
     - role: ovn-controller
       tags: ['ovn', 'control']
@@ -265,7 +265,7 @@
 
 - name: nova data plane
   gather_facts: force
-  hosts: compute_kvm
+  hosts: compute
   roles:
     - role: nova-data
       tags: ['openstack', 'nova', 'data']
@@ -290,7 +290,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ceph compute
-  hosts: compute_kvm
+  hosts: compute
   gather_facts: force
   roles:
     - role: ceph-compute
@@ -308,7 +308,7 @@
 
 - name: neutron core data plane
   gather_facts: force
-  hosts: compute_kvm:network
+  hosts: compute:network
   roles:
     - role: neutron-data
       tags: ['openstack', 'neutron', 'data']
@@ -373,7 +373,7 @@
 
 - name: ceilometer data plane
   gather_facts: force
-  hosts: compute_kvm
+  hosts: compute
   roles:
     - role: ceilometer-data
       tags: ['openstack', 'ceilometer', 'data']
