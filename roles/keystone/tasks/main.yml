@@ -49,7 +49,7 @@
   tags: fernet-setup
 
 - name: list fernet keys
-  shell: ls /etc/keystone/fernet-keys | grep "^[0-9]+$"
+  shell: ls /etc/keystone/fernet-keys | grep -E "^[0-9]+$"
   register: fernet_list
   failed_when: false
   changed_when: false
@@ -82,7 +82,7 @@
 
 - name: sync keys to all other controllers
   synchronize:
-    src: /etc/keystone/fernet-keys
+    src: /etc/keystone/fernet-keys/
     dest: /etc/keystone/fernet-keys
   delegate_to: "{{ groups['controller'][0] }}"
   when: fernet_list.rc != 0 or fernet_list.stdout == ''
