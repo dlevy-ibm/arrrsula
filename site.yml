@@ -418,7 +418,7 @@
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network']
-      when: provider_interface
+      when: provider_interface is defined
   environment: "{{ env_vars|default({}) }}"
 
 - name: openstack base setup
