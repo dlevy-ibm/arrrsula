@@ -1,5 +1,6 @@
 ---
 heat:
+  enable_fatal_deprecations: False
   enabled: True
   heartbeat_timeout_threshold: 30
   source:
@@ -35,7 +36,10 @@ heat:
         tags: heat,heat-manage
   logging:
     debug: False
-    verbose: True
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   plugin_dirs: []
   engine_workers: 4
+  stack_user_domain_name: heat
+  domain_admin: heat_domain_admin
+  stack_owner: heat_stack_owner
+  stack_user: heat_stack_user
