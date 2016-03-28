@@ -414,6 +414,7 @@
 
 - name: openstack network setup
   hosts: network
+  gather_facts: force
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network']
