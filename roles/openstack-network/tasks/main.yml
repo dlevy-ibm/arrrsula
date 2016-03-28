@@ -1,6 +1,6 @@
 - name: bounce provider network interface after ovs changes to move IP
   command: ifdown {{ provider_interface_device }}
-  when: "'ipv4' in hostvars[inventory_hostname]['provider_interface']"
+  when: "'ipv4' in hostvars[inventory_hostname][provider_interface]"
   notify: ifup provider network interface
 
 - name: add provider network interface as port on provider network bridge
