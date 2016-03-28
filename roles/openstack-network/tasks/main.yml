@@ -1,10 +1,3 @@
----
-- name: debug hostvars
-  debug: var=hostvars[inventory_hostname]
-
-- name: debug provider_interface
-  debug: var=provider_interface
-
 - name: bounce provider network interface after ovs changes to move IP
   command: ifdown {{ provider_interface_device }}
   when: "'ipv4' in hostvars[inventory_hostname][provider_interface]"
