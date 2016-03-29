@@ -24,36 +24,6 @@
       when: openstack_source.use_superproject
   environment: "{{ env_vars|default({}) }}"
 
-- name: override stock kernel kernel version
-  hosts: all
-  gather_facts: false
-  tasks:
-    - name: install kernel packages
-      sudo: yes
-      apt: pkg="{{ item }}"
-      register: apt_install_kernel
-      with_items:
-        - linux-image-{{ kernel_override_version }}-generic
-        - linux-image-extra-{{ kernel_override_version }}-generic
-        - linux-headers-{{ kernel_override_version }}-generic
-      when: kernel_override_version is defined
-    - name: update vbox additions
-      when: "'vagrant' in stack_env and apt_install_kernel.changed"
-      shell: /etc/init.d/vboxadd setup
-      sudo: yes
-      ignore_errors: true
-    - name: restart server
-      sudo: yes
-      shell: sleep 2 && shutdown -r now "Rebooting to activate new kernel."
-      async: 1
-      poll: 0
-      ignore_errors: true
-      when: kernel_override_version is defined and apt_install_kernel.changed
-    - name: wait for hosts to be up with SSH after kernel upgrade
-      local_action: wait_for timeout={{wait_for_all_timeout}} host={{ ansible_ssh_host | default(inventory_hostname) }} state=started delay=30
-      sudo: no
-      when: wait_for_all_timeout|default(0) > 0 and kernel_override_version is defined and apt_install_kernel.changed
-  tags: ['kernel']
 
 - name: security and errata
   hosts: all
@@ -427,6 +397,37 @@
     - role: 'openstack-setup'
       tags: ['openstack-setup', 'openstack', 'setup']
   environment: "{{ env_vars|default({}) }}"
+
+- name: override stock kernel kernel version
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: install kernel packages
+      sudo: yes
+      apt: pkg="{{ item }}"
+      register: apt_install_kernel
+      with_items:
+        - linux-image-{{ kernel_override_version }}-generic
+        - linux-image-extra-{{ kernel_override_version }}-generic
+        - linux-headers-{{ kernel_override_version }}-generic
+      when: kernel_override_version is defined
+    - name: update vbox additions
+      when: "'vagrant' in stack_env and apt_install_kernel.changed"
+      shell: /etc/init.d/vboxadd setup
+      sudo: yes
+      ignore_errors: true
+    - name: restart server
+      sudo: yes
+      shell: sleep 2 && shutdown -r now "Rebooting to activate new kernel."
+      async: 1
+      poll: 0
+      ignore_errors: true
+      when: kernel_override_version is defined and apt_install_kernel.changed
+    - name: wait for hosts to be up with SSH after kernel upgrade
+      local_action: wait_for timeout={{wait_for_all_timeout}} host={{ ansible_ssh_host | default(inventory_hostname) }} state=started delay=30
+      sudo: no
+      when: wait_for_all_timeout|default(0) > 0 and kernel_override_version is defined and apt_install_kernel.changed
+  tags: ['kernel']
 
 - name: Shade test
   hosts: shadetest
