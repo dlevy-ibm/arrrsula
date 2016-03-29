@@ -20,6 +20,8 @@
 
 - name: update apt index
   apt: update_cache=yes cache_valid_time=3600
+  retries: 3
+  delay: 30
   tags: ['prereboot']
 
 - include: system-tools.yml
