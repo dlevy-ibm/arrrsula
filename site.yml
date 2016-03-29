@@ -368,7 +368,8 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ironic data plane
-  hosts: controller
+  gather_facts: force
+  hosts: ironic
   roles:
     - role: ironic-data
       tags: ['openstack', 'ironic', 'data']
@@ -380,6 +381,7 @@
   roles:
     - role: ironic-nova-compute
       tags: ['openstack', 'ironic', 'control']
+      when: ironic.enabled|bool
   environment: "{{ env_vars|default({}) }}"
 
 - name: openstack network setup
