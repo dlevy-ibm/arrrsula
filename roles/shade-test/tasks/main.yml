@@ -1,0 +1,26 @@
+- name: Create local user to run shade as
+  user: name={{ shadetest_user }} state=present
+
+- name: Get shade from git
+  git: repo=https://git.openstack.org/openstack-infra/shade.git dest=~{{ shadetest_user }}/shade update=yes
+  become_user: "{{ shadetest_user }}"
+
+- name: Make ~/.config/openstack dir
+  file: path=~{{ shadetest_user }}/.config/openstack state=directory
+  become_user: "{{ shadetest_user }}"
+
+- name: Create clouds.yaml
+  template: src=clouds.yaml dest=~{{ shadetest_user }}/.config/openstack/clouds.yaml
+  become_user: "{{ shadetest_user }}"
+
+- name: install tox
+  pip: name=tox virtualenv=~{{ shadetest_user }}/tox
+  become_user: "{{ shadetest_user }}"
+
+- name: Run shade test
+  command: ~{{ shadetest_user }}/tox/bin/tox -efunctional
+  args:
+    chdir: ~{{ shadetest_user }}/shade
+  become_user: "{{ shadetest_user }}"
+  ignore_errors: true # Until it passes reliably
+  run_once: true

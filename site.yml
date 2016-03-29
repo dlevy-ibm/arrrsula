@@ -428,9 +428,16 @@
       tags: ['openstack-setup', 'openstack', 'setup']
   environment: "{{ env_vars|default({}) }}"
 
+- name: Shade test
+  hosts: controller
+  roles:
+    - shade-test
+  tags: [ 'test' ]
+
 - name: install tempest
   hosts: tempest
   roles:
     - role: tempest
       tags:
       - tempest
+
