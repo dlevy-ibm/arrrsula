@@ -15,3 +15,7 @@
 
 - include: computes.yml
   tags: hostagg
+
+- include: baremetal_flavors.yml
+  tags: ironic
+  when: ironic.enabled|default('False')|bool
