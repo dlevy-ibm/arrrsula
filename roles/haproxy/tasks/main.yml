@@ -10,12 +10,22 @@
 - name: fix haproxy init script
   template: src=etc/init.d/haproxy dest=/etc/init.d/haproxy mode=0755
 
-- name: install ssl cert+key
+- name: install ssl cert+key from inventory
   template: src=etc/haproxy/openstack.pem dest=/etc/haproxy/openstack.pem
             owner=haproxy group=haproxy mode=0600
   notify: reload haproxy
   tags:
     - ssl
+  when: letsencrypt_domains is not defined
+
+- name: install ssl cert+key from letsencrypt
+  shell: cat /etc/letsencrypt/live/{{ letsencrypt_domains[0].name }}/cert.pem /etc/letsencrypt/live/{{ letsencrypt_domains[0].name }}/chain.pem /etc/letsencrypt/live/{{ letsencrypt_domains[0].name }}/privkey.pem > /etc/haproxy/openstack.pem
+  args:
+    creates: /etc/haproxy/openstack.pem
+  notify: reload haproxy
+  tags:
+    - ssl
+  when: letsencrypt_domains is defined
 
 - name: haproxy config
   template: src=etc/haproxy/haproxy_{{ haproxy_type }}.cfg
