@@ -7,6 +7,7 @@
     - ovn-common
     - ovn-host
     - python-openvswitch
+  tags: ['prereboot']
 
 - name: start openvswitch service
   service: name=openvswitch-switch state=started enabled=yes
