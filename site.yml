@@ -380,7 +380,7 @@
   hosts: compute_ironic
   roles:
     - role: ironic-nova-compute
-      tags: ['openstack', 'ironic', 'control']
+      tags: ['openstack', 'ironic', 'nova', 'control']
       when: ironic.enabled|bool
   environment: "{{ env_vars|default({}) }}"
 
