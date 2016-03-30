@@ -22,10 +22,6 @@
 
 - meta: flush_handlers
 
-- name: update apt index with shell
-  # This removes some not-quite locking dpgk lock
-  shell: "apt-get update"
-
 - name: update apt index
   apt: update_cache=yes cache_valid_time=3600
   retries: 3
