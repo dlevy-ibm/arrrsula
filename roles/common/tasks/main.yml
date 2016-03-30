@@ -10,10 +10,17 @@
   register: result
   changed_when: result.stderr == ''
 
+# In some ENVs this might be a symlink, not a directory, so skip the next test
+# if it already exists in either case
+- name: Stat /var/lib/apt/lists dir
+  stat: path=/var/lib/apt/lists
+  register: result
+
 # If this dir is missing then python apt.Cache().update() fails
 - name: Create /var/lib/apt/lists dir
   file: dest=/var/lib/apt/lists state=directory owner=root group=root mode=755
   tags: ['prereboot']
+  when: not result.stat.exists
 
 - name: ubuntu apt source list
   template: src=etc/apt/sources.list dest=/etc/apt/sources.list
