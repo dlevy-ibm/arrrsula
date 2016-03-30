@@ -13,6 +13,7 @@
 # If this dir is missing then python apt.Cache().update() fails
 - name: Create /var/lib/apt/lists dir
   file: dest=/var/lib/apt/lists state=directory owner=root group=root mode=755
+  tags: ['prereboot']
 
 - name: ubuntu apt source list
   template: src=etc/apt/sources.list dest=/etc/apt/sources.list
