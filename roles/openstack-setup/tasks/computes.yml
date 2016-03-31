@@ -3,7 +3,7 @@
   os_nova_host_agg:
     name: "{{ hostvars[item]['compute_ag'] }}"
     az: "{{ hostvars[item]['compute_ag'] }}"
-    state: present 
+    state: present
     auth:
       auth_url: "{{ endpoints.auth_uri }}"
       project_name: admin
@@ -17,7 +17,7 @@
   os_nova_host_agg_host:
     name: "{{ hostvars[item]['compute_ag'] }}"
     host: "{{ hostvars[item]['ansible_nodename'] }}"
-    state: present 
+    state: present
     auth:
       auth_url: "{{ endpoints.auth_uri }}"
       project_name: admin
