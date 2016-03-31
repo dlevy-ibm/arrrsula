@@ -10,8 +10,5 @@
 - name: Install vtep-ovsdb upstart script
   copy: src=vtep-ovsdb.conf dest=/etc/init/vtep-ovsdb.conf owner=root group=root mode=0644
 
-- name: Install vtep-ovsdb defaults
-  template: src=vtep-ovsdb.defaults dest=/etc/default/vtep-ovsdb owner=root group=root mode=0644
-
 - name: Ensure service is running / enabled
   service: name=ovn-controller-vtep state=started enabled=yes
