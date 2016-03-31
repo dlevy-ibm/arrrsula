@@ -2,6 +2,7 @@
   apt: pkg={{ item }} state=latest
   with_items:
     - openvswitch-switch
+    - openvswitch-vtep
     - ovn-controller-vtep
 
 - name: Install ovn-controller-vtep upstart script
