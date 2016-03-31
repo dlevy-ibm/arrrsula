@@ -1,0 +1,22 @@
+---
+
+- name: Check for baremetal flavor
+  shell: "openstack flavor list -f json | grep baremetal"
+  register: flavor_list
+  ignore_errors: true
+  environment:
+    OS_AUTH_URL: "{{ endpoints.auth_uri }}"
+    OS_USERNAME: admin
+    OS_PASSWORD: "{{ secrets.admin_password }}"
+    OS_PROJECT_NAME: admin
+
+
+- name: Create baremetal flavor
+  command: "openstack flavor create --id 99 --ram 1024 --disk 10 baremetal"
+  when: flavor_list|failed
+  environment:
+    OS_AUTH_URL: "{{ endpoints.auth_uri }}"
+    OS_USERNAME: admin
+    OS_PASSWORD: "{{ secrets.admin_password }}"
+    OS_PROJECT_NAME: admin
+
