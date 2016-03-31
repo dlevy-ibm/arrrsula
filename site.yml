@@ -129,12 +129,6 @@
       tags: ['infra']
   environment: "{{ env_vars|default({}) }}"
 
-- name: letsencrypt certificates
-  hosts: controller
-  roles:
-    - role: letsencrypt
-      when: letsencrypt_domains is defined
-
 - name: controller haproxy
   gather_facts: force
   hosts: controller
