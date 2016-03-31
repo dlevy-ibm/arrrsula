@@ -11,7 +11,7 @@
       password: "{{ secrets.admin_password }}"
   run_once: True
   when: hostvars[item]['compute_ag'] is defined
-  with_items: "{{ groups['compute_kvm'] }} {{ groups['compute_ironic'] }}"
+  with_items: "{{ groups['compute'] }} {{ groups['compute_ironic'] }}"
 
 - name: assign hosts to aggs
   os_nova_host_agg_host:
@@ -25,4 +25,4 @@
       password: "{{ secrets.admin_password }}"
   run_once: True
   when: hostvars[item]['compute_ag'] is defined
-  with_items: "{{ groups['compute_kvm'] }} {{ groups['compute_ironic'] }}"
+  with_items: "{{ groups['compute'] }} {{ groups['compute_ironic'] }}"
