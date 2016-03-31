@@ -179,6 +179,11 @@
       when: neutron.plugin == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
+- name: ovn-controller-vtep
+  hosts: vtep-controller
+  roles:
+    - role: ovn-controller-vtep
+
 # VTEP EMULATOR
 
 - name: vtep emulator
