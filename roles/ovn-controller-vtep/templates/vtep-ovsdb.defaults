@@ -1,3 +1,0 @@
-PRIVATE_KEY_PATH={{ ovn_controller_vtep.ssl.private_key_path }}
-CERT_PATH={{ ovn_controller_vtep.ssl.cert_path }}
-BOOTSTRAP_CERT_PATH={{ ovn_controller_vtep.ssl.bootstrap_cert_path }}
