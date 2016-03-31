@@ -1,0 +1,7 @@
+- name: install dependencies
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - ovn-controller-vtep
+
+- name: Ensure service is running / enabled
+  service: name=ovn-controller-vtep state=started enabled=yes
