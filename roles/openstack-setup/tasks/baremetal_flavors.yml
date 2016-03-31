@@ -13,6 +13,7 @@
 
 - name: Create baremetal flavor
   command: "openstack flavor create --id 99 --ram 1024 --disk 10 baremetal"
+  run_once: true
   when: flavor_list|failed
   environment:
     OS_AUTH_URL: "{{ endpoints.auth_uri }}"
