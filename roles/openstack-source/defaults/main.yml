@@ -9,5 +9,6 @@ openstack_source:
   system_dependencies: "{{ system_dependencies|default([]) }}"
   python_dependencies: "{{ python_dependencies|default([]) }}"
   openstack_dependencies: "{{ openstack_dependencies|default([]) }}"
+  pip_upgrade: no
   use_superproject: no
   use_constraints: no
