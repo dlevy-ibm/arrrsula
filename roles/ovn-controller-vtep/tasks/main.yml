@@ -4,7 +4,7 @@
     - ovn-controller-vtep
 
 - name: Install ovn-controller-vtep upstart script
-  file: src=ovn-controller-vtep.conf dest=/etc/init/ovn-controller-vtep.conf owner=root group=root mode=0644
+  copy: src=ovn-controller-vtep.conf dest=/etc/init/ovn-controller-vtep.conf owner=root group=root mode=0644
 
 - name: Install ovn-controller-vtep defaults
   template: src=ovn-controller-vtep.defaults dest=/etc/defaults/ovn-controller-vtep owner=root group=root mode=0644
