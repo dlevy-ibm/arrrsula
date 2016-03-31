@@ -15,6 +15,7 @@
 - name: Stat /var/lib/apt/lists dir
   stat: path=/var/lib/apt/lists
   register: result
+  tags: ['prereboot']
 
 # If this dir is missing then python apt.Cache().update() fails
 - name: Create /var/lib/apt/lists dir
