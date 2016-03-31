@@ -7,7 +7,7 @@
   copy: src=ovn-controller-vtep.conf dest=/etc/init/ovn-controller-vtep.conf owner=root group=root mode=0644
 
 - name: Install ovn-controller-vtep defaults
-  template: src=ovn-controller-vtep.defaults dest=/etc/defaults/ovn-controller-vtep owner=root group=root mode=0644
+  template: src=ovn-controller-vtep.defaults dest=/etc/default/ovn-controller-vtep owner=root group=root mode=0644
 
 - name: Ensure service is running / enabled
   service: name=ovn-controller-vtep state=started enabled=yes
