@@ -1,0 +1,2 @@
+VTEP_DB={{ ovn_controller_vtep.vtep_db }}
+OVNSB_DB={{ ovn_controller_vtep.ovnsb_db }}
