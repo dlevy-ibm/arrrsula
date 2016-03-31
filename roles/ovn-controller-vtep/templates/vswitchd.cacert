@@ -1,3 +1,0 @@
-{% for cert in ssl.extracerts %}
-{{ cert.content }}
-{% endfor %}
