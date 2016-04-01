@@ -19,30 +19,50 @@
     - tftp
     - tftpd-hpa
 
-- name: create tftpboot
-  file: path={{ ironic.tftpboot_path }}
+- name: create pxe and ipxe directories
+  file: name={{item}}
         state=directory
         owner=ironic
         group=ironic
         mode=0755
+  with_items:
+      - "{{ ironic.tftpboot_path }}"
+      - "{{ ironic.tftpboot_path }}/pxelinux.cfg"
+      - "{{ ironic.httpboot_path }}"
+      - "{{ ironic.httpboot_path }}/pxelinux.cfg"
+      - "{{ ironic.tftpboot_path }}/master_images"
 
-# NOTE(deva)
-# we may need to make some changes here to add iPXE support
+- name: "override default pxelinux.0 source for Ubuntu >= 14.10"
+  set_fact:
+     syslinux_tftp_dir: '/usr/lib/PXELINUX'
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_version|version_compare('14.10', '>=')
 
 - name: check if pxelinux.0 exists
   stat: path={{ ironic.tftpboot_path }}/pxelinux.0
   register: pxe
 
 - name: copy pxelinux.0 to tftpboot
-  command: cp /usr/lib/syslinux/pxelinux.0 {{ ironic.tftpboot_path }}/
+  command: cp {{syslinux_tftp_dir}}/pxelinux.0 {{ ironic.tftpboot_path }}/
   when: pxe.stat.exists == False
 
 - name: create tfpd map file
-  copy: src=tftpboot/map-file dest=/tftpboot/map-file
+  copy: src=map-file dest={{ ironic.tftpboot_path }}/map-file owner=ironic group=ironic mode=0744
 
 - name: create tftpd defaults
   template: src=etc/default/tftpd-hpa dest=/etc/default/tftpd-hpa
   notify: restart tftpd
+
+- name: copy ipxe helper script
+  copy: src=boot.ipxe dest={{ ironic.httpboot_path }}/boot.ipxe owner=ironic group=ironic mode=0744
+
+- name: copy ipxe boot image into tftp dir
+  command: cp /usr/lib/ipxe/undionly.kpxe {{ ironic.tftpboot_path }}/
+
+- name: copy ipxe full image into tftp dir
+  command: cp /usr/lib/ipxe/ipxe.pxe {{ ironic.tftpboot_path }}/
+
+- name: copy ipxe full image into http dir
+  command: cp /usr/lib/ipxe/ipxe.pxe {{ ironic.httpboot_path }}/
 
 - name: permit access to tftpd
   ufw: rule=allow port=69 proto=udp
@@ -53,6 +73,20 @@
   ufw: rule=allow port=53
        to_ip={{ ironic.dns_server }}
   tags: ufw
+
+- name: copy apache configs
+  template: src=etc/apache2/sites-available/ironic-ipxe.conf
+            dest=/etc/apache2/sites-available/ironic-ipxe.conf
+  notify:
+      - restart apache
+
+- name: enable apache site
+  file:
+    state: link
+    src: /etc/apache2/sites-available/ironic-ipxe.conf
+    dest: /etc/apache2/sites-enabled/ironic-ipxe.conf
+  notify:
+      - restart apache
 
 - name: start ironic controller services
   service: name={{ item }} state=started
