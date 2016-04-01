@@ -1,8 +1,8 @@
 ---
 - name: create host aggs
   os_nova_host_agg:
-    name: "{{ hostvars[item]['compute_ag'] }}"
-    az: "{{ hostvars[item]['compute_ag'] }}"
+    name: "{{ hostvars[item]['nova']['compute_ag'] }}"
+    az: "{{ hostvars[item]['nova']['zone']|default('default_zone') }}"
     state: present
     auth:
       auth_url: "{{ endpoints.auth_uri }}"
@@ -10,13 +10,13 @@
       username: admin
       password: "{{ secrets.admin_password }}"
   run_once: True
-  when: hostvars[item]['compute_ag'] is defined
+  when: hostvars[item]['nova']['compute_ag'] is defined
   with_items: "{{ groups['compute'] + groups['compute_ironic']|default([]) }}"
 
 - name: assign hosts to aggs
   os_nova_host_agg_host:
-    name: "{{ hostvars[item]['compute_ag'] }}"
-    host: "{{ hostvars[item]['ansible_nodename'] }}"
+    name: "{{ hostvars[item]['nova']['compute_ag'] }}"
+    host: "{{ hostvars[item]['inventory_hostname'] }}"
     state: present
     auth:
       auth_url: "{{ endpoints.auth_uri }}"
@@ -24,5 +24,5 @@
       username: admin
       password: "{{ secrets.admin_password }}"
   run_once: True
-  when: hostvars[item]['compute_ag'] is defined
+  when: hostvars[item]['nova']['compute_ag'] is defined
   with_items: "{{ groups['compute'] + groups['compute_ironic']|default([]) }}"
