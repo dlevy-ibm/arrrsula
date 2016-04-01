@@ -183,6 +183,7 @@
   hosts: vtep-controller
   roles:
     - role: ovn-controller-vtep
+  tags: ['vtep']
 
 # VTEP EMULATOR
 

@@ -12,10 +12,10 @@
   template: src=etc/init/vtep-ovsdb.conf.j2 dest=/etc/init/vtep-ovsdb.conf owner=root group=root mode=0644
 
 - name: Install vtep-ovsdb ssl cert
-  copy: content='{{ ssl.ca.crt }}' dest=/etc/openvswitch/ovsclient-privkey.pem owner=root group=root mode=0600
+  copy: content='{{ ssl.crt }}' dest=/etc/openvswitch/ovsclient-privkey.pem owner=root group=root mode=0600
 
 - name: Install vtep-ovsdb ssl key
-  copy: content='{{ ssl.ca.key }}' dest=/etc/openvswitch/ovsclient-privkey.pem owner=root group=root mode=0600
+  copy: content='{{ ssl.key }}' dest=/etc/openvswitch/ovsclient-privkey.pem owner=root group=root mode=0600
 
 - name: Install vtep-ovsdb ssl ca cert
   template: src=vswitchd.cacert dest=/etc/openvswitch/vswitchd.cacert owner=root group=root mode=0600
