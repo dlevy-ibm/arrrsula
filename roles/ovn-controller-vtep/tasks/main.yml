@@ -4,21 +4,27 @@
     - openvswitch-switch
     - openvswitch-vtep
     - ovn-controller-vtep
+  notify: restart ovn-controller-vtep
 
 - name: Install ovn-controller-vtep upstart script
   template: src=etc/init/ovn-controller-vtep.conf.j2 dest=/etc/init/ovn-controller-vtep.conf owner=root group=root mode=0644
+  notify: restart ovn-controller-vtep
 
 - name: Install vtep-ovsdb upstart script
   template: src=etc/init/vtep-ovsdb.conf.j2 dest=/etc/init/vtep-ovsdb.conf owner=root group=root mode=0644
+  notify: restart vtep-ovsdb
 
 - name: Install vtep-ovsdb ssl cert
-  copy: content='{{ ssl.crt }}' dest=/etc/openvswitch/ovsclient-privkey.pem owner=root group=root mode=0600
+  copy: content='{{ ssl.crt }}' dest=/etc/openvswitch/ovsclient-cert.pem owner=root group=root mode=0600
+  notify: restart vtep-ovsdb
 
 - name: Install vtep-ovsdb ssl key
   copy: content='{{ ssl.key }}' dest=/etc/openvswitch/ovsclient-privkey.pem owner=root group=root mode=0600
+  notify: restart vtep-ovsdb
 
 - name: Install vtep-ovsdb ssl ca cert
   template: src=vswitchd.cacert dest=/etc/openvswitch/vswitchd.cacert owner=root group=root mode=0600
+  notify: restart vtep-ovsdb
 
 - name: Ensure service is running / enabled
   service: name=ovn-controller-vtep state=started enabled=yes

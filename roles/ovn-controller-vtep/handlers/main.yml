@@ -1,0 +1,5 @@
+- name: restart vtep-ovsdb
+  service: name=vtep-ovsdb state=restarted
+
+- name: restart ovn-controller-vtep
+  service: name=ovn-controller-vtep state=restarted
