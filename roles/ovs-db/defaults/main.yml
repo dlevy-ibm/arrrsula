@@ -1,1 +1,4 @@
 ovs_db_dir: /var/lib/openvswitch
+ovs_db_private_key_path: /etc/openvswitch/ovsclient-privkey.pem
+ovs_db_cert_path: /etc/openvswitch/ovsclient-cert.pem
+ovs_db_bootstrap_cert_path: /etc/openvswitch/vswitchd.cacert

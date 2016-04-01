@@ -6,10 +6,10 @@
     - ovn-controller-vtep
 
 - name: Install ovn-controller-vtep upstart script
-  copy: src=ovn-controller-vtep.conf dest=/etc/init/ovn-controller-vtep.conf owner=root group=root mode=0644
+  template: src=etc/init/ovn-controller-vtep.conf.j2 dest=/etc/init/ovn-controller-vtep.conf owner=root group=root mode=0644
 
 - name: Install vtep-ovsdb upstart script
-  copy: src=vtep-ovsdb.conf dest=/etc/init/vtep-ovsdb.conf owner=root group=root mode=0644
+  template: src=etc/init/vtep-ovsdb.conf.j2 dest=/etc/init/vtep-ovsdb.conf owner=root group=root mode=0644
 
 - name: Ensure service is running / enabled
   service: name=ovn-controller-vtep state=started enabled=yes

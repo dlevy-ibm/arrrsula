@@ -1,3 +1,5 @@
+# {{ ansible_managed }}
+
 description "Start vtep ovsdb"
 
 start on starting ovn-controller-vtep
@@ -12,7 +14,10 @@ post-start exec sleep 1
 script
   exec ovsdb-server /etc/openvswitch/vtep.db \
     --remote=punix:/var/run/openvswitch/vtep_db.sock \
-    --remote=ptcp:6632 \
+    --remote=pssl:6632 \
+    --private-key={{ ovs_db_private_key_path }} \
+    --certificate={{ ovs_db_cert_path }} \
+    --bootstrap-ca-cert={{ ovs_db_bootstrap_cert_path }} \
     --log-file=/var/log/openvswitch/ovsdb-server-vtep.log \
     --pidfile=/var/run/openvswitch/ovsdb-server-vtep.pid \
     -vconsole:emer -vsyslog:err -vfile:info

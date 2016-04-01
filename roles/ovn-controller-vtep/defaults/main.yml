@@ -1,7 +1,3 @@
 ovn_controller_vtep:
-    vtep_db: unix:/var/run/openvswitch/vtep_db.sock
-    ovnsb_db: tcp:{{ endpoints.ovndb.url }}:{{ endpoints.ovndb.port.southbound }}
-    ssl:
-      cert_path: /etc/openvswitch/ovsclient-cert.pem
-      private_key_path: /etc/openvswitch/ovsclient-privkey.pem
-      bootstrap_cert_path: /etc/openvswitch/vswitchd.cacert
+  vtep_db: unix:/var/run/openvswitch/vtep_db.sock
+  ovnsb_db: tcp:{{ endpoints.ovndb.url }}:{{ endpoints.ovndb.port.southbound }}
