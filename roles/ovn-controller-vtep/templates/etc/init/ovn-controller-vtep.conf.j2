@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+
+description "Start ovn-controller-vtep service"
+
+start on runlevel [2345]
+
+script
+  exec ovn-controller-vtep --vtep-db={{ ovn_controller_vtep.vtep_db }} --ovnsb-db={{ ovn_controller_vtep.ovnsb_db }}
+end script
