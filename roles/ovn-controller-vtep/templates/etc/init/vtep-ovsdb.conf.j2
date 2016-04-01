@@ -19,6 +19,6 @@ script
     --pidfile=/var/run/openvswitch/ovsdb-server-vtep.pid \
     --private-key=/etc/openvswitch/ovsclient-privkey.pem \
     --certificate=/etc/openvswitch/ovsclient-cert.pem \
-    --bootstrap-ca-cert=/etc/openvswitch/vswitchd.cacert \
+    --ca-cert=/etc/openvswitch/vswitchd.cacert \
     -vconsole:emer -vsyslog:err -vfile:info
 end script
