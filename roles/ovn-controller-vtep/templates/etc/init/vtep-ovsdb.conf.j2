@@ -15,10 +15,10 @@ script
   exec ovsdb-server /etc/openvswitch/vtep.db \
     --remote=punix:/var/run/openvswitch/vtep_db.sock \
     --remote=pssl:6632 \
-    --private-key={{ ovs_db_private_key_path }} \
-    --certificate={{ ovs_db_cert_path }} \
-    --bootstrap-ca-cert={{ ovs_db_bootstrap_cert_path }} \
     --log-file=/var/log/openvswitch/ovsdb-server-vtep.log \
     --pidfile=/var/run/openvswitch/ovsdb-server-vtep.pid \
+    --private-key=/etc/openvswitch/ovsclient-privkey.pem \
+    --certificate=/etc/openvswitch/ovsclient-cert.pem \
+    --bootstrap-ca-cert=/etc/openvswitch/vswitchd.cacert \
     -vconsole:emer -vsyslog:err -vfile:info
 end script
