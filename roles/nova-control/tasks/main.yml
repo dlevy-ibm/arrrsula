@@ -52,6 +52,7 @@
   tags: ufw
 
 - include: novnc.yml tags=novnc
+  when: nova.enable_novnc|default('True')|bool
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
