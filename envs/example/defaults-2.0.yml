@@ -197,6 +197,8 @@ cinder:
 neutron:
   plugin: ovn
   bridge_mappings: provider:br-provider
+  bridge_mapping:
+    provider: br-provider
   network_vlan_ranges: ''
   tenant_network_type: ''
   # The 'overlay_interface' option replaces 'vxlan_interface' because the OVN
