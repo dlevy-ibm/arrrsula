@@ -13,5 +13,5 @@
 - name: add provider network interface as port on provider network bridge
   command: ovs-vsctl --may-exist add-port {{ neutron.bridge_mapping[openstack_network_name] }} {{ openstack_network_interface_device }}
   notify: ifup provider network bridge with mapping
-  when: neutron.bridge_mapping defined
+  when: neutron.bridge_mapping is defined
   tags: ['prereboot']
