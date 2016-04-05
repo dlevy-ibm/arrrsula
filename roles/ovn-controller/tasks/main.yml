@@ -7,6 +7,9 @@
     - ovn-common
     - ovn-host
     - python-openvswitch
+  notify:
+    - restart openvswitch-switch
+    - restart ovn-host
 
 - name: start openvswitch service
   service: name=openvswitch-switch state=started enabled=yes
@@ -40,7 +43,7 @@
   copy:
     content={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}
     dest=/var/run/ovn-encap-ip
-  notify: restart ovn controller
+  notify: restart ovn-host
 
 - name: configure ovn overlay network endpoint
   command: ovs-vsctl set open . external-ids:ovn-encap-ip={{ hostvars[inventory_hostname][neutron.overlay_interface|default(primary_interface)]['ipv4']['address'] }}

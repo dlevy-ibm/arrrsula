@@ -5,8 +5,9 @@
     - openvswitch-vtep
     - ovn-controller-vtep
   notify:
-    - restart ovn-controller-vtep
+    - restart openvswitch-switch
     - restart vtep-ovsdb
+    - restart ovn-controller-vtep
 
 - name: Install ovn-controller-vtep upstart script
   template: src=etc/init/ovn-controller-vtep.conf.j2 dest=/etc/init/ovn-controller-vtep.conf owner=root group=root mode=0644
