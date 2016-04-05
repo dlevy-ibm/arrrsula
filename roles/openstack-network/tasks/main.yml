@@ -1,10 +1,17 @@
-- name: bounce provider network interface after ovs changes to move IP
-  command: ifdown {{ provider_interface_device }}
-  when: "'ipv4' in hostvars[inventory_hostname][provider_interface]"
+- name: bounce network interface after ovs changes to move IP
+  command: ifdown {{ openstack_network_interface_device }}
+  when: "'ipv4' in hostvars[inventory_hostname][openstack_network_interface]"
   notify: ifup provider network interface
   tags: ['prereboot']
 
 - name: add provider network interface as port on provider network bridge
   command: ovs-vsctl --may-exist add-port {{ provider_bridge_device }} {{ provider_interface_device }}
   notify: ifup provider network bridge
+  when: neutron.bridge_mapping is not defined
+  tags: ['prereboot']
+
+- name: add provider network interface as port on provider network bridge
+  command: ovs-vsctl --may-exist add-port {{ neutron.bridge_mapping[openstack_network_name] }} {{ openstack_network_interface_device }}
+  notify: ifup provider network bridge with mapping
+  when: neutron.bridge_mapping defined
   tags: ['prereboot']

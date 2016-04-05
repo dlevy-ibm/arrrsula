@@ -53,11 +53,25 @@
   command: ovs-vsctl --may-exist add-br {{item.split(':')[1]}}
   with_items: "{{ neutron.bridge_mappings.split(',') }}"
   notify: ifup provider network bridge
+  when: neutron.bridge_mapping is not defined
+
+- name: add ovs provider network bridges
+  command: ovs-vsctl --may-exist add-br {{item}}
+  with_items: "{{ neutron.bridge_mapping.values() }}"
+  notify: ifup provider network bridge with mapping
+  when: neutron.bridge_mapping is defined
 
 - name: configure ovs provider network bridges
   command: ovs-vsctl set bridge {{ item.split(':')[1] }} protocols=OpenFlow13
   with_items: "{{ neutron.bridge_mappings.split(',') }}"
   changed_when: false
+  when: neutron.bridge_mapping is not defined
+
+- name: configure ovs provider network bridges
+  command: ovs-vsctl set bridge {{ item }} protocols=OpenFlow13
+  with_items: "{{ neutron.bridge_mapping.values() }}"
+  changed_when: false
+  when: neutron.bridge_mapping is defined
 
 - name: start ovn controller
   service: name=ovn-host state=started enabled=yes

@@ -1,3 +1,5 @@
 ---
-provider_interface_device: "{{ hostvars[inventory_hostname][provider_interface]['device'] }}"
-provider_bridge_device: "{{ neutron.bridge_mappings.split(':')[1] }}"
+openstack_network_interface_device: "{{ hostvars[inventory_hostname][openstack_network_interface]['device'] }}"
+# This is legacy, and will only be used if we don't have neutron.bridge_mapping
+# which is a dict. This only works for the first provider network
+provider_network_bridge_device: "{{ neutron.bridge_mappings.split(':')[1] }}"

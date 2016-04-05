@@ -4,5 +4,9 @@
   with_items: "{{ neutron.bridge_mappings.split(',') }}"
   ignore_errors: yes
 
+- name: ifup provider network bridge with mapping
+  command: ip link set dev {{ item }} up
+  with_items: "{{ neutron.bridge_mapping.values() }}"
+
 - name: restart ovn controller
   service: name=ovn-host state=restarted
