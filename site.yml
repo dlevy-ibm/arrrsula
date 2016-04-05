@@ -396,9 +396,8 @@
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network']
-      args:
-        openstack_network_interface: "{{ provider_interface }}"
-        openstack_network_name: "provider"
+      openstack_network_interface: "{{ provider_interface }}"
+      openstack_network_name: "provider"
       when: provider_interface is defined
   environment: "{{ env_vars|default({}) }}"
 
@@ -408,15 +407,13 @@
   roles:
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network', ironic]
-      args:
-        openstack_network_interface: "{{ provisioning_interface }}"
-        openstack_network_name: "provisioning"
+      openstack_network_interface: "{{ provisioning_interface }}"
+      openstack_network_name: "provisioning"
       when: provisioning_interface is defined
     - role: 'openstack-network'
       tags: ['openstack', 'setup', 'openstack-network', ironic]
-      args:
-        openstack_network_interface: "{{ cleaning_interface }}"
-        openstack_network_name: "cleaning"
+      openstack_network_interface: "{{ cleaning_interface }}"
+      openstack_network_name: "cleaning"
       when: cleaning_interface is defined
   environment: "{{ env_vars|default({}) }}"
 
