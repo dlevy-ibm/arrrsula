@@ -3,7 +3,7 @@
   command: ifup {{ provider_bridge_device }}
 
 - name: ifup provider network bridge with mapping
-  command: ifup {{ neutron.bridge_mapping[openstack_network_interface] }}
+  command: ifup {{ neutron.bridge_mapping[openstack_network_name] }}
 
 - name: ifup provider network interface
   command: ifup {{ openstack_network_interface_device }}
