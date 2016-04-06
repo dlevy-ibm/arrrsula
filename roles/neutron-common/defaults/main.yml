@@ -46,6 +46,7 @@ neutron:
     enabled: true
     agent:
       config_files: /etc/neutron/dhcp_agent.ini
+    agents_per_network: 1
   metadata:
     enabled: true
     agent:
