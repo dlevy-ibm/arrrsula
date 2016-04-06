@@ -430,7 +430,7 @@
   tasks:
     - name: install kernel packages
       sudo: yes
-      apt: pkg="{{ item }}"
+      apt: pkg="{{ item }}" state=latest
       register: apt_install_kernel
       with_items:
         - linux-image-{{ kernel_override_version }}-generic
