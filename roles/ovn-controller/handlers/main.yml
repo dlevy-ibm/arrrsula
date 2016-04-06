@@ -8,5 +8,8 @@
   command: ip link set dev {{ item }} up
   with_items: "{{ neutron.bridge_mapping.values() }}"
 
-- name: restart ovn controller
+- name: restart openvswitch-switch
+  service: name=openvswitch-switch state=restarted args="--save-flows=yes"
+
+- name: restart ovn-host
   service: name=ovn-host state=restarted
