@@ -149,7 +149,7 @@ endpoints:
     url: "{{ undercloud_floating_ip }}"
     port:
       northbound: 6641
-      southbound: 6640
+      southbound: 6642
   heat:
     name: heat
     type: orchestration
