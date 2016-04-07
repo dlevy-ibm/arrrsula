@@ -9,6 +9,7 @@ dependencies:
     system_dependencies: "{{ tempest.source.system_dependencies }}"
     python_dependencies: "{{ tempest.source.python_dependencies }}"
     when: openstack_install_method == 'source'
+    use_constraints: false
   - role: openstack-package
     project_name: tempest
     alternatives: "{{ tempest.alternatives }}"

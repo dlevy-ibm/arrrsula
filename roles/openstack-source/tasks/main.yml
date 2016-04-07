@@ -9,7 +9,7 @@
   register: git_result
   until: git_result|success
   retries: 3
-  when: openstack_source.use_constraints and not openstack_source.use_superproject
+  when: use_constraints and not openstack_source.use_superproject
 
 - name: "get {{ project_name }} source repo"
   git: repo="{{ openstack_source.git_mirror }}/{{ project_name }}.git"
@@ -32,7 +32,7 @@
     name: "{{ item.name }}"
     version: "{{ item.version|default(omit) }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
-    extra_args: "-i {{ openstack_source.pypi_mirror }} {{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}}"
+    extra_args: "-i {{ openstack_source.pypi_mirror }} {{ '-c /opt/stack/requirements/upper-constraints.txt' if use_constraints else ''}}"
   with_items: openstack_source.python_dependencies
   when: openstack_source.pypi_mirror
 
@@ -54,7 +54,7 @@
     name: "{{ item.name }}"
     version: "{{ item.version|default(omit) }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
-    extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}}"
+    extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if use_constraints else ''}}"
   with_items: openstack_source.python_dependencies
   when: not openstack_source.pypi_mirror
 
@@ -63,7 +63,7 @@
   pip:
     name: "/opt/stack/{{ item }}"
     virtualenv: "{{ openstack_source.virtualenv_base }}/{{ project_name }}"
-    extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if openstack_source.use_constraints else ''}} {{ '-U' if openstack_source.pip_upgrade else '' }}"
+    extra_args: "{{ '-c /opt/stack/requirements/upper-constraints.txt' if use_constraints else ''}} {{ '-U' if openstack_source.pip_upgrade else '' }}"
   environment: "{{ {'GIT_DIR': '/opt/stack/.git/modules/%s' % item } if openstack_source.use_superproject else {} }}"
   register: pip_result
   until: pip_result|success
