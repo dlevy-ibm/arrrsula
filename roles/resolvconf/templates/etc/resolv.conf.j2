@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+
+{% if etc_resolv_conf.domain is defined %}
+domain {{ etc_resolv_conf.domain }}
+{% endif %}
+{% if etc_resolv_conf.searchdomains is defined %}
+search {% for searchdomain in etc_resolv_conf.searchdomains %}{{ searchdomain }} {% endfor %}
+{% endif %}
+
+{% for nameserver in etc_resolv_conf.nameservers %}
+nameserver {{ nameserver }}
+{% endfor %}

@@ -26,3 +26,4 @@ dependencies:
     when: logging.enabled|default(True)|bool
     service: common
     logdata: "{{ common.logs }}"
+  - role: resolvconf
