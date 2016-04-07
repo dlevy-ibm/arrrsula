@@ -1,6 +1,9 @@
 ---
 - include: resizeroot.yml
 
+- include: resolvconf.yml
+  tags: ['prereboot']
+
 - name: set hostname
   hostname: name={{ hostname }}
   when: hostname is defined

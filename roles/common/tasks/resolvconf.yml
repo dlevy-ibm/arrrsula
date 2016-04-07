@@ -1,0 +1,16 @@
+- name: install resolvconf
+  apt: pkg=resolvconf state=present
+
+- name: resolv.conf file
+  template:
+    src: etc/resolvconf/resolv.conf.d/base.j2
+    dest: /etc/resolvconf/resolv.conf.d/base
+    owner: root
+    group: root
+    mode: 0644
+  register: resolv_conf_base
+  when: etc_resolv_conf is defined
+
+- name: update resolvconf
+  when: resolv_conf_base.changed
+  command: resolvconf -u
