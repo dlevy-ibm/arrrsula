@@ -172,7 +172,7 @@
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn control plane
-  hosts: compute
+  hosts: compute:ironic
   roles:
     - role: ovn-controller
       tags: ['ovn', 'control', 'prereboot']
