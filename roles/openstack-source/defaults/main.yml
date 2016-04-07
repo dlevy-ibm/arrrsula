@@ -12,4 +12,4 @@ openstack_source:
   pip_upgrade: no
   use_superproject: no
   use_constraints: no
-use_constraints: {{ use_constraints|default(openstack_source.use_constraints) }}
+use_constraints: "{{ use_constraints|default(openstack_source.use_constraints) }}"
