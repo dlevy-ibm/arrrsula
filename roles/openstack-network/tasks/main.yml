@@ -1,6 +1,6 @@
 - name: bounce network interface after ovs changes to move IP
   command: ifdown {{ openstack_network_interface_device }}
-  when: "'ipv4' in hostvars[inventory_hostname][openstack_network_interface]"
+  when: "openstack_network_interface is defined and 'ipv4' in hostvars[inventory_hostname][openstack_network_interface]"
   notify: ifup provider network interface
   tags: ['prereboot']
 
