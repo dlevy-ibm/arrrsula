@@ -20,7 +20,7 @@
     network_name: "{{ item.network_name }}"
     cidr: "{{ item.cidr }}"
     enable_dhcp: "{{ item.enable_dhcp }}"
-    gateway_ip: "{{ item.gateway_ip }}"
+    gateway_ip: "{{ item.gateway_ip|default(omit) }}"
     ip_version: "{{ item.ip_version }}"
     ipv6_ra_mode: "{{ item.ipv6_ra_mode | default(omit) }}"
     ipv6_address_mode: "{{ item.ipv6_ra_mode | default(omit) }}"
