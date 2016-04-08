@@ -43,7 +43,7 @@
 
 - name: copy pxelinux.0 to tftpboot
   command: cp {{syslinux_tftp_dir}}/pxelinux.0 {{ ironic.tftpboot_path }}/
-  when: pxe.stat.exists == False
+  when: pxe.stat.exists == False and ansible_distribution == 'Ubuntu' and ansible_distribution_version|version_compare('14.10', '>=')
 
 - name: create tfpd map file
   copy: src=map-file dest={{ ironic.tftpboot_path }}/map-file owner=ironic group=ironic mode=0744
