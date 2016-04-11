@@ -1,0 +1,2 @@
+nova_ironic:
+  scheduler_default_filters: AggregateInstanceExtraSpecsFilter,RetryFilter,AvailabilityZoneFilter,ComputeFilter,ComputeCapabilitiesFilter,ImagePropertiesFilter,ExactCoreFilter,ExactRamFilter,ExactDiskFilter
