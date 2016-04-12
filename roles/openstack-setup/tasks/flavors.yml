@@ -1,12 +1,15 @@
-- name: Assert Flavors
+- name: assertflavors
+  environment:
+    OS_CLOUD: admin
   os_nova_flavor:
     name={{item.name}}
-    ram={{item.ram|omit}}
-    vcpus={{item.vcpus|omit}}
-    disk={{item.disk|omit}}
-    ephemeral={{item.ephemeral|omit}}
-    swap={{item.swap|omit}}
-    rxtx_factor={{item.rxtx_factor|omit}}
-    is_public={{item.is_public|omit}}
-    flavorid={{item.flavorid|omit}}
+    ram={{item.ram|default(omit)}}
+    vcpus={{item.vcpus|default(omit)}}
+    disk={{item.disk|default(omit)}}
+    ephemeral={{item.ephemeral|default(omit)}}
+    swap={{item.swap|default(omit)}}
+    rxtx_factor={{item.rxtx_factor|default(omit)}}
+    is_public={{item.is_public|default(omit)}}
+    flavorid={{item.flavorid|default(omit)}}
   with_items: nova.flavors | default([])
+  run_once: true
