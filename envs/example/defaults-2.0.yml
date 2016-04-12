@@ -163,6 +163,12 @@ nova:
     verbose: True
   novnc_method: file
   novnc_url: https://file-mirror.openstack.blueboxgrid.com/novnc/novnc-0.5.1.tar.gz
+  flavors:
+    - { flavor_id: 1, name: m1.tiny,   ram: 512,    disk: 10,  ephemeral: 0, vcpus: 1 }
+    - { flavor_id: 2, name: m1.small,  ram: 2048,   disk: 20,  ephemeral: 0, vcpus: 1 }
+    - { flavor_id: 3, name: m1.medium, ram: 4096,   disk: 40,  ephemeral: 0, vcpus: 2 }
+    - { flavor_id: 4, name: m1.large,  ram: 8192,   disk: 80,  ephemeral: 0, vcpus: 4 }
+    - { flavor_id: 5, name: m1.xlarge, ram: 16384,  disk: 160, ephemeral: 0, vcpus: 8 }
 
 ceph:
   enabled: false

@@ -1,12 +1,12 @@
----
-- name: is m1.tiny undersized?
-  shell: mysql -e "select root_gb from nova.instance_types where name='m1.tiny';" | grep 10
-  failed_when: False
-  changed_when: False
-  register: resize_tiny_flavor
-  run_once: true
-
-- name: bump root disk size on m1.tiny
-  shell: mysql -e "update nova.instance_types set root_gb=10 where name='m1.tiny';"
-  when: resize_tiny_flavor|failed
-  run_once: true
+- name: Assert Flavors
+  os_nova_flavor:
+    name={{item.name}}
+    ram={{item.ram|omit}}
+    vcpus={{item.vcpus|omit}}
+    disk={{item.disk|omit}}
+    ephemeral={{item.ephemeral|omit}}
+    swap={{item.swap|omit}}
+    rxtx_factor={{item.rxtx_factor|omit}}
+    is_public={{item.is_public|omit}}
+    flavorid={{item.flavorid|omit}}
+  with_items: nova.flavors | default([])
