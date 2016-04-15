@@ -1,5 +1,15 @@
 <div align="center"><img src="./ursula.png" alt="Ursula"></div><hr />
 
+Arrrsula is a temporary fork of Ursula. It has evolved rapidly and for the
+purpose of continuously deploying a cloud from OpenStack's master branch,
+rather than from stable releases.
+
+The original content of this file is retained below, but may not be
+representative of the current status of this repository any longer.
+
+
+-------------------------
+
 Ursula provides a series of Ansible playbooks for installing, managing, and
 maintaining OpenStack powered clouds.
 
