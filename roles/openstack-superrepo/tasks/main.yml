@@ -1,5 +1,4 @@
 ---
-
 - name: Use local copy of superrepo
   file: path=/opt/stack state=link src=/srv/git/openstack
   when: openstack_source.use_superproject and openstack_source.use_local_superproject
@@ -9,8 +8,9 @@
        dest="/opt/stack"
        version="{{ openstack_source.project_rev }}"
        update="{{ openstack_source.git_update }}"
-       recursive=yes
+       recursive=no
        force=yes
+       depth="{{ openstack_source.depth | default(omit) }}"
   register: git_result
   until: git_result|success
   retries: 3
@@ -31,4 +31,3 @@
   register: superrepo_update
   changed_when: superrepo_update.stdout
   when: openstack_source.use_constraints and openstack_source.use_superproject
-

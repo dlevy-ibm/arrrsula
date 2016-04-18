@@ -21,6 +21,21 @@
   retries: 3
   when: not openstack_source.use_superproject
 
+- name: "update {{ project_name }} from superrepo"
+  command: |
+    git submodule update --recursive
+    {% if openstack_source.depth is defined %}
+    --depth {{ openstack_source.depth }}
+    {% endif %}
+    {{ project_name }}
+  args:
+    chdir: /opt/stack
+  register: git_result
+  until: git_result|success
+  retries: 3
+  changed_when: superrepo_update.stdout
+  when: openstack_source.use_superproject
+
 - name: upgrade pip
   pip:
     name: pip
