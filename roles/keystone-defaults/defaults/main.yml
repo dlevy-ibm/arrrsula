@@ -16,7 +16,6 @@ keystone:
       - libkrb5-dev
   alternatives:
     - keystone-manage
-    - keystone-all
   jellyroll: False # custom middleware for password compliance
   logs:
     - paths:
