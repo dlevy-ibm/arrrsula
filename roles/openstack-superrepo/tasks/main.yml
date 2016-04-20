@@ -24,6 +24,12 @@
   changed_when: superrepo_init.stdout
   when: openstack_source.use_superproject
 
+- name: fetch all tags
+  command: git fetch --tags
+  register: superrepo_tags
+  changed_when: superrepo_tags.stdout
+  when: openstack_source.use_superproject
+
 - name: get requirements project from superrepo
   command: git submodule update --recursive requirements
   args:
