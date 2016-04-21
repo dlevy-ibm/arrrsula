@@ -26,6 +26,8 @@
 
 - name: fetch all tags
   command: git fetch --tags
+  args:
+    chdir: /opt/stack
   register: superrepo_tags
   changed_when: superrepo_tags.stdout
   when: openstack_source.use_superproject
