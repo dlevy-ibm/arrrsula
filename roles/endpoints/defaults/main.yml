@@ -12,12 +12,12 @@ endpoints:
     name: nova
     type: compute
     description: Compute Service
-    version: v2
+    version: v2.1
     url:
       admin: https://{{ fqdn }}:8774
       internal: https://{{ fqdn }}:8774
       public: https://{{ fqdn }}:8774
-      path: v2/%(tenant_id)s
+      path: v2.1/%(tenant_id)s
     port:
       backend_api: 9774
       haproxy_api: 8774
