@@ -4,7 +4,7 @@ nova:
   patches:
   compute_driver: libvirt.LibvirtDriver
   firewall_driver: nova.virt.firewall.NoopFirewallDriver
-  scheduler_host_manager: nova.scheduler.host_manager.HostManager
+  scheduler_host_manager: host_manager
   compute_manager: nova.compute.manager.ComputeManager
   api_workers: 5
   conductor_workers: 5
