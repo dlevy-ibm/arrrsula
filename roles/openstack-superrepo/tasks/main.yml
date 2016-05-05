@@ -22,7 +22,7 @@
     chdir: /opt/stack
   register: superrepo_init
   changed_when: superrepo_init.stdout
-  when: openstack_source.use_superproject
+  when: openstack_source.use_superproject and not openstack_source.use_local_superproject
 
 - name: fetch all tags
   command: git fetch --tags
@@ -38,4 +38,4 @@
     chdir: /opt/stack
   register: superrepo_update
   changed_when: superrepo_update.stdout
-  when: openstack_source.use_constraints and openstack_source.use_superproject
+  when: openstack_source.use_constraints and openstack_source.use_superproject and not openstack_source.use_local_superproject
