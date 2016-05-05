@@ -27,9 +27,10 @@
     {% if openstack_source.depth is defined %}
     --depth {{ openstack_source.depth }}
     {% endif %}
-    {{ project_name }}
+    {{ item }}
   args:
     chdir: /opt/stack
+  with_items: "[ project_name ] + openstack_source.openstack_dependencies"
   register: git_result
   until: git_result|success
   retries: 3
