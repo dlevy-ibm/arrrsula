@@ -30,7 +30,7 @@
     chdir: /opt/stack
   register: superrepo_tags
   changed_when: superrepo_tags.stdout
-  when: openstack_source.use_superproject
+  when: openstack_source.use_superproject and not openstack_source.use_local_superproject
 
 - name: get requirements project from superrepo
   command: git submodule update --recursive requirements
