@@ -30,11 +30,11 @@
     {{ item }}
   args:
     chdir: /opt/stack
-  with_items: "[ project_name ] + openstack_source.openstack_dependencies"
+  with_items: "{{ [ project_name ] + openstack_source.openstack_dependencies }}"
   register: git_result
   until: git_result|success
   retries: 3
-  changed_when: superrepo_update.stdout
+  changed_when: superrepo_update|selectattr("stdout")
   when: openstack_source.use_superproject
 
 - name: upgrade pip
