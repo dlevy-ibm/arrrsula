@@ -46,6 +46,6 @@
 
 - name: restart uwsgi
   service: name=uwsgi-emperor state=restarted
-  when: keystone_templates.changed
+  when: keystone_templates.changed or pip_result.changed
 
 - meta: flush_handlers
