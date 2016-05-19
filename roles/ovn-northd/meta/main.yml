@@ -8,3 +8,5 @@ dependencies:
         key_url: '{{ apt_repos.ovn.key_url }}'
   - role: ovs-db
     ovs_db_dir: /var/lib/openvswitch
+  - role: monitoring-common
+    when: monitoring.enabled|default(True)|bool

@@ -1,0 +1,10 @@
+---
+- name: ovn-northd process check
+  sensu_check: name=ovn-northd-process plugin=check-procs.rb
+               args="-p ovn-northd -C 2 -c 2 -W 2 -w 2"
+  notify: restart sensu-client
+
+- name: ovn-databases process check
+  sensu_check: name=ovn-databases-process plugin=check-procs.rb
+               args="-p ovsdb-server -C 4 -c 4 -w 4 -W 4"
+  notify: restart sensu-client
