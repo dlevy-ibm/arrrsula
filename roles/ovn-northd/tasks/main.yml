@@ -35,3 +35,6 @@
 
 - name: start ovn northd service
   service: name=ovn-central state=started enabled=yes
+
+- include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool

@@ -78,3 +78,6 @@
 
 - name: start ovn controller
   service: name=ovn-host state=started enabled=yes
+
+- include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool
