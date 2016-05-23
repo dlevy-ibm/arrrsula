@@ -1,0 +1,13 @@
+[Unit]
+Description=sensu api
+
+[Service]
+User=sensu
+Group=sensu
+ExecStart=/usr/local/bin/sensu-api -c /etc/sensu/config.json -d /etc/sensu/conf.d -e /etc/sensu/extensions -l /var/log/sensu/sensu-api.log
+KillMode=process
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

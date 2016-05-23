@@ -1,0 +1,13 @@
+- name: install uchiwa server
+  apt: name={{ item }}
+  with_items:
+    - uchiwa
+
+- name: setup uchiwa config
+  template: src=etc/sensu/uchiwa.json dest=/etc/sensu/uchiwa.json
+  notify: restart uchiwa
+
+- name: start uchiwa
+  service: name={{ item }} state=started enabled=yes
+  with_items:
+    - uchiwa
