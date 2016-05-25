@@ -4,27 +4,16 @@
   when: openstack_source.use_superproject and openstack_source.use_local_superproject
 
 - name: get openstack superrepo
-  command: git clone {{ openstack_source.git_mirror }}/openstack
-  args:
-    chdir: /opt
-    creates: /opt/stack/.git
+  git: repo="{{ openstack_source.git_mirror }}/openstack"
+       dest="/opt/stack"
+       version="{{ openstack_source.project_rev }}"
+       update="{{ openstack_source.git_update }}"
+       recursive=no
+       force=yes
+       depth="{{ openstack_source.depth | default(omit) }}"
   register: git_result
   until: git_result|success
   retries: 3
-  when: openstack_source.use_superproject and not openstack_source.use_local_superproject
-
-- name: Fetch if exists
-  command: git fetch origin
-  args:
-    chdir: /opt/stack
-  when: not git_result.changed and openstack_source.git_update
-
-- name: Checkout version
-  command: git checkout "{{ openstack_source.project_rev }}"
-  args:
-    chdir: /opt/stack
-  register: git_checkout_result
-  changed_when: "'Switched to branch' in git_checkout_result.stdout or 'checking out' in git_checkout_result.stdout"
   when: openstack_source.use_superproject and not openstack_source.use_local_superproject
 
 - name: initialize repo submodules
