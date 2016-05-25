@@ -21,6 +21,16 @@
   retries: 3
   when: not openstack_source.use_superproject
 
+- name: "sync remotes for {{ project_name }} from superrepo"
+  command: |
+    git submodule sync {{ item }}
+  args:
+    chdir: /opt/stack
+  with_items: "{{ [ project_name ] + openstack_source.openstack_dependencies }}"
+  register: git_result
+  changed_when: superrepo_update|selectattr("stdout")
+  when: openstack_source.use_superproject
+
 - name: "update {{ project_name }} from superrepo"
   command: |
     git submodule update --recursive
