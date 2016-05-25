@@ -1,0 +1,14 @@
+- name: update apt-get
+  apt: update_cache=yes
+
+- name: restart rabbitmq-server
+  service: name=rabbitmq-server state=restarted
+
+- name: reload rabbitmq-server
+  service: name=rabbitmq-server state=reload
+
+- name: restart redis-server
+  service: name=redis-server state=restarted
+
+- name: reload redis-server
+  service: name=redis-server state=reloaded

@@ -1,0 +1,13 @@
+rabbitmq_ulimit_default: 65536
+sensu_rabbitmq_user: sensu
+sensu_rabbitmq_password: sensu_rabbitmq_password
+sensu_rabbitmq_vhost: /sensu
+sensu_rabbitmq_host: 127.0.0.1
+sensu_rabbitmq_port: 5672
+rabbitmq_packages:
+  - name: 'rabbitmq-server_3.6.0-1_all.deb'
+    url: 'http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.0/rabbitmq-server_3.6.0-1_all.deb'
+redis_host: 127.0.0.1
+redis_port: 6379
+redis_ulimit_default: 65536
+

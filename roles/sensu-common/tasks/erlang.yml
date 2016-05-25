@@ -1,0 +1,14 @@
+- name: get erlang-solutions debian package
+  get_url: url='http://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb'
+           dest=/tmp/erlang-solutions_1.0_all.deb
+
+- name: install erlang-solutions
+  apt: deb=/tmp/erlang-solutions_1.0_all.deb
+  notify: update apt-get
+
+- name: install erlang-nox
+  apt: name=erlang-nox state=present
+
+- name: get erlang-solutions debian package
+  get_url: url='http://www.rabbitmq.com/releases/rabbitmq-server/v3.6.0/rabbitmq-server_3.6.0-1_all.deb'
+           dest=/tmp/rabbitmq-server_3.6.0-1_all.deb

@@ -1,0 +1,5 @@
+- name: install common dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - build-essential
+    - g++

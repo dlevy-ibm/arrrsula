@@ -1,0 +1,6 @@
+- name: add sensu repo key
+  apt_key: url=http://repositories.sensuapp.org/apt/pubkey.gpg state=present
+
+- name: add sensu repository
+  apt_repository: repo='deb http://repositories.sensuapp.org/apt sensu main' state=present update_cache=yes
+  notify: update apt-get
