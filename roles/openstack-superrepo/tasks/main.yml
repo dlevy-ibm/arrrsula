@@ -17,6 +17,9 @@
   command: git fetch origin
   args:
     chdir: /opt/stack
+  register: git_result
+  until: git_result|success
+  retries: 3
   when: not git_result.changed and openstack_source.git_update
 
 - name: Checkout version
@@ -26,6 +29,13 @@
   register: git_checkout_result
   changed_when: "'Switched to branch' in git_checkout_result.stdout or 'checking out' in git_checkout_result.stdout"
   when: openstack_source.use_superproject and not openstack_source.use_local_superproject
+
+- name: Pull new changes
+  command: git pull --ff-only
+  args:
+    chdir: /opt/stack
+  register: git_pull_result
+  changed_when: "'Already up-to-date' not in git_pull_result.stdout"
 
 - name: initialize repo submodules
   command: git submodule init
