@@ -175,7 +175,7 @@
   hosts: compute:ironic
   roles:
     - role: ovn-controller
-      tags: ['ovn', 'control', 'prereboot']
+      tags: ['ovn', 'control']
       when: neutron.plugin == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
