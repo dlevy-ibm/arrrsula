@@ -1,9 +1,4 @@
 ---
-- name: ovsdb-server process check
-  sensu_check: name=ovsdb-server-process plugin=check-procs.rb
-               args="-p ovsdb-server -C 2 -c 2 -w 2 -W 2"
-  notify: restart sensu-client
-
 - name: ovn-controller process check
   sensu_check: name=ovn-controller-process plugin=check-procs.rb
                args="-p ovn-controller -C 2 -c 2 -w 2 -W 2"
