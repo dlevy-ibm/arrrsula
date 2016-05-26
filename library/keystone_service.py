@@ -132,7 +132,7 @@ def ensure_service_present(keystone, name, service_type, description,
     service = None
     try:
         service = get_service(keystone, name)
-    except:
+    except KeyError:
         # Service doesn't exist yet, we'll need to create one
         pass
     else:
@@ -168,7 +168,7 @@ def ensure_endpoint_present(keystone, name, public_url, internal_url,
     endpoint = None
     try:
         endpoint = get_endpoint(keystone, name)
-    except:
+    except KeyError:
         # Endpoint doesn't exist yet, we'll need to create one
         pass
     else:
