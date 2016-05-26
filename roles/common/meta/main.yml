@@ -1,6 +1,7 @@
 ---
 dependencies:
   - role: ensure-pip
+    tags: ['prereboot']
   - role: endpoints
   - role: apt-repos
     repos:
