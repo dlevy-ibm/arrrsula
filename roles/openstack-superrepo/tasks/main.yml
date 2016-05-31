@@ -1,7 +1,7 @@
 ---
 - name: mount vagrant shared folder for superrepo
   mount: name=/srv/git/openstack src=srv_git_openstack fstype=vboxsf state=mounted
-  when: "'vagrant' in stack_env" and openstack_source.use_local_superproject
+  when: "'vagrant' in stack_env and openstack_source.use_local_superproject"
 
 - name: Use local copy of superrepo
   file: path=/opt/stack state=link src=/srv/git/openstack
