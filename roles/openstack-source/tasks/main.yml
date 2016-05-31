@@ -21,14 +21,6 @@
   retries: 3
   when: not openstack_source.use_superproject
 
-- name: "update {{ project_name }} with relative git paths"
-  replace:
-    dest: "/opt/stack/{{ item }}/.git"
-    regexp: '^(gitdir:).*(/)'
-    replace: 'gitdir: ../.git/modules/'
-  with_items: "{{ [ project_name ] + openstack_source.openstack_dependencies }}"
-  when: openstack_source.use_superproject
-
 - name: "sync remotes for {{ project_name }} from superrepo"
   command: |
     git submodule sync {{ item }}
