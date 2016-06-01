@@ -31,6 +31,7 @@
   when: openstack.ubuntu_mirror is defined
   notify:
     - update apt index
+  tags: ['prereboot']
 
 - meta: flush_handlers
 
