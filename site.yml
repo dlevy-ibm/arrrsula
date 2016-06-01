@@ -437,18 +437,20 @@
         - linux-image-extra-{{ kernel_override_version }}-generic
         - linux-headers-{{ kernel_override_version }}-generic
       when: kernel_override_version is defined
-    - name: update vbox additions
-      when: "'vagrant' in stack_env and apt_install_kernel.changed"
-      shell: /etc/init.d/vboxadd setup
-      sudo: yes
-      ignore_errors: true
-    - name: restart server
+    - name: restart hosts
       sudo: yes
       shell: sleep 2 && shutdown -r now "Rebooting to activate new kernel."
       async: 1
       poll: 0
       ignore_errors: true
-      when: kernel_override_version is defined and apt_install_kernel.changed
+      when: "kernel_override_version is defined and apt_install_kernel.changed and 'vagrant' not in stack_env"
+    - name: reload vagrant vms
+      command: vagrant reload
+      delegate_to: localhost
+      sudo: no
+      run_once: true
+      ignore_errors: true
+      when: "kernel_override_version is defined and apt_install_kernel.changed and 'vagrant' in stack_env"
     - name: wait for hosts to be up with SSH after kernel upgrade
       local_action: wait_for timeout={{wait_for_all_timeout}} host={{ ansible_ssh_host | default(inventory_hostname) }} state=started delay=30
       sudo: no
