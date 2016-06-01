@@ -19,6 +19,12 @@ dependencies:
       - repo: 'deb {{ apt_repos.ovn.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.ovn.key_url }}'
     when: neutron.plugin == 'ovn'
+  - role: apt-repos
+    repos:
+      - repo: 'deb {{ apt_repos.kernel.repo }} {{ ansible_lsb.codename }} main'
+        key_url: '{{ apt_repos.kernel.key_url }}'
+    when: apt_repos.kernel is defined
+    tags: ['kernel']
   - role: docker
     when: docker.enabled is defined and docker.enabled|bool
   - role: monitoring-common
