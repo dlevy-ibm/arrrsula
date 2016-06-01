@@ -90,6 +90,7 @@ neutron:
     - neutron-server
     - neutron-sriov-nic-agent
     - neutron-usage-audit
+    - neutron-ovn-db-sync-util
   logs:
     - paths:
         - /var/log/neutron/neutron-server.log
