@@ -22,7 +22,7 @@
   become_user: "{{ shadetest_user }}"
 
 - name: Run shade test
-  command: ~{{ shadetest_user }}/tox/bin/tox -r -efunctional
+  shell: ~{{ shadetest_user }}/tox/bin/tox -r -efunctional | tee ~{{ shadetest_user }}/shade-test.output
   args:
     chdir: ~{{ shadetest_user }}/shade
   become: true
