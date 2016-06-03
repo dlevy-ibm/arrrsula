@@ -625,3 +625,5 @@ magnum:
   enabled: True
   debug: True
 
+horizon:
+  enabled: True

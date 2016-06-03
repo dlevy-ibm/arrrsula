@@ -302,6 +302,7 @@
   roles:
     - role: horizon
       tags: ['openstack', 'horizon', 'control']
+      when: horizon.enabled|bool
   environment: "{{ env_vars|default({}) }}"
 
 - name: swift code and config
