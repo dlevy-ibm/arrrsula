@@ -3,8 +3,6 @@ dependencies:
   - role: ensure-pip
   - role: endpoints
   - role: apt-repos
-    tags: ['prereboot']
-  - role: apt-repos
     repos:
       - repo: 'deb {{ apt_repos.hwraid.repo }} precise main'
         key_url: '{{ apt_repos.hwraid.key_url }}'
