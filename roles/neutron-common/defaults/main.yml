@@ -20,6 +20,8 @@ neutron:
     # path between nodes within the deployment.
     ttl: 1
     vni_ranges: 1:4095
+  geneve:
+    vni_ranges: 1:4095
   heartbeat_timeout_threshold: 30
   allow_overlapping_ips: False
   api_workers: 3
@@ -29,9 +31,7 @@ neutron:
   dhcp_dns_servers:
     - 8.8.8.8
     - 8.8.4.4
-  service_plugins:
-    - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
-  enable_flat_networks: False
+  enable_flat_networks: True
   l3ha:
     enabled: False
     max_agents: 2

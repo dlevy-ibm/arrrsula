@@ -3,12 +3,12 @@
   file: dest=/var/cache/neutron/api owner=neutron state=directory
 
 - name: set config path for ovn
-  set_fact: neutron_plugin_config=/etc/neutron/plugins/networking-ovn/networking-ovn.ini
-  when: neutron.plugin == 'ovn'
+  set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini,/etc/neutron/plugins/networking-ovn/networking-ovn.ini
+  when: neutron.mech_driver == 'ovn'
 
 - name: set config path for ml2
   set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini
-  when: neutron.plugin == 'ml2'
+  when: neutron.mech_driver == 'linuxbridge'
 
 - name: install neutron-server service
   upstart_service:
@@ -26,8 +26,9 @@
 
 - name: sync neutron database for ovn
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
+           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini \
            --config-file /etc/neutron/plugins/networking-ovn/networking-ovn.ini upgrade head
-  when: neutron.plugin == 'ovn' and ( database_create.changed or force_sync|default('false')|bool )
+  when: neutron.mech_driver == 'ovn' and ( database_create.changed or force_sync|default('false')|bool )
   run_once: true
   changed_when: true
   notify: restart neutron services
@@ -37,7 +38,7 @@
 - name: sync neutron database ml2
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
-  when: neutron.plugin == 'ml2' and ( database_create.changed or force_sync|default('false')|bool )
+  when: neutron.mech_driver == 'linuxbridge' and ( database_create.changed or force_sync|default('false')|bool )
   run_once: true
   changed_when: true
   notify: restart neutron services
@@ -46,8 +47,9 @@
 
 - name: sync neutron database for ovn/lbaas
   command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
+           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini \
            --config-file /etc/neutron/plugins/networking-ovn/networking-ovn.ini upgrade head
-  when: neutron.plugin == 'ovn' and ((database_create.changed or force_sync|default('false')|bool) and
+  when: neutron.mech_driver == 'ovn' and ((database_create.changed or force_sync|default('false')|bool) and
         ((neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or
          neutron.lbaas.enabled|bool))
@@ -60,7 +62,7 @@
 - name: sync neutron database for ml2/lbaas
   command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
-  when: neutron.plugin == 'ml2' and ((database_create.changed or force_sync|default('false')|bool) and
+  when: neutron.mech_driver == 'linuxbridge' and ((database_create.changed or force_sync|default('false')|bool) and
         ((neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or
          neutron.lbaas.enabled|bool))

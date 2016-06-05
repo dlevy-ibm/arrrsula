@@ -168,7 +168,7 @@
   roles:
     - role: ovn-northd
       tags: ['ovn', 'database']
-      when: neutron.plugin == 'ovn'
+      when: neutron.mech_driver == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn control plane
@@ -176,7 +176,7 @@
   roles:
     - role: ovn-controller
       tags: ['ovn', 'control']
-      when: neutron.plugin == 'ovn'
+      when: neutron.mech_driver == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
 - name: ovn-controller-vtep
@@ -192,7 +192,7 @@
   roles:
     - role: ovs-vtep
       tags: ['ovn', 'openvswitch-vtep', 'database']
-      when: neutron.plugin == 'ovn'
+      when: neutron.mech_driver == 'ovn'
   environment: "{{ env_vars|default({}) }}"
 
 # OPENSTACK SERVICES

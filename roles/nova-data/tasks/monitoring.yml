@@ -7,7 +7,7 @@
 - name: neutron linuxbridge agent check
   sensu_process_check: service=neutron-linuxbridge-agent
   notify: restart sensu-client
-  when: neutron.plugin=='ml2'
+  when: neutron.mech_driver=='linuxbridge'
 
 - name: nova cinder session check
   sensu_metrics_check: name=check-cinder-sessions plugin=check-cinder-sessions.py

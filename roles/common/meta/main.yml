@@ -17,7 +17,7 @@ dependencies:
     repos:
       - repo: 'deb {{ apt_repos.ovn.repo }} {{ ansible_lsb.codename }} main'
         key_url: '{{ apt_repos.ovn.key_url }}'
-    when: neutron.plugin == 'ovn'
+    when: neutron.mech_driver == 'ovn'
   - role: apt-repos
     repos:
       - repo: 'deb {{ apt_repos.kernel.repo }} {{ ansible_lsb.codename }} main'
