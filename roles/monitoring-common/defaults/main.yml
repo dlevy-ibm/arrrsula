@@ -3,8 +3,8 @@ monitoring:
   client_name: ~
   checks:
     memory:
-      warning: 4096
-      critical: 1024
+      warning: 3
+      critical: 2
   graphite:
     cluster_prefix: "stats.bbc.{{ stack_env }}.openstack"
     host_prefix: "stats.bbc.{{ stack_env }}.{{ ansible_nodename|regex_replace('\\\\.*$', '') }}"

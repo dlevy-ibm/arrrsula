@@ -137,6 +137,13 @@
   with_items:
     - check-neutron-fip.sh
 
+- name: inject customized sensu checks
+  copy:
+    src: plugins/
+    dest: /etc/sensu/plugins/
+    mode: u=rwx,g=rx,o=rx
+  notify: restart sensu-client
+
 - name: cpu check
   sensu_check: name=cpu plugin=check-cpu.rb args='-w 80 -c 90 -p kvm'
   notify: restart sensu-client
@@ -172,7 +179,7 @@
   notify: restart sensu-client
 
 - name: memory check
-  sensu_check: name=memory plugin=check-mem.sh
+  sensu_check: name=memory plugin=check-ram.rb
                args="-w {{ monitoring.checks.memory.warning }} -c {{ monitoring.checks.memory.critical }}"
   notify: restart sensu-client
 
