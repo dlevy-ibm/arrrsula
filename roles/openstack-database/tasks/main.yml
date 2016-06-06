@@ -1,4 +1,7 @@
 ---
+- name: Install python-mysqldb
+  apt: name=python-mysqldb
+
 - name: database users
   run_once: true
   mysql_user: name={{ database_name }} host=%
