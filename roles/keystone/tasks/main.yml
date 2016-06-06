@@ -77,6 +77,9 @@
   with_items: groups["controller"]
   known_hosts: path=/etc/ssh/ssh_known_hosts key="{{ item }} {{ hostvars[item]['ssh_host_key'].stdout }}" name="{{ item }}"
 
+- name: Install python-mysqldb
+  apt: name=python-mysqldb
+
 - name: Install rsync
   apt: name=rsync
 
