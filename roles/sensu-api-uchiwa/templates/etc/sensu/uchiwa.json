@@ -1,0 +1,15 @@
+{
+    "sensu": [{
+        "host": "{{ primary_ip }}",
+        "name": "{{ sensu_uchiwa_config.name }}",
+        "port": 4567,
+        "timeout": 5
+    }],
+    "uchiwa": {
+        "host": "0.0.0.0",
+        "interval": 5,
+        "pass": "admin",
+        "port": 3000,
+        "user": "admin"
+    }
+}

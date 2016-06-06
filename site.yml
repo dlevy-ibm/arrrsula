@@ -57,6 +57,30 @@
       tags: ['infra', 'rabbitmq']
   environment: "{{ env_vars|default({}) }}"
 
+- name: sensu-common
+  hosts: sensu-common
+  sudo: true
+  roles:
+    - sensu-common
+  tags:
+    - sensu-common
+
+- name: sensu-server
+  hosts: sensu-server
+  sudo: true
+  roles:
+    - sensu-server
+  tags:
+    - sensu-server
+
+- name: sensu-api-uchiwa
+  hosts: sensu-api-uchiwa
+  sudo: true
+  roles:
+    - sensu-api-uchiwa
+  tags:
+    - sensu-api-uchiwa
+
 - name: install common percona components and gather facts
   gather_facts: force
   hosts: db
