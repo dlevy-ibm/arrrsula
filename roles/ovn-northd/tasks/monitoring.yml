@@ -4,7 +4,38 @@
                args="-p ovn-northd -C 2 -c 2 -W 2 -w 2"
   notify: restart sensu-client
 
+- name: install psutil for usage metrics
+  pip: name=psutil state=present
+
+- name: ovn-northd cpu and memory metrics
+  sensu_metrics_check:
+    name: ovn-northd-usage-metrics
+    plugin: metrics-process-usage.py
+    use_sudo: true
+    args: >
+      -n ovn-northd
+      -w {{ cpu_warn_pct }}
+      -c {{ cpu_crit_pct }}
+      -W {{ mem_warn_pct }}
+      -C {{ mem_crit_pct }}
+      --scheme {{ monitoring.graphite.host_prefix }}
+  notify: restart sensu-client
+
 - name: ovn-databases process check
   sensu_check: name=ovn-databases-process plugin=check-procs.rb
                args="-p ovsdb-server -C 4 -c 4 -w 4 -W 4"
+  notify: restart sensu-client
+
+- name: ovn-databases cpu and memory metrics
+  sensu_metrics_check:
+    name: ovn-databases-usage-metrics
+    plugin: metrics-process-usage.py
+    use_sudo: true
+    args: >
+      -n ovsdb-server
+      -w {{ cpu_warn_pct }}
+      -c {{ cpu_crit_pct }}
+      -W {{ mem_warn_pct }}
+      -C {{ mem_crit_pct }}
+      --scheme {{ monitoring.graphite.host_prefix }}
   notify: restart sensu-client

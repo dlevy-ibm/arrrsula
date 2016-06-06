@@ -4,7 +4,38 @@
                args="-p ovn-controller -C 2 -c 2 -w 2 -W 2"
   notify: restart sensu-client
 
+- name: install psutil for usage metrics
+  pip: name=psutil state=present
+
+- name: ovn-controller cpu and memory metrics
+  sensu_metrics_check:
+    name: ovn-controller-usage-metrics
+    plugin: metrics-process-usage.py
+    use_sudo: true
+    args: >
+      -n ovn-controller
+      -w {{ cpu_warn_pct }}
+      -c {{ cpu_crit_pct }}
+      -W {{ mem_warn_pct }}
+      -C {{ mem_crit_pct }}
+      --scheme {{ monitoring.graphite.host_prefix }}
+  notify: restart sensu-client
+
 - name: ovs-vswitchd process check
   sensu_check: name=ovs-vswitchd-process plugin=check-procs.rb
                args="-p ovs-vswitchd -C 2 -c 2 -w 2 -W 2"
+  notify: restart sensu-client
+
+- name: ovs-vswitchd cpu and memory metrics
+  sensu_metrics_check:
+    name: ovs-vswitchd-usage-metrics
+    plugin: metrics-process-usage.py
+    use_sudo: true
+    args: >
+      -n ovs-vswitchd
+      -w {{ cpu_warn_pct }}
+      -c {{ cpu_crit_pct }}
+      -W {{ mem_warn_pct }}
+      -C {{ mem_crit_pct }}
+      --scheme {{ monitoring.graphite.host_prefix }}
   notify: restart sensu-client
