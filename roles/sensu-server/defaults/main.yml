@@ -1,0 +1,15 @@
+redis_host: 127.0.0.1
+redis_port: 6379
+redis_ulimit_default: 65536
+
+sensu_host: 0.0.0.0
+sensu_port: 3030
+sensu_api_port: 4567
+sensu_api_bind_host: 0.0.0.0
+sensu_api_host: localhost
+
+sensu_rabbitmq_user: sensu
+sensu_rabbitmq_password: sensu_rabbitmq_password
+sensu_rabbitmq_vhost: /sensu
+sensu_rabbitmq_host: 127.0.0.1
+sensu_rabbitmq_port: 5672

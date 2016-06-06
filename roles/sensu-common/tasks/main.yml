@@ -1,0 +1,40 @@
+- include: sensu-repo.yml
+- include: erlang.yml
+- include: dependencies.yml
+
+- name: get rabbitmq-server packages
+  get_url: url={{ item.url }}
+           dest=/tmp/{{ item.name }}
+  with_items: rabbitmq_packages
+
+- name: install rabbitmq-server packages
+  apt: deb=/tmp/{{ item.name }} state=present
+  register: register1
+  failed_when: "register1.msg is defined and 'already installed' not in register1.msg"
+  with_items: rabbitmq_packages
+  notify: restart rabbitmq-server
+
+- name: add sensu vhost to rabbitmq
+  rabbitmq_vhost: name={{ sensu_rabbitmq_vhost }}
+
+- name: add sensu user to rabbitmq
+  rabbitmq_user: user={{ sensu_rabbitmq_user }}
+                 password={{ sensu_rabbitmq_password }}
+                 vhost={{ sensu_rabbitmq_vhost }}
+                 configure_priv=.*
+                 read_priv=.*
+                 write_priv=.*
+                 state=present
+
+- name: update rabbimq-server defaults
+  template: src=rabbitmq-server.defaults dest=/etc/default/rabbitmq-server
+  notify: restart rabbitmq-server
+
+- name: install redis database
+  apt: name={{ item }} state=present
+  with_items:
+    - redis-server
+
+- name: update the redis-server defaults file
+  template: src=redis-server.defaults dest=/etc/default/redis-server
+  notify: restart redis-server

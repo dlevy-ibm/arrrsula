@@ -21,6 +21,14 @@
 - name: sensu gems directory
   file: dest=/opt/sensu/gems state=directory owner=sensu mode=0750
 
+- name: install the ruby-sensu gems
+  notify: restart sensu-client
+  gem: name={{item}}  user_install=no
+  with_items:
+    - sensu-plugin
+    - carrot-top
+    - rest-client
+
 - name: sensu cert directory
   file: dest=/etc/sensu/ssl state=directory owner=sensu mode=0750
 
