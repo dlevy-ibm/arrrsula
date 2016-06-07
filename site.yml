@@ -20,6 +20,7 @@
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
     - role: openstack-superrepo
+      serial: 5
       tags: ['common']
       when: openstack_source.use_superproject
   environment: "{{ env_vars|default({}) }}"
