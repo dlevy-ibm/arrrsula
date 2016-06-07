@@ -146,7 +146,7 @@ endpoints:
     name: ovndb
     type: network
     description: 'Open Virtual Network (OVN) databases'
-    url: "{{ undercloud_floating_ip }}"
+    url: "{{ hostvars[groups['ovndb'][0]][hostvars[groups['ovndb'][0]]['primary_interface']]['ipv4']['address'] }}"
     port:
       northbound: 6641
       southbound: 6642
