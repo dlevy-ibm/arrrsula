@@ -17,14 +17,12 @@
 - name: add sensu vhost to rabbitmq
   rabbitmq_vhost: name={{ sensu_rabbitmq_vhost }}
 
-- name: add sensu user to rabbitmq
+- name: openstack sensu rabbit user
   rabbitmq_user: user={{ sensu_rabbitmq_user }}
                  password={{ sensu_rabbitmq_password }}
-                 vhost={{ sensu_rabbitmq_vhost }}
-                 configure_priv=.*
-                 read_priv=.*
-                 write_priv=.*
-                 state=present
+                 node={{ nodename }} vhost={{ sensu_rabbitmq_vhost }} tags=administrator
+                 configure_priv=.* read_priv=.*
+                 write_priv=.* state=present
 
 - name: update rabbimq-server defaults
   template: src=rabbitmq-server.defaults dest=/etc/default/rabbitmq-server
