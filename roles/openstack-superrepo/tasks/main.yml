@@ -1,7 +1,28 @@
 ---
-- name: mount vagrant shared folder for superrepo
-  mount: name=/srv/git/openstack src=srv_git_openstack fstype=vboxsf state=mounted
-  when: "'vagrant' in stack_env and openstack_source.use_local_superproject"
+- name: find local copy if exists
+  delegate_to: localhost
+  become: false
+  connection: local
+  run_once: true
+  stat: path=../openstack/.git
+  register: has_local_openstack
+  when: openstack_source.use_local_superproject
+
+- name: make a tarball
+  command: tar -cJf openstack.tar.xz -C .. openstack
+  delegate_to: localhost
+  become: false
+  run_once: true
+  connection: local
+  when: has_local_openstack.stat.isdir and openstack_source.use_local_superproject
+
+- name: copy it up
+  copy: src=openstack.tar.xz dest=/srv/git
+  when: has_local_openstack.stat.isdir and openstack_source.use_local_superproject
+
+- name: explode tarball
+  command: tar -xJf /srv/git/openstack.tar.xz -C /srv/git
+  when: has_local_openstack.stat.isdir and openstack_source.use_local_superproject
 
 - name: Use local copy of superrepo
   file: path=/opt/stack state=link src=/srv/git/openstack
