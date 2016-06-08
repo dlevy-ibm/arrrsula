@@ -22,8 +22,8 @@
   when: "'vxlan' in neutron.tunnel_types"
 
 - name: ml2 dataplane config
-  template: src=etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
-            dest=/etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
+  template: src=etc/neutron/plugins/ml2/ml2_conf_dataplane.ini
+            dest=/etc/neutron/plugins/ml2/ml2_conf_dataplane.ini
             mode=0644
   when: "'linuxbridge' in neutron.mechanism_drivers"
   notify:
@@ -34,7 +34,7 @@
                    user=neutron
                    cmd=/usr/local/bin/neutron-linuxbridge-agent
                    config_dirs=/etc/neutron
-                   config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini,/etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
+                   config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_conf.ini,/etc/neutron/plugins/ml2/ml2_conf_dataplane.ini
   when: "'linuxbridge' in neutron.mechanism_drivers"
 
 - name: start neutron-linuxbridge-agent

@@ -117,14 +117,14 @@
       - l3_agent.ini
       - rootwrap.conf
       - policy.json
-      - plugins/ml2/ml2_plugin.ini
+      - plugins/ml2/ml2_conf.ini
 
   - name: Install new neutron-linuxbridge-agent service
     upstart_service: name=neutron-linuxbridge-agent
                      user=neutron
                      cmd=/usr/local/bin/neutron-linuxbridge-agent
                      config_dirs=/etc/neutron
-                     config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini
+                     config_files=/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_conf.ini
 
   - name: Start neutron-linuxbridge-agent
     service: name=neutron-linuxbridge-agent state=started enabled=yes
@@ -148,7 +148,7 @@
                      user=neutron
                      cmd=/usr/local/bin/neutron-server
                      config_dirs=/etc/neutron
-                     config_files="/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini"
+                     config_files="/etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_conf.ini"
 
   - name: Start Neutron Server
     service: name=neutron-server state=started

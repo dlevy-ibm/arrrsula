@@ -95,8 +95,8 @@
   file: dest=/etc/neutron/plugins/ml2 state=directory
 
 - name: ml2 config
-  template: src=etc/neutron/plugins/ml2/ml2_plugin.ini
-            dest=/etc/neutron/plugins/ml2/ml2_plugin.ini
+  template: src=etc/neutron/plugins/ml2/ml2_conf.ini
+            dest=/etc/neutron/plugins/ml2/ml2_conf.ini
             mode=0644
   notify:
     - restart neutron services
