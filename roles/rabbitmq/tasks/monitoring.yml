@@ -1,4 +1,11 @@
 ---
+- name: inject customized sensu checks
+  copy:
+    src: plugins/
+    dest: /etc/sensu/plugins/
+    mode: u=rwx,g=rx,o=rx
+  notify: restart sensu-client
+
 - name: rabbit process check
   sensu_process_check: service=rabbitmq
   notify: restart sensu-client
@@ -19,10 +26,31 @@
   set_fact: cluster_node_count={{ groups['all'] | count }}
 
 - name: rabbit queue num check
-  sensu_check: name=rabbitmq-numqueues plugin=check-rabbitmq-queues.rb
+  sensu_check: name=rabbitmq-num-queues plugin=check-rabbitmq-queues.rb
                args="-t number -w {{ cluster_node_count|int * rabbitmq.numqueues_warning_multiplier|int }}
                      -c {{ cluster_node_count|int * rabbitmq.numqueues_critical_multiplier|int }}
                      --timeout 2"
+               use_sudo=true
+  notify: restart sensu-client
+
+- name: rabbitmq overview messages
+  sensu_check: name=rabbitmq-overview-messages plugin=check-rabbitmq-messages.rb
+               args="-w 200000 -c 500000"
+               use_sudo=true
+  notify: restart sensu-client
+
+- name: rabbitmq drain time
+  sensu_check: name=rabbitmq-drain-time plugin=check-rabbitmq-queue-drain-time.rb
+               use_sudo=true
+  notify: restart sensu-client
+
+- name: rabbitmq node health check
+  sensu_check: name=rabbitmq-node-health plugin=check-rabbitmq-node-health.rb
+               use_sudo=true
+  notify: restart sensu-client
+
+- name: rabbitmq cluster health check
+  sensu_check: name=rabbitmq-cluster-health plugin=rabbitmq-cluster-health.rb
                use_sudo=true
   notify: restart sensu-client
 
