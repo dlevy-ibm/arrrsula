@@ -19,12 +19,16 @@
     - role: collectd-client
       tags: ['collectd-client','collectd']
       when: collectd.enabled|default('False')|bool
-    - role: openstack-superrepo
-      serial: 5
-      tags: ['common']
-      when: openstack_source.use_superproject
   environment: "{{ env_vars|default({}) }}"
 
+- name: get the superrepo serially for source installs
+  hosts: all
+  gather_facts: force
+  serial: 5
+  roles:
+    - role: openstack-superrepo
+      tags: ['common']
+      when: openstack_source.use_superproject
 
 - name: security and errata
   hosts: all
