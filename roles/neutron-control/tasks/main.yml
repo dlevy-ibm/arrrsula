@@ -2,21 +2,13 @@
 - name: neutron api cache dir
   file: dest=/var/cache/neutron/api owner=neutron state=directory
 
-- name: set config path for ovn
-  set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini,/etc/neutron/plugins/networking-ovn/networking-ovn.ini
-  when: "'ovn' in neutron.mechanism_drivers"
-
-- name: set config path for ml2
-  set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini
-  when: "'linuxbridge' in neutron.mechanism_drivers"
-
 - name: install neutron-server service
   upstart_service:
     name: neutron-server
     user: neutron
     cmd: /usr/local/bin/neutron-server
     config_dirs: /etc/neutron
-    config_files: "/etc/neutron/neutron.conf,{{ neutron_plugin_config }}"
+    config_files: /etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini
     envs: "{{ neutron.service.envs }}"
 
 - name: stop neutron service before db sync
@@ -24,52 +16,28 @@
   when: database_create.changed or force_sync|default('false')|bool
   tags: db-migrate
 
-- name: sync neutron database for ovn
+- name: sync neutron database
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
-           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini \
-           --config-file /etc/neutron/plugins/networking-ovn/networking-ovn.ini upgrade head
-  when: "'ovn' in neutron.mechanism_drivers and ( database_create.changed or force_sync|default('false')|bool )"
+           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
+  when: database_create.changed or force_sync|default('false')|bool
   run_once: true
   changed_when: true
   notify: restart neutron services
   # we want this to always be changed so that it can notify the service restart
   tags: db-migrate
 
-- name: sync neutron database ml2
-  command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
-           --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
-  when: "'linuxbridge' in neutron.mechanism_drivers and ( database_create.changed or force_sync|default('false')|bool )"
-  run_once: true
-  changed_when: true
-  notify: restart neutron services
-  # we want this to always be changed so that it can notify the service restart
-  tags: db-migrate
-
-- name: sync neutron database for ovn/lbaas
+- name: sync neutron database for lbaas
   command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
-           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini \
-           --config-file /etc/neutron/plugins/networking-ovn/networking-ovn.ini upgrade head
-  when: "'ovn' in neutron.mechanism_drivers and ((database_create.changed or force_sync|default('false')|bool) and
-        ((neutron.lbaas.enabled == 'smart' and
+           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
+  when: (database_create.changed or force_sync|default('false')|bool) and
+        ((neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or
-         neutron.lbaas.enabled|bool))"
+         neutron.lbaas.enabled|bool)
   run_once: true
   changed_when: true
   notify: restart neutron services
   # we want this to always be changed so that it can notify the service restart
   tags: db-migrate
-
-- name: sync neutron database for ml2/lbaas
-  command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
-           --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
-  when: "'linuxbridge' in neutron.mechanism_drivers and ((database_create.changed or force_sync|default('false')|bool) and
-        ((neutron.lbaas.enabled == 'smart' and
-         groups['controller'][0] not in groups['compute']) or
-         neutron.lbaas.enabled|bool))"
-  run_once: true
-  changed_when: true
-  notify: restart neutron services
-  # we want this to always be changed so that it can notify the service restart
 
 - meta: flush_handlers
 

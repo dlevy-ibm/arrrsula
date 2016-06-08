@@ -10,16 +10,16 @@
 
 - name: permit GENEVE traffic
   ufw: rule=allow to_port=6081 proto=udp
-  when: "'ovn' in neutron.mechanism_drivers and 'geneve' in neutron.tunnel_types"
+  when: "'geneve' in neutron.tunnel_types"
 
 - name: permit STT traffic
   ufw: rule=allow to_port=7471 proto=tcp
-  when: "'ovn' in neutron.mechanism_drivers and 'stt' in neutron.tunnel_types"
+  when: "'stt' in neutron.tunnel_types"
 
 - name: permit VXLAN traffic
   ufw: rule=allow to_port=4789 proto=udp
   tags: ufw
-  when: "'linuxbridge' in neutron.mechanism_drivers and 'vxlan' in neutron.tunnel_types"
+  when: "'vxlan' in neutron.tunnel_types"
 
 - name: ml2 dataplane config
   template: src=etc/neutron/plugins/ml2/ml2_plugin_dataplane.ini
