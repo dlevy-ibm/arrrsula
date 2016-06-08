@@ -7,7 +7,7 @@
 
 - name: unload openvswitch if present
   modprobe: name=openvswitch state=absent
-  when: neutron.mech_driver == 'linuxbridge'
+  when: "'linuxbridge' in neutron.mechanism_drivers"
 
 - name: blacklist openvswitch
   template: dest=/etc/modprobe.d/blacklist-openvswitch.conf
@@ -15,7 +15,7 @@
             mode=0644
             owner=root
             group=root
-  when: neutron.mech_driver == 'linuxbridge'
+  when: "'linuxbridge' in neutron.mechanism_drivers"
 
 - name: configure VXLAN to use IANA assigned port 4789
   copy: content="options vxlan udp_port=4789"
@@ -103,13 +103,13 @@
 
 - name: OVN mech driver directory
   file: dest=/etc/neutron/plugins/networking-ovn state=directory
-  when: neutron.mech_driver == 'ovn'
+  when: "'ovn' in neutron.mechanism_drivers"
 
 - name: OVN mech driver configuration
   template: src=etc/neutron/plugins/networking-ovn/networking-ovn.ini
             dest=/etc/neutron/plugins/networking-ovn/networking-ovn.ini
             mode=0644
-  when: neutron.mech_driver == 'ovn'
+  when: "'ovn' in neutron.mechanism_drivers"
   notify:
     - restart neutron services
 

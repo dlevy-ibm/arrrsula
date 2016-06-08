@@ -4,11 +4,11 @@
 
 - name: set config path for ovn
   set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini,/etc/neutron/plugins/networking-ovn/networking-ovn.ini
-  when: neutron.mech_driver == 'ovn'
+  when: "'ovn' in neutron.mechanism_drivers"
 
 - name: set config path for ml2
   set_fact: neutron_plugin_config=/etc/neutron/plugins/ml2/ml2_plugin.ini
-  when: neutron.mech_driver == 'linuxbridge'
+  when: "'linuxbridge' in neutron.mechanism_drivers"
 
 - name: install neutron-server service
   upstart_service:
@@ -28,7 +28,7 @@
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini \
            --config-file /etc/neutron/plugins/networking-ovn/networking-ovn.ini upgrade head
-  when: neutron.mech_driver == 'ovn' and ( database_create.changed or force_sync|default('false')|bool )
+  when: "'ovn' in neutron.mechanism_drivers and ( database_create.changed or force_sync|default('false')|bool )"
   run_once: true
   changed_when: true
   notify: restart neutron services
@@ -38,7 +38,7 @@
 - name: sync neutron database ml2
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
-  when: neutron.mech_driver == 'linuxbridge' and ( database_create.changed or force_sync|default('false')|bool )
+  when: "'linuxbridge' in neutron.mechanism_drivers and ( database_create.changed or force_sync|default('false')|bool )"
   run_once: true
   changed_when: true
   notify: restart neutron services
@@ -49,10 +49,10 @@
   command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini \
            --config-file /etc/neutron/plugins/networking-ovn/networking-ovn.ini upgrade head
-  when: neutron.mech_driver == 'ovn' and ((database_create.changed or force_sync|default('false')|bool) and
-        ((neutron.lbaas.enabled == "smart" and
+  when: "'ovn' in neutron.mechanism_drivers and ((database_create.changed or force_sync|default('false')|bool) and
+        ((neutron.lbaas.enabled == 'smart' and
          groups['controller'][0] not in groups['compute']) or
-         neutron.lbaas.enabled|bool))
+         neutron.lbaas.enabled|bool))"
   run_once: true
   changed_when: true
   notify: restart neutron services
@@ -62,10 +62,10 @@
 - name: sync neutron database for ml2/lbaas
   command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
            --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
-  when: neutron.mech_driver == 'linuxbridge' and ((database_create.changed or force_sync|default('false')|bool) and
-        ((neutron.lbaas.enabled == "smart" and
+  when: "'linuxbridge' in neutron.mechanism_drivers and ((database_create.changed or force_sync|default('false')|bool) and
+        ((neutron.lbaas.enabled == 'smart' and
          groups['controller'][0] not in groups['compute']) or
-         neutron.lbaas.enabled|bool))
+         neutron.lbaas.enabled|bool))"
   run_once: true
   changed_when: true
   notify: restart neutron services

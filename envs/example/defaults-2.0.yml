@@ -202,10 +202,12 @@ cinder:
 
 neutron:
   plugin: ml2
-  mech_driver: ovn
-  service_plugins: [networking_ovn.l3.l3_ovn.OVNL3RouterPlugin]
-  # mech_driver: linuxbridge
-  # service_plugins: [neutron.services.l3_router.l3_router_plugin.L3RouterPlugin]
+  mechanism_drivers:
+    - ovn
+  # - linuxbridge
+  service_plugins:
+    - networking_ovn.l3.l3_ovn.OVNL3RouterPlugin
+  # - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
   bridge_mappings: provider:br-provider
   bridge_mapping:
     provider: br-provider
