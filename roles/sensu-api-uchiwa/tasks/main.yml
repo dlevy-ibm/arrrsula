@@ -1,13 +1,19 @@
-- name: install uchiwa server
+- name: install uchiwa and sensu
   apt: name={{ item }}
   with_items:
+    - sensu
     - uchiwa
+
+- name: setup sensu-api config
+  template: src=etc/sensu/api.json dest=/etc/sensu/api.json
+  notify: restart sensu-api
 
 - name: setup uchiwa config
   template: src=etc/sensu/uchiwa.json dest=/etc/sensu/uchiwa.json
   notify: restart uchiwa
 
-- name: start uchiwa
+- name: start uchiwa and sensu-api
   service: name={{ item }} state=started enabled=yes
   with_items:
+    - sensu-api
     - uchiwa

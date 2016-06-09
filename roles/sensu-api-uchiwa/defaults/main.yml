@@ -1,2 +1,6 @@
 sensu_uchiwa_config:
   name: RegionOne
+
+sensu_api_port: 4567
+sensu_api_bind_host: 0.0.0.0
+sensu_api_host: localhost

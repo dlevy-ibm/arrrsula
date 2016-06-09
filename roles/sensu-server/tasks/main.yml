@@ -5,19 +5,16 @@
   template: src=sensu-conf/{{ item }} dest=/etc/sensu/conf.d/{{ item }}
   with_items:
     - transport.json
-    - api.json
     - rabbitmq.json
     - redis.json
 
 - name: update defaults
   shell: update-rc.d {{ item }} defaults
-  with_items: 
+  with_items:
     - sensu-server
-    - sensu-api
 
 - name: restart sensu services
   service: name={{ item }}  state=restarted
   with_items:
     - sensu-server
-    - sensu-api
 
