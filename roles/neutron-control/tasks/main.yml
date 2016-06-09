@@ -8,7 +8,7 @@
     user: neutron
     cmd: /usr/local/bin/neutron-server
     config_dirs: /etc/neutron
-    config_files: /etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_plugin.ini
+    config_files: /etc/neutron/neutron.conf,/etc/neutron/plugins/ml2/ml2_conf.ini
     envs: "{{ neutron.service.envs }}"
 
 - name: stop neutron service before db sync
@@ -18,7 +18,7 @@
 
 - name: sync neutron database
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf \
-           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
+           --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
   when: database_create.changed or force_sync|default('false')|bool
   run_once: true
   changed_when: true
@@ -28,7 +28,7 @@
 
 - name: sync neutron database for lbaas
   command: neutron-db-manage --service lbaas --config-file /etc/neutron/neutron.conf \
-           --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini upgrade head
+           --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
   when: (database_create.changed or force_sync|default('false')|bool) and
         ((neutron.lbaas.enabled == "smart" and
          groups['controller'][0] not in groups['compute']) or

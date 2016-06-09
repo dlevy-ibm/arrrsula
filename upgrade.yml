@@ -317,14 +317,14 @@
 
     - name: check db version
       command: neutron-db-manage --config-file /etc/neutron/neutron.conf
-               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
+               --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
                current
       register: neutron_db_ver
       run_once: True
 
     - name: stamp neutron to havana
       command: neutron-db-manage --config-file /etc/neutron/neutron.conf
-               --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
+               --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
                stamp havana
       when: not neutron_db_ver.stdout|search('juno')
       run_once: True

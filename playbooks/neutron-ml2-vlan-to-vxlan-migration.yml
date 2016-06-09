@@ -54,7 +54,7 @@
       - l3_agent.ini
       - rootwrap.conf
       - policy.json
-      - plugins/ml2/ml2_plugin.ini
+      - plugins/ml2/ml2_conf.ini
 
 - hosts: controller
   serial: 1
