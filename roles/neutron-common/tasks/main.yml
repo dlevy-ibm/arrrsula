@@ -101,18 +101,6 @@
   notify:
     - restart neutron services
 
-- name: OVN mech driver directory
-  file: dest=/etc/neutron/plugins/networking-ovn state=directory
-  when: "'ovn' in neutron.mechanism_drivers"
-
-- name: OVN mech driver configuration
-  template: src=etc/neutron/plugins/networking-ovn/networking-ovn.ini
-            dest=/etc/neutron/plugins/networking-ovn/networking-ovn.ini
-            mode=0644
-  when: "'ovn' in neutron.mechanism_drivers"
-  notify:
-    - restart neutron services
-
 - name: neutron stop all script
   template: src=usr/local/bin/neutron-stop-all
             dest=/usr/local/bin/neutron-stop-all
