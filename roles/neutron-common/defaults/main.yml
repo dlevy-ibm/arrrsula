@@ -42,6 +42,8 @@ neutron:
   # Tunneling encapsulations enabled e.g. gre, vxlan
   # Including any tunnels will enable tunnling
   tunnel_types: []
+  qos:
+    enabled: True
   dhcp:
     enabled: true
     agent:
