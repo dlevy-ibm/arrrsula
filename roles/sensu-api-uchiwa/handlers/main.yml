@@ -1,2 +1,11 @@
 - name: restart uchiwa
   service: name=uchiwa state=restarted
+
+- name: reload uchiwa
+  service: name=uchiwa state=reloaded
+
+- name: restart sensu-api
+  service: name=sensu-api state=restarted
+
+- name: reload sensu-api
+  service: name=sensu-api state=reload
