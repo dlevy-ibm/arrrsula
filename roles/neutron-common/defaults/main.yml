@@ -117,3 +117,6 @@ neutron:
     verbose: True
   cafile: "{{ ssl.cafile|default('/etc/ssl/certs/ca-certificates.crt') }}"
   enable_external_interface: False
+  auditing:
+    enabled: False
+    logging: False
