@@ -50,3 +50,8 @@
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool
+
+- name: neutron ovn db sync cron
+  template: src=etc/cron.d/neutron-ovn-db-sync
+            dest=/etc/cron.d/neutron-ovn-db-sync
+            mode=0640
