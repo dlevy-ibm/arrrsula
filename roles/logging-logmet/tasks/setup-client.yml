@@ -1,0 +1,10 @@
+- name: get Logmet GPG public key
+  apt_key:
+    url=https://downloads.opvis.bluemix.net:5443/client/LOGMET-SIGNING-PUBLIC.KEY
+    state=present
+
+# for ansible v2.1+ use filename='IBM_logmet_stable'
+- name: add Logmet repository
+  apt_repository:
+    repo='deb https://downloads.opvis.bluemix.net:5443/deb/public/ stable main'
+    state=present

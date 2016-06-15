@@ -45,6 +45,13 @@
       when: logging.enabled|default('True')|bool
   environment: "{{ env_vars|default({}) }}"
 
+- name: install logging-logmet and dependencies
+  hosts: all
+  roles:
+    - role: logging-logmet
+      tags: ['common', 'logging-logmet']
+      when: logging_logmet.enabled|default('True')|bool
+
 - name: setup IPv6 router advertisements
   gather_facts: force
   hosts: controller

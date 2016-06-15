@@ -1,0 +1,15 @@
+LSF_INSTANCE_ID="{{ LSF_INSTANCE_ID }}"
+LSF_GROUP_ID="{{ LSF_GROUP_ID }}"
+{% if stack_env == "prod-dal09-ib" %}
+LSF_TARGET="{{ LOGGING_HOST_IB }}"
+LSF_TENANT_ID="{{ SPACE_ID_IB }}"
+LSF_PASSWORD="{{ LOGGING_TOKEN_IB }}"
+{% elif stack_env == "prod-dal09-psr" %}
+LSF_TARGET="{{ LOGGING_HOST_PSR }}"
+LSF_TENANT_ID="{{ SPACE_ID_PSR }}"
+LSF_PASSWORD="{{ LOGGING_TOKEN_PSR }}"
+{% else %}
+LSF_TARGET="{{ LOGGING_HOST }}"
+LSF_TENANT_ID="{{ SPACE_ID }}"
+LSF_PASSWORD="{{ LOGGING_TOKEN }}"
+{% endif %}
