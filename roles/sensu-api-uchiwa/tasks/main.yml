@@ -5,7 +5,7 @@
     - uchiwa
 
 - name: setup sensu-api config
-  template: src=etc/sensu/api.json dest=/etc/sensu/api.json
+  template: src=etc/sensu/api.json dest=/etc/sensu/conf.d/api.json
   notify: restart sensu-api
 
 - name: setup uchiwa config
