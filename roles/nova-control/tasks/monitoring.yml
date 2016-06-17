@@ -1,4 +1,16 @@
 ---
+- name: inject custom nova sensu checks
+  copy:
+    src: plugins/
+    dest: /etc/sensu/plugins/
+    mode: u=rwx,g=rx,o=rx
+  notify: restart sensu-client
+
+- name: nova-api availability check
+  sensu_check: name=check-nova-api-availability plugin=check-nova-api-avail.py
+               use_sudo=true
+  notify: restart sensu-client
+
 - name: nova process checks
   sensu_process_check: service={{ item }}
   with_items:
