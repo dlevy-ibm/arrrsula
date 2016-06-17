@@ -17,3 +17,6 @@
   run_once: true
   mysql_db: db={{ database_name }} state=present
   register: database_create
+
+- include: monitoring.yml tags=monitoring,common
+  when: monitoring.enabled|default('True')|bool

@@ -1,0 +1,12 @@
+---
+- name: inject customized sensu checks
+  copy:
+    src: plugins/
+    dest: /etc/sensu/plugins/
+    mode: u=rwx,g=rx,o=rx
+  notify: restart sensu-client
+
+- name: sql connection check
+  sensu_check: name=sql-connection-check plugin=sqlcheck.py
+               interval=10 occurrences=3
+  notify: restart sensu-client
