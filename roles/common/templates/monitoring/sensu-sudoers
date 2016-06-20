@@ -8,6 +8,7 @@ sensu ALL= NOPASSWD: /etc/sensu/plugins/check-rabbitmq-messages.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-rabbitmq-node-health.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-rabbitmq-queue-drain-time.rb
 sensu ALL= NOPASSWD: /etc/sensu/plugins/rabbitmq-cluster-health.rb
+sensu ALL= NOPASSWD: /etc/sensu/plugins/check-nova-api-avail.py
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check_3ware_raid.py
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check_megaraid_sas.pl
 sensu ALL= NOPASSWD: /etc/sensu/plugins/check-storcli.pl
