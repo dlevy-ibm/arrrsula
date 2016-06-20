@@ -205,9 +205,6 @@ neutron:
   mechanism_drivers:
     - ovn
   # - linuxbridge
-  service_plugins:
-    - networking_ovn.l3.l3_ovn.OVNL3RouterPlugin
-  # - neutron.services.l3_router.l3_router_plugin.L3RouterPlugin
   bridge_mappings: provider:br-provider
   bridge_mapping:
     provider: br-provider
