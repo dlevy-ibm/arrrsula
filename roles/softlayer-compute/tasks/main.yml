@@ -1,7 +1,6 @@
-- name: Set br_provider facts
+- name: Set br_provider to a reasonable default to avoid undefined variable errors
   set_fact:
-    br_provider_addr: "{{ ansible_br_provider['ipv4']['address'] | default('') }}"
-    br_provider_mask: "{{ ansible_br_provider['ipv4']['netmask'] | default('') }}"
+    br_provider: "{{ ansible_br_provider | default({'ipv4': {'address': None, 'netmask': None}}) }}"
 
 - name: Set network_interfaces_d for softlayer compute nodes
   set_fact:
@@ -25,6 +24,6 @@
         contents: |
           allow-ovs br-provider
           iface br-provider inet static
-          address {{ ansible_bond1['ipv4']['address'] | default(br_provider_addr) }}
-          netmask {{ ansible_bond1['ipv4']['netmask'] | default(br_provider_mask) }}
+          address {{ ansible_bond1['ipv4']['address'] | default(br_provider['ipv4']['address']) }}
+          netmask {{ ansible_bond1['ipv4']['netmask'] | default(br_provider['ipv4']['netmask']) }}
           gateway {{ ansible_default_ipv4['gateway'] }}
