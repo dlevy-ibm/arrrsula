@@ -1,0 +1,4 @@
+- name: restart log forwarder client
+  service:
+    name=mt-logstash-forwarder
+    state=restarted

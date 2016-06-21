@@ -1,0 +1,8 @@
+LSF_INSTANCE_ID: "{{ inventory_hostname }}"
+LSF_GROUP_ID: infra.logs
+LOGGING_HOST: loghostport
+SPACE_ID: id
+LOGGING_TOKEN: token
+
+logging_logmet:
+  enabled: False

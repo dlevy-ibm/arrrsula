@@ -1,0 +1,14 @@
+- name: install logmet client
+  apt: name={{ item }} update_cache=yes
+  with_items:
+    - mt-logstash-forwarder
+
+- name: setup logmet config
+  template: src=mt-lsf-config.sh.j2 dest=/etc/mt-logstash-forwarder/mt-lsf-config.sh
+  notify: restart log forwarder client
+
+- name: gather other interesting log files besides syslog for logmet
+  copy:
+    src: syslog.conf
+    dest: /etc/mt-logstash-forwarder/conf.d
+  notify: restart log forwarder client
