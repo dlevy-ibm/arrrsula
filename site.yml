@@ -507,6 +507,14 @@
       when: wait_for_all_timeout|default(0) > 0 and kernel_override_version is defined and apt_install_kernel.changed
   tags: ['kernel']
 
+- name: Check kernel compatibility with OVN
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: check kernel version
+      fail: msg="Kernel version check {{ ansible_kernel }}"
+      when: "{{ ansible_kernel | version_compare('4.6.0', '<') }}"
+
 - name: Shade test
   hosts: shadetest
   roles:
