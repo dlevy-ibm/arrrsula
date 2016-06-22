@@ -1,3 +1,7 @@
+- name: flush existing ip addresses from provider network interface
+  command: ip addr flush dev "{{ hostvars[inventory_hostname][provider_interface]['device'] }}"
+  when: inventory_hostname in groups['compute'] and hostvars[inventory_hostname][provider_interface]['ipv4'] is defined
+
 - name: bounce network interface after ovs changes to move IP
   command: ifdown {{ openstack_network_interface_device }}
   when: "openstack_network_interface is defined and 'ipv4' in hostvars[inventory_hostname][openstack_network_interface]"
