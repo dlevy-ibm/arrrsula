@@ -18,7 +18,7 @@
       - filename: bond1.cfg
         contents: |
           auto bond1
-          iface bond1 inet static
+          iface bond1 inet manual
           #pre-up /sbin/ethtool -s bond1 speed 1000 duplex full autoneg on
           post-up ifenslave bond1 eth1 eth3
           pre-down ifenslave -d bond1 eth1 eth3
@@ -37,3 +37,4 @@
           address {{ softlayer_public_ipv4['address'] }}
           netmask {{ softlayer_public_ipv4['netmask'] }}
           gateway {{ ansible_default_ipv4['gateway'] }}
+
