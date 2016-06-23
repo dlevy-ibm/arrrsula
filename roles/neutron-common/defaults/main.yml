@@ -82,6 +82,7 @@ neutron:
     - neutron-dhcp-agent
     - neutron-keepalived-state-change
     - neutron-lbaasv2-agent
+    - neutron-linuxbridge-agent
     - neutron-metadata-agent
     - neutron-metering-agent
     - neutron-netns-cleanup

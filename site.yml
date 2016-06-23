@@ -440,7 +440,7 @@
       tags: ['openstack', 'setup', 'openstack-network']
       openstack_network_interface: "{{ provider_interface }}"
       openstack_network_name: "provider"
-      when: provider_interface is defined
+      when: provider_interface is defined and 'ovn' in neutron.mechanism_drivers
   environment: "{{ env_vars|default({}) }}"
 
 - name: openstack Ironic network setup
@@ -464,6 +464,15 @@
   roles:
     - role: 'openstack-setup'
       tags: ['openstack-setup', 'openstack', 'setup']
+  environment: "{{ env_vars|default({}) }}"
+
+- name: openstack network setup linuxbridge
+  hosts: network
+  gather_facts: force
+  roles:
+    - role: 'openstack-network-linuxbridge'
+      tags: ['openstack', 'setup', 'openstack-network']
+      when: neutron.enable_external_interface|default('false')|bool and 'linuxbridge' in neutron.mechanism_drivers
   environment: "{{ env_vars|default({}) }}"
 
 - name: override stock kernel kernel version
