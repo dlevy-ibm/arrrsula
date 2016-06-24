@@ -59,8 +59,8 @@ keystone:
       public:
         port: 5008
         processes: "{{ ansible_processor_vcpus }}"
-        threads: "{{ ansible_processor_vcpus }}"
+        threads: 10
       admin:
         port: 5009
         processes: "{{ ansible_processor_vcpus }}"
-        threads: "{{ ansible_processor_vcpus }}"
+        threads: 10
