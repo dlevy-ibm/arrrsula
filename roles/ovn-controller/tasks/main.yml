@@ -2,7 +2,6 @@
   apt: pkg={{ item }} state=latest
   with_items:
     - openvswitch-common
-    - openvswitch-datapath-dkms
     - openvswitch-switch
     - ovn-common
     - ovn-host
