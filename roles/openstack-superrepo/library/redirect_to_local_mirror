@@ -1,0 +1,62 @@
+#!/bin/bash
+
+function is_good() {
+   return $(( ${1:-1} == 0?0:1 ))
+}
+
+function set_failure() {
+   changed=false
+   failed=true
+}
+
+function set_success() {
+   changed=true
+   failed=false
+}
+
+function verify_argument() {
+   if [ -z "$2" ]
+   then
+      printf '{"failed": true, "msg": "%s must be defined"}' "$1"
+      exit 1
+   fi
+}
+
+function fail_module() {
+   printf '{"failed": true, "msg": "%s"}' "$@"
+   exit 1
+}
+
+source $1
+verify_argument local_mirror $local_mirror
+verify_argument git_dir $git_dir
+
+gitmodules=".gitmodules"
+failed=false
+changed=false
+messages=""
+
+cd $git_dir
+is_good $? || fail_module "Cannot change directory to: $git_dir."
+
+[ -e $gitmodules ] || fail_module "$gitmodules file missing. $PWD is not a git repository. Exiting"
+
+sed_pattern="s%http[s]*://[[:graph:]]*/%${local_mirror}/%"
+stdout=$(sed -i $sed_pattern $gitmodules 2>&1)
+if is_good $?
+then
+   stdout=$(git submodule sync 2>&1)
+   if is_good $?
+   then
+      set_success
+   else
+      set_failure
+      messages="git submodule sync failed in $PWD"
+   fi
+else
+   set_failure
+   messages="Failed to update the $gitmodules file in $PWD"
+fi
+
+printf '{ "changed": %s, "failed": %s , "stdout": "%s" }' $changed $failed "$messages"
+exit 0
