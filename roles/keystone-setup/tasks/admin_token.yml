@@ -41,7 +41,7 @@
                     public_url={{ item.public_url }}
                     internal_url={{ item.internal_url }}
                     admin_url={{ item.admin_url }}
-                    region=RegionOne
+                    region={{ keystone.region }}
                     endpoint=http://127.0.0.1:{{ endpoints.keystone_admin.port.backend_api }}/v2.0
                     token={{ admin_token }}
   # TODO refactor keystone.services data to be easier to pull out individual services
