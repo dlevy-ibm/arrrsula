@@ -24,7 +24,8 @@
   redirect_to_local_mirror:
        local_mirror: "{{ openstack_source.git_mirror }}"
        git_dir: /opt/stack
-  when: openstack_source.use_superproject and openstack_source.local_mirror is defined and not openstack_source.use_local_superproject
+  when: openstack_source.use_superproject and not openstack_source.use_local_superproject and
+        ( openstack_source.git_mirror_is_local is defined and openstack_source.git_mirror_is_local )
 
 - name: initialize repo submodules
   command: git submodule init
