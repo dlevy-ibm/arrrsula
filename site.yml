@@ -29,7 +29,6 @@
 - name: get the superrepo serially for source installs
   hosts: all
   gather_facts: force
-  serial: 5
   roles:
     - role: openstack-superrepo
       tags: ['common']
