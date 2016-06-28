@@ -21,7 +21,7 @@ neutron:
     ttl: 1
     vni_ranges: 1:4095
   geneve:
-    vni_ranges: 1:4095
+    vni_ranges: 1:65536
   heartbeat_timeout_threshold: 30
   allow_overlapping_ips: False
   api_workers: 3
