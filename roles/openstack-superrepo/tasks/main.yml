@@ -18,13 +18,13 @@
   register: git_result
   until: git_result|success
   retries: 3
-  when: openstack_source.use_superproject and openstack_source.local_mirror is defined and not openstack_source.use_local_superproject
+  when: openstack_source.use_superproject and not openstack_source.use_local_superproject
 
 - name: modify the remote url of the submodules to point to local mirror
   redirect_to_local_mirror:
        local_mirror: "{{ openstack_source.git_mirror }}"
        git_dir: /opt/stack
-  when: openstack_source.use_superproject and not openstack_source.use_local_superproject
+  when: openstack_source.use_superproject and openstack_source.local_mirror is defined and not openstack_source.use_local_superproject
 
 - name: initialize repo submodules
   command: git submodule init
