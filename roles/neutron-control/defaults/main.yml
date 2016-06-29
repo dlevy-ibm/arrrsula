@@ -1,4 +1,0 @@
-cpu_warn_pct: 70
-cpu_crit_pct: 90
-mem_warn_pct: 70
-mem_crit_pct: 90
