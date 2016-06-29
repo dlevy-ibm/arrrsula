@@ -16,7 +16,7 @@ neutron_auth = {
     'password':    os.environ['OS_PASSWORD'],
     'tenant_name': os.environ['OS_TENANT_NAME'],
     'auth_url':    os.environ['OS_AUTH_URL'],
-    'region_name': 'RegionOne',
+    'region_name': os.environ['OS_REGION_NAME'],
 }
 
 if 'OS_CACERT' in os.environ.keys():

@@ -6,7 +6,7 @@
                     public_url={{ item.public_url }}
                     internal_url={{ item.internal_url }}
                     admin_url={{ item.admin_url }}
-                    region=RegionOne
+                    region={{ keystone.region }}
                     auth_url={{ endpoints.auth_uri }}
                     tenant_name=admin
                     login_user=admin

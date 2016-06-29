@@ -1,5 +1,5 @@
 shadetest_keystone_auth_url: "{{ endpoints.auth_url }}"
-shadetest_region: RegionOne
+shadetest_region: "{{ keystone.region }}"
 shadetest_identity_api_version: 2
 shadetest_nonadmin_username: demo
 shadetest_nonadmin_password: demopass
