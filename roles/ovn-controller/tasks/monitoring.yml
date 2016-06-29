@@ -21,6 +21,16 @@
       --scheme {{ monitoring.graphite.host_prefix }}
   notify: restart sensu-client
 
+- name: ovn-controller tx/rx queue metrics
+  sensu_metrics_check:
+    name: ovn-controller-queue-metrics
+    plugin: metrics-network-queues.py
+    use_sudo: true
+    args: >
+      -n ovn-controller
+      --scheme {{ monitoring.graphite.host_prefix }}
+  notify: restart sensu-client
+
 - name: ovs-vswitchd process check
   sensu_check: name=ovs-vswitchd-process plugin=check-procs.rb
                args="-p ovs-vswitchd -C 2 -c 2 -w 2 -W 2"
