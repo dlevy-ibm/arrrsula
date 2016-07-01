@@ -67,6 +67,8 @@ neutron:
       config_files: /etc/neutron/services/loadbalancer/haproxy/lbaas_agent.ini,/etc/neutron/neutron_lbaas.conf
   service:
     envs: []
+    sync_freq: 1
+    sync_unit: days
   source:
     rev: 'stable/kilo'
     python_dependencies:
