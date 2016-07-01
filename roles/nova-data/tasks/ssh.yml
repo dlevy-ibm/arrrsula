@@ -4,12 +4,6 @@
         generate_ssh_key=yes
   register: nova_user
 
-- pause: seconds=2
-
-- debug: var=nova_user
-
-- debug: var=hostvars[host].nova_user
-
 - name: nova authorized_keys
   template:
     src: var/lib/nova/ssh/authorized_keys
