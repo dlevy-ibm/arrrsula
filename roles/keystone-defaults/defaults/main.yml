@@ -58,9 +58,9 @@ keystone:
     vassal:
       public:
         port: 5008
-        processes: "{{ ansible_processor_vcpus }}"
+        processes: 10
         threads: 10
       admin:
         port: 5009
-        processes: "{{ ansible_processor_vcpus }}"
+        processes: 10
         threads: 10
