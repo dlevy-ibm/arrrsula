@@ -1,0 +1,9 @@
+# Find inconsistencies between ovn and neutron databases
+
+SHELL=/bin/sh
+PATH=/bin:/usr/local/bin
+
+# The minute, hour, or day cron term is replaced by the inverse of the frequency variable
+{{ "0 0" if neutron.service.sync_unit == "days" else "" }} {{ "0" if neutron.service.sync_unit == "hours" else "" }} {{ "*/" ~ neutron.service.sync_freq }} {{ "*" if neutron.service.sync_unit == "hours" else "" }} {{ "* *" if neutron.service.sync_unit == "minutes" else "" }} * * root  neutron-ovn-db-sync-util \
+   --config-file /etc/neutron/neutron.conf               \
+   --config-file /etc/neutron/plugins/ml2/ml2_plugin.ini
