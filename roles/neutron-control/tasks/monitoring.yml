@@ -29,3 +29,27 @@
         groups['controller'][0] not in groups['compute']) or
         neutron.lbaas.enabled|bool
   notify: restart sensu-client
+
+- name: neutron-server cpu and memory metrics
+  sensu_metrics_check:
+    name: neutron-server-usage-metrics
+    plugin: metrics-process-usage.py
+    use_sudo: true
+    args: >
+      -n neutron-server
+      -w {{ cpu_warn_pct }}
+      -c {{ cpu_crit_pct }}
+      -W {{ mem_warn_pct }}
+      -C {{ mem_crit_pct }}
+      --scheme {{ monitoring.graphite.host_prefix }}
+  notify: restart sensu-client
+
+- name: neutron-server tx/rx queue metrics
+  sensu_metrics_check:
+    name: neutron-server-queue-metrics
+    plugin: metrics-network-queues.py
+    use_sudo: true
+    args: >
+      -n neutron-server
+      --scheme {{ monitoring.graphite.host_prefix }}
+  notify: restart sensu-client
