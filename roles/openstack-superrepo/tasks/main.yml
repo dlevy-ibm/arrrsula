@@ -14,15 +14,15 @@
   become: false
   run_once: true
   connection: local
-  when: has_local_openstack.stat.isdir and openstack_source.use_local_superproject
+  when: openstack_source.use_local_superproject and has_local_openstack.stat.isdir
 
 - name: copy it up
   copy: src=openstack.tar.xz dest=/srv/git
-  when: has_local_openstack.stat.isdir and openstack_source.use_local_superproject
+  when: openstack_source.use_local_superproject and has_local_openstack.stat.isdir
 
 - name: explode tarball
   command: tar -xJf /srv/git/openstack.tar.xz -C /srv/git
-  when: has_local_openstack.stat.isdir and openstack_source.use_local_superproject
+  when: openstack_source.use_local_superproject and has_local_openstack.stat.isdir
 
 - name: Use local copy of superrepo
   file: path=/opt/stack state=link src=/srv/git/openstack
