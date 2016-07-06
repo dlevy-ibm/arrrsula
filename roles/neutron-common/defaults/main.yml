@@ -23,8 +23,7 @@ neutron:
   geneve:
     vni_ranges: 1:65536
   heartbeat_timeout_threshold: 30
-  allow_overlapping_ips: False
-  api_workers: 3
+  allow_overlapping_ips: True
   metadata_workers: 3
   agent_down_time: 20
   report_interval: 4
@@ -50,7 +49,6 @@ neutron:
     enabled: true
     agent:
       config_files: /etc/neutron/dhcp_agent.ini
-    agents_per_network: 1
   metadata:
     enabled: true
     agent:
