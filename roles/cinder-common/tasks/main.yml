@@ -1,4 +1,9 @@
 ---
+- name: install nfs-common
+  apt: name={{ item }} state=present
+  with_items:
+    - nfs-common
+
 - name: check if cinder user exists
   shell: getent passwd cinder
   register: cinder_user
