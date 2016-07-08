@@ -41,7 +41,10 @@
                    config_dirs=/etc/neutron
                    config_files=/etc/neutron/neutron.conf,{{ neutron.dhcp.agent.config_files }}
                    envs={{ neutron.service.envs }}
-  when: neutron.dhcp.enabled|default(true)|bool
+  when: |
+    neutron.dhcp.enabled|default(true)|bool
+    and (neutron.max_dhcp_agents is not defined)
+    or groups['network'].index(inventory_hostname) < neutron.max_dhcp_agents
 
 - name: install neutron metadata agent upstart script
   upstart_service: name=neutron-metadata-agent
@@ -51,7 +54,10 @@
                    config_dirs=/etc/neutron
                    config_files=/etc/neutron/neutron.conf,{{ neutron.metadata.agent.config_files }}
                    envs={{ neutron.service.envs }}
-  when: neutron.metadata.enabled|default(true)|bool
+  when: |
+    neutron.metadata.enabled|default(true)|bool
+    and (neutron.max_metadata_agents is not defined)
+    or groups['network'].index(inventory_hostname) < neutron.max_metadata_agents
 
 - name: install neutron lbaas agent upstart script
   upstart_service: name=neutron-lbaasv2-agent
@@ -89,11 +95,17 @@
 
 - name: start neutron dhcp agent
   service: name=neutron-dhcp-agent state=started
-  when: neutron.dhcp.enabled|bool
+  when: |
+    neutron.dhcp.enabled|bool
+    and (neutron.max_dhcp_agents is not defined)
+    or groups['network'].index(inventory_hostname) < neutron.max_dhcp_agents
 
 - name: start neutron metadata agent
   service: name=neutron-metadata-agent state=started
-  when: neutron.metadata.enabled|bool
+  when: |
+    neutron.metadata.enabled|bool
+    and (neutron.max_metadata_agents is not defined)
+    or groups['network'].index(inventory_hostname) < neutron.max_metadata_agents
 
 - name: start neutron lbaas agent
   service: name=neutron-lbaasv2-agent state=started
