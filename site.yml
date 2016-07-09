@@ -8,6 +8,15 @@
       tags: ['kernel']
       when: wait_for_all_timeout|default(0) > 0
 
+- name: wait for internet connection after SSH is available
+  hosts: all
+  gather_facts: false
+  sudo: no
+  tasks:
+    - wait_for: host=8.8.8.8 port=53
+      tags: ['kernel']
+      when: wait_for_all_timeout|default(0) > 0
+
 - name: softlayer compute
   hosts: softlayer-compute
   roles:
