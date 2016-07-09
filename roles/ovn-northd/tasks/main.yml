@@ -7,8 +7,12 @@
     - ovn-central
     - python-openvswitch
   notify:
-    - restart openvswitch-switch
+    - stop openvswitch-switch
     - restart ovn-central
+
+- name: remove openvswitch-switch from startup
+  shell: update-rc.d -f openvswitch-switch remove
+  sudo: true
 
 - name: check if ovn northbound database exists
   stat: path="{{ovs_db_dir}}/ovnnb.db"
