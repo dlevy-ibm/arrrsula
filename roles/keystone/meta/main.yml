@@ -36,8 +36,8 @@ dependencies:
           wsgi-file: "{{ openstack_source.virtualenv_base }}/keystone/bin/keystone-wsgi-admin"
           virtualenv: "{{ openstack_source.virtualenv_base }}/keystone"
           chdir: "{{ openstack_source.virtualenv_base }}/keystone"
-          threads: "{{ keystone.uwsgi.vassal.admin.threads }}"
-          processes: "{{ keystone.uwsgi.vassal.admin.processes }}"
+          threads: "{{ [keystone.uwsgi.vassal.admin.threads, ansible_processor_vcpus] | min }}"
+          processes: "{{ [keystone.uwsgi.vassal.admin.processes, ansible_processor_vcpus] | min }}"
           enable-threads: true
           plugin: python
           thunder-lock: true
@@ -51,8 +51,8 @@ dependencies:
           wsgi-file: "{{ openstack_source.virtualenv_base }}/keystone/bin/keystone-wsgi-public"
           virtualenv: "{{ openstack_source.virtualenv_base }}/keystone"
           chdir: "{{ openstack_source.virtualenv_base }}/keystone"
-          threads: "{{ keystone.uwsgi.vassal.public.threads }}"
-          processes: "{{ keystone.uwsgi.vassal.public.processes }}"
+          threads: "{{ [keystone.uwsgi.vassal.public.threads, ansible_processor_vcpus] | min }}"
+          processes: "{{ [keystone.uwsgi.vassal.public.processes, ansible_processor_vcpus] | min }}"
           enable-threads: true
           plugin: python
           thunder-lock: true
