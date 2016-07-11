@@ -140,7 +140,7 @@ endpoints:
       haproxy_api: 9696
     haproxy:
       health_check: 'httpchk /'
-      balance: 'source'
+      balance: 'roundrobin'
       prefer_primary_backend: False
   ovndb:
     name: ovndb
