@@ -36,7 +36,6 @@
   file: src=/etc/ssl/certs/ca-certificates.crt dest={{ item }} owner=root
         mode=0644 state=link force=yes
   with_items:
-    - /usr/local/lib/python2.7/dist-packages/httplib2/cacerts.txt
     - /usr/local/lib/python2.7/dist-packages/requests/cacert.pem
 
 - meta: flush_handlers
