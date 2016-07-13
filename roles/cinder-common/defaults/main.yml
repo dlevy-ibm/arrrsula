@@ -30,6 +30,7 @@ cinder:
       - { name: PyMySQL }
       - { name: python-memcached }
     system_dependencies: []
+  check_sessions: true
   logs:
   - paths:
       - /var/log/cinder/cinder-api.log
