@@ -1,0 +1,6 @@
+- name: send ovn error check
+  template: src=check-ovn-error.sh dest=/etc/sensu/plugins mode=0744
+
+- name: check for ovn deployment errors
+  command: /etc/sensu/plugins/check-ovn-error.sh {{ ansible_date_time.epoch }}
+  sudo: true

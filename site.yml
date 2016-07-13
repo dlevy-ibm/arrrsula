@@ -245,6 +245,16 @@
       when: "'ovn' in neutron.mechanism_drivers"
   environment: "{{ env_vars|default({}) }}"
 
+# OVN ERROR CHECK
+
+- name: ovn-error-check
+  hosts: ovndb:network
+  roles:
+    - role: ovn-check
+      tags: ['ovn']
+      when: "'ovn' in neutron.mechanism_drivers"
+  environment: "{{ env_vars|default({}) }}"
+
 # OPENSTACK SERVICES
 
 - name: openstack client tools
