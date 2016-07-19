@@ -1,6 +1,7 @@
 - name: install dependencies
   apt: pkg={{ item }} state=latest
   with_items:
+    - ucarp
     - openvswitch-common
     - openvswitch-switch
     - ovn-common
@@ -8,7 +9,9 @@
     - python-openvswitch
   notify:
     - stop openvswitch-switch
-    - restart ovn-central
+
+- name: bounce network interfaces
+  shell: ifdown -a ; ifup -a
 
 - name: remove openvswitch-switch from startup
   shell: update-rc.d -f openvswitch-switch remove
@@ -33,12 +36,15 @@
 - name: permit access to ovn databases
   ufw: rule=allow to_port={{ item }} proto=tcp
   with_items:
-    - "{{ endpoints.ovndb.port.northbound }}"
-    - "{{ endpoints.ovndb.port.southbound }}"
+    - "{{ endpoints.ovnnb.port }}"
+    - "{{ endpoints.ovnsb.port }}"
   tags: ufw
 
+- name: set variable for database replication
+  template: src=etc/default/ovn-central dest=/etc/default/ovn-central
+
 - name: start ovn northd service
-  service: name=ovn-central state=started enabled=yes
+  service: name=ovn-central state=restarted enabled=yes
 
 - include: monitoring.yml tags=monitoring,common
   when: monitoring.enabled|default('True')|bool

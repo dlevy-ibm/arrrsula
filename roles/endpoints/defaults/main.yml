@@ -142,14 +142,18 @@ endpoints:
       health_check: 'httpchk /'
       balance: 'roundrobin'
       prefer_primary_backend: False
-  ovndb:
-    name: ovndb
+  ovnnb:
+    name: ovnnb
     type: network
-    description: 'Open Virtual Network (OVN) databases'
-    url: "{{ hostvars[groups['ovndb'][0]][hostvars[groups['ovndb'][0]]['primary_interface']]['ipv4']['address'] }}"
-    port:
-      northbound: 6641
-      southbound: 6642
+    description: 'Open Virtual Network (OVN) Northbound database'
+    url: "{{ ovn.ucarp }}:6641"
+    port: 6641
+  ovnsb:
+    name: ovnsb
+    type: network
+    url: "{{ ovn.ucarp }}:6642"
+    description: 'Open Virtual Network (OVN) Southbound database'
+    port: 6642
   heat:
     name: heat
     type: orchestration

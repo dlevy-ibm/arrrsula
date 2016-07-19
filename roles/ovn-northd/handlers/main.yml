@@ -1,5 +1,2 @@
 - name: stop openvswitch-switch
   service: name=openvswitch-switch state=stopped
-
-- name: restart ovn-central
-  service: name=ovn-central state=restarted

@@ -1,0 +1,5 @@
+{%- for host in groups['compute'] -%}
+  {%- if hostvars[host]['ansible_eth1']['ipv4']['address'] != ansible_eth1.ipv4.address -%}
+  OVN_CTL_OPTS=--ovn-nb-sync-from=tcp:{{hostvars[host]['ansible_eth1']['ipv4']['address']}}
+  {%- endif -%}
+{%- endfor -%}

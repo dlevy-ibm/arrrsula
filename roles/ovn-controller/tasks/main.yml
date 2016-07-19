@@ -18,7 +18,7 @@
 # the 'ovs-vsctl set open' command only provides output when it fails.
 
 - name: setup connection to remote database
-  command: ovs-vsctl set open . external-ids:ovn-remote=tcp:{{ endpoints.ovndb.url }}:{{ endpoints.ovndb.port.southbound }}
+  command: ovs-vsctl set open . external-ids:ovn-remote=tcp:{{ endpoints.ovnsb.url }}
   changed_when: false
 
 - name: add ovs integration bridge

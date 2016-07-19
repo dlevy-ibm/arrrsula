@@ -1,0 +1,3 @@
+#Set the ovn northbound database to replicate.
+#Assumes that only 2 databases exist
+OVN_CTL_OPTS=--ovn-nb-sync-from=tcp:{{ovnnb}}
